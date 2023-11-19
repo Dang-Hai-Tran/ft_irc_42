@@ -1,0 +1,39 @@
+RFC 2812 version
+https://datatracker.ietf.org/doc/html/rfc2812
+
+Server:
+- name: maximum of length: 63 chars
+
+User:
+- name: maximum of length: 9 chars
+
+Operators:
+
+Services:
+
+Channels:
+- name: beginning with a '&', '#', '+', '!'
+- length up to 50 chars
+- cant contain space, ctrl+g, comma(,)
+- name are case insensitive
+
+IRC Client
+- character codes: ASCII
+- message:
+    - may or may not generate a reply
+    - consist up to 3 main parts: [prefix(optional)][command][command parameters(up to 15 chars)]
+    - each part separated by one or more space(0x20)
+    - prefix indicated by :[prefix] and no space between ':' and [prefix]
+    - should not use a prefix when sending a message
+    - message not exceed 512 chars
+
+Channel Operators:
+- join: Command: JOIN
+        Parameters: <channel> <key> <0(optional)>
+        Once user has joined a channel, the user receives a JOIN message as confirmation and then sent the channel 's
+        topic ans the list of users who are on the channel
+        The "0" parameter is a special request to leave all channels the user is currently a member of
+        Examples:
+        JOIN #foobar                    ; Command to join channel #foobar.
+        JOIN &foo fubar                 ; Command to join channel &foo using key "fubar".
+        JOIN #foo,&bar fubar            ; Command to join channel #foo using key "fubar" and &bar using no key.
