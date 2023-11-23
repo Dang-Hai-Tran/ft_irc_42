@@ -13,7 +13,7 @@ void Pass::execute(int clientSocket, std::vector<std::string> args) {
     } else {
         std::string password = args[1];
         if (password == server->getPassword()) {
-            server->sendData(clientSocket, "Error :Password accepted\r\n");
+            server->sendData(clientSocket, "Password accepted\r\n");
         } else {
             server->sendData(clientSocket, "Error :Invalid password\r\n");
         }
@@ -28,7 +28,6 @@ void Nick::execute(int clientSocket, std::vector<std::string> args) {
         server->sendData(clientSocket, "Usage : NICK <nick>\r\n");
     } else {
         std::string nick = args[1];
-        int clientIndex = server->getClientIndex(clientSocket);
         std::string nickname = args[1];
         bool nicknameExists = false;
         for (size_t i = 0; i < server->getRegisteredClients().size(); i++) {
@@ -41,6 +40,7 @@ void Nick::execute(int clientSocket, std::vector<std::string> args) {
             server->sendData(clientSocket, "ERROR :Nickname already in use\r\n");
         } else {
             // Change nick name of client ot nickname
+            int clientIndex = server->getClientIndex(clientSocket);
             server->getRegisteredClients()[clientIndex]->setNickName(nickname);
             server->sendData(clientSocket, "NICK :Nickname accepted\r\n");
         }
