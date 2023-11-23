@@ -1,57 +1,44 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include <arpa/inet.h>
-#include <cstdlib>
-#include <cstring>
-#include <errno.h>
-#include <fcntl.h>
-#include <iostream>
-#include <netinet/in.h>
-#include <stdexcept>
-#include <string>
-#include <sys/poll.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <vector>
-
-#include "Channel.hpp"
-#include "Client.hpp"
-#include "utils.hpp"
-
-#define DEFAULT_SERVER_NAME "IRC Server"
-#define DEFAULT_PORT 8888
-#define MAX_CLIENTS 32
-#define BUFFER_SIZE 8192
-#ifndef DEBUG
-#define DEBUG 0
-#endif
+#include "irc.hpp"
 
 class Client;
+class Channel;
 
 class Server {
 private:
     int port;
     std::string password;
-    std::string serverName;
     std::string startTime;
     int serverSocket;
-    std::vector<Client *> clients;
-    // std::vector<Channel *> channels;
-    struct pollfd *clientFds;
-    int setNonBlocking(int serverSocket);
-    void setClientFds(void);
+    std::vector<int> clientFDs;
+    std::vector<struct pollfd> pollFDs;
+    std::vector<Client *> registeredClients;
+    std::vector<Channel *> channels;
+    std::vector<Client *> admins;
+    void setNonBlocking();
+    void setPollFds(void);
 
 public:
+    Server();
     Server(int port, std::string password);
     ~Server();
+    int getServerSocket(void);
+    std::vector<Client *> getRegisteredClients(void);
+    std::vector<int> getClientFDs(void);
     void waitEvents(void);
     void acceptConnection(void);
-    void receiveData(Client *);
-    void addClient(int clientSocket, std::string clientIpAddress, int clientPort);
-    void delClient(int clientSocket);
-    void handleCommand(std::string command, Client *client);
-    int listening(void);
+    void receiveData(int clientSocket);
+    void sendData(int clientSocket, std::string message);
+    void addClientSocket(int clientSocket);
+    void delClientSocket(int clientSocket);
+    void handleMessage(std::string message, int clientSocket);
+    void addChannel(Channel *channel);
+    void delChannel(std::string channelName);
+    Channel *getChannel(std::string channelName);
+    int getClientIndex(int clientSocket);
+    void start(void);
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "../inc/irc.hpp"
 
 bool strContainOnlyDigits(std::string str) {
     for (size_t i = 0; i < str.length(); i++) {
@@ -20,16 +20,47 @@ std::string getCurrentTime(void) {
 std::string getClientIpAddress(const struct sockaddr_in6 *clientAddress) {
     char ipAddress[INET6_ADDRSTRLEN];
     inet_ntop(AF_INET6, &(clientAddress->sin6_addr), ipAddress, INET6_ADDRSTRLEN);
-    return std::string(ipAddress);
+    std::string ip = std::string(ipAddress);
+    if (ip.find("::ffff:") != std::string::npos) {
+        ip = ip.substr(7);
+    }
+    if (ip.find("::") != std::string::npos) {
+        ip = ip.substr(2);
+    }
+    if (ip.empty() || ip == "1")
+        ip = "127.0.0.1";
+    return ip;
 }
 
 std::vector<std::string> splitString(std::string str, char c) {
     std::vector<std::string> strs;
     std::string part;
     std::istringstream partStream(str);
-
     while (std::getline(partStream, part, c)) {
         strs.push_back(part);
     }
     return strs;
+}
+
+// Find client ip address from client socket
+std::string getIpAddressFromSocket(int fd) {
+    struct sockaddr_in6 clientAddress;
+    socklen_t clientAddressSize = sizeof(clientAddress);
+    getpeername(fd, (struct sockaddr *)&clientAddress, &clientAddressSize);
+    return getClientIpAddress(&clientAddress);
+}
+
+// Find client port from client socket
+int getPortFromSocket(int fd) {
+    struct sockaddr_in6 clientAddress;
+    socklen_t clientAddressSize = sizeof(clientAddress);
+    getpeername(fd, (struct sockaddr *)&clientAddress, &clientAddressSize);
+    return ntohs(clientAddress.sin6_port);
+}
+
+// Remove end of line of a string
+void trimEndOfLine(std::string &str) {
+    if (!str.empty() && str[str.size() - 1] == '\n') {
+        str.erase(str.size() - 1);
+    }
 }
