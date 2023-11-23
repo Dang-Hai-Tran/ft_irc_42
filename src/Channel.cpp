@@ -93,7 +93,7 @@ void Channel::addUser(Client *client) {
 
 void Channel::kickUser(Client *client) {
     for (size_t i = 0; i < this->users.size(); i++) {
-        if (this->users[i] == client) {
+        if (this->users[i]->getNickName() == client->getNickName()) {
             this->users.erase(this->users.begin() + i);
             return;
         }

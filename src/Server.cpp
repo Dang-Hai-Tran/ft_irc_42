@@ -191,6 +191,15 @@ int Server::getClientIndex(int clientSocket) {
     return -1;
 }
 
+Client *Server::getClient(int clientSocket) {
+    for (size_t i = 0; i < this->registeredClients.size(); i++) {
+        if (this->registeredClients[i]->getFD() == clientSocket) {
+            return this->registeredClients[i];
+        }
+    }
+    return NULL;
+}
+
 void Server::start(void) {
     this->serverSocket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
     if (this->serverSocket < 0) {

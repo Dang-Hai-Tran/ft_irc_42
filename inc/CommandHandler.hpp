@@ -13,13 +13,13 @@ protected:
     std::vector<std::string> args;
 
 public:
-    CommandHandler();
     CommandHandler(Server *server);
     virtual ~CommandHandler();
     virtual void execute(int clientSocket, std::vector<std::string> args) = 0;
 };
 
 // Pass class to handle PASS command
+// PASS <password>
 class Pass : public CommandHandler {
 public:
     Pass(Server *server);
@@ -28,6 +28,7 @@ public:
 };
 
 // Nick class to handle NICK command
+// NICK <nickname>
 class Nick : public CommandHandler {
 public:
     Nick(Server *server);
@@ -36,6 +37,7 @@ public:
 };
 
 // Join class to handle JOIN command
+// JOIN <channel> <password>
 class Join : public CommandHandler {
 public:
     Join(Server *server);
@@ -43,12 +45,13 @@ public:
     void execute(int clientSocket, std::vector<std::string> args);
 };
 
-// User class to handle USER command
-// class User : public CommandHandler {
-// public:
-//     User(Server *server);
-//     ~User();
-//     void execute(int clientSocket, std::vector<std::string> args);
-// };
+// Part class to handle PART command
+// PART <channel> <message>
+class Part : public CommandHandler {
+public:
+    Part(Server *server);
+    ~Part();
+    void execute(int clientSocket, std::vector<std::string> args); 
+};
 
 #endif

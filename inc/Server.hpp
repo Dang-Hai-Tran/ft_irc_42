@@ -41,6 +41,7 @@ public:
     Channel *getChannel(std::string channelName);
     std::vector<Channel *> getChannels(void);
     int getClientIndex(int clientSocket);
+    Client *getClient(int clientSocket);
     void start(void);
 };
 

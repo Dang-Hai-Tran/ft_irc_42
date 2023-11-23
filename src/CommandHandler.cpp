@@ -1,6 +1,5 @@
 #include "../inc/irc.hpp"
 
-CommandHandler::CommandHandler(){};
 CommandHandler::CommandHandler(Server *server) : server(server){};
 CommandHandler::~CommandHandler(){};
 
@@ -39,9 +38,9 @@ void Nick::execute(int clientSocket, std::vector<std::string> args) {
         if (nicknameExists) {
             server->sendData(clientSocket, "ERROR :Nickname already in use\r\n");
         } else {
-            // Change nick name of client ot nickname
-            int clientIndex = server->getClientIndex(clientSocket);
-            server->getRegisteredClients()[clientIndex]->setNickName(nickname);
+            // Change nick name of client to nickname
+            Client *client = server->getClient(clientSocket);
+            client->setNickName(nickname);
             server->sendData(clientSocket, "NICK :Nickname accepted\r\n");
         }
     }
@@ -66,10 +65,10 @@ void Join::execute(int clientSocket, std::vector<std::string> args) {
                 break;
             }
         }
+        Client *client = server->getClient(clientSocket);
         if (channelExists) {
             // Add a new client to a channel exists
-            int clientIndex = server->getClientIndex(clientSocket);
-            server->getChannel(channelName)->addUser(server->getRegisteredClients()[clientIndex]);
+            server->getChannel(channelName)->addUser(client);
         } else {
             // Create a new channel
             Channel *channel;
@@ -80,9 +79,30 @@ void Join::execute(int clientSocket, std::vector<std::string> args) {
             }
             server->addChannel(channel);
             // Add a new client to a channel exists
-            int clientIndex = server->getClientIndex(clientSocket);
-            Client *client = server->getRegisteredClients()[clientIndex];
             server->getChannel(channelName)->addUser(client);
+        }
+    }
+}
+
+Part::Part(Server *server) : CommandHandler(server){};
+Part::~Part(){};
+void Part::execute(int clientSocket, std::vector<std::string> args) {
+    Server *server = this->server;
+    Client *client = server->getClient(clientSocket);
+    if (args.size() < 2 || args.size() > 3) {
+        server->sendData(clientSocket, "Usage : PART <channel> <message>\r\n");
+    } else {
+        std::string channelName = args[1];
+        std::string message = "";
+        if (args.size() == 3) {
+            message = args[2];
+        }
+        Channel *channel = server->getChannel(channelName);
+        channel->kickUser(client);
+        std::vector<Client *> clients = channel->getUsers();
+        for (size_t i = 0; i < clients.size(); i++) {
+            std::string leaveMessage = clients[i]->getNickName() + "leave " + channelName + " :" + message + "\r\n";
+            server->sendData(clients[i]->getFD(), leaveMessage);
         }
     }
 }
