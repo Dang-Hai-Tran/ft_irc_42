@@ -51,7 +51,14 @@ class Part : public CommandHandler {
 public:
     Part(Server *server);
     ~Part();
-    void execute(int clientSocket, std::vector<std::string> args); 
+    void execute(int clientSocket, std::vector<std::string> args);
 };
 
+// TOPIC <channel> <topic*>
+class Topic : public CommandHandler {
+public:
+    Topic(Server *server);
+    ~Topic();
+    void execute(int clientSocket, std::vector<std::string> args);
+};
 #endif

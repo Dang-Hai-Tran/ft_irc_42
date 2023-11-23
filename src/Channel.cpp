@@ -39,8 +39,8 @@ std::string Channel::getNameChannel(void) {
     return this->nameChannel;
 }
 
-std::vector<std::string> Channel::getTopics(void) {
-    return this->topics;
+std::string Channel::getTopic(void) {
+    return this->topic;
 }
 
 std::vector<Client *> Channel::getAdmins(void) {
@@ -75,6 +75,22 @@ Server *Channel::getServer(void) {
     return this->server;
 }
 
+void Channel::setNameChannel(std::string nameChannel) {
+    this->nameChannel = nameChannel;
+}
+
+void Channel::setTopic(std::string topic) {
+    this->topic = topic;
+}
+
+void Channel::addAdmins(Client *admin) {
+    this->admins.push_back(admin);
+}
+
+void Channel::addAdmins(std::vector<Client *> admins) {
+    this->admins.insert(this->admins.end(), admins.begin(), admins.end());
+}
+
 void Channel::addUser(Client *client) {
     // Check if the number of user is over the max number of user
     if (this->haveMaxUsers) {
@@ -107,4 +123,13 @@ void Channel::kickUser(Client *client, std::string reason) {
 
 void Channel::invite(Client *src, Client *target) {
     this->server->sendData(target->getFD(), "INVITE " + src->getNickName() + " " + this->nameChannel + "\r\n");
+}
+
+bool Channel::isAdmin(Client *client) {
+    for (size_t i = 0; i < this->admins.size(); i++) {
+        if (this->admins[i]->getNickName() == client->getNickName()) {
+            return true;
+        }
+    }
+    return false;
 }

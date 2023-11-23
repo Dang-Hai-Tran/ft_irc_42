@@ -106,3 +106,28 @@ void Part::execute(int clientSocket, std::vector<std::string> args) {
         }
     }
 }
+
+// Implement Topic Class
+Topic::Topic(Server *server) : CommandHandler(server){};
+Topic::~Topic(){};
+void Topic::execute(int clientSocket, std::vector<std::string> args) {
+    Server *server = this->server;
+    Client *client = server->getClient(clientSocket);
+    if (args.size() < 2 || args.size() > 3) {
+        server->sendData(clientSocket, "Usage : TOPIC <channel> <topic>\r\n");
+    } else {
+        std::string channelName = args[1];
+        std::string topic = "";
+        if (args.size() == 3) {
+            topic = args[2];
+        }
+        Channel *channel = server->getChannel(channelName);
+        if (channel->isAdmin(client) == false) {
+            server->sendData(clientSocket, "ERROR :You are not admin\r\n");
+        } else {
+            channel->setTopic(topic);
+            std::string topicMessage = "You change topic of channel: " + channelName + " to " + topic + "\r\n";
+            server->sendData(client->getFD(), topicMessage);
+        }
+    }
+}
