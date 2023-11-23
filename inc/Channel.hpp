@@ -5,6 +5,7 @@
 
 class Client;
 class Server;
+class CommandHandler;
 
 class Channel {
 private:

@@ -22,6 +22,7 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include "utils.hpp"
+#include "CommandHandler.hpp"
 
 #define DEFAULT_PORT 8888
 #define MAX_CLIENTS 32

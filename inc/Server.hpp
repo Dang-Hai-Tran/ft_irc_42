@@ -5,6 +5,7 @@
 
 class Client;
 class Channel;
+class CommandHandler;
 
 class Server {
 private:
@@ -24,7 +25,8 @@ public:
     Server();
     Server(int port, std::string password);
     ~Server();
-    int getServerSocket(void);
+    int getSocket(void);
+    std::string getPassword(void);
     std::vector<Client *> getRegisteredClients(void);
     std::vector<int> getClientFDs(void);
     void waitEvents(void);
@@ -37,6 +39,7 @@ public:
     void addChannel(Channel *channel);
     void delChannel(std::string channelName);
     Channel *getChannel(std::string channelName);
+    std::vector<Channel *> getChannels(void);
     int getClientIndex(int clientSocket);
     void start(void);
 };

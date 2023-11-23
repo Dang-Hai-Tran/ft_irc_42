@@ -101,10 +101,10 @@ void Channel::kickUser(Client *client) {
 }
 
 void Channel::kickUser(Client *client, std::string reason) {
-    this->server->sendData(client->getFD(), "KICK " + this->nameChannel + " " + client->getNickName() + " :" + reason);
+    this->server->sendData(client->getFD(), "KICK " + this->nameChannel + " " + client->getNickName() + " :" + reason + "\r\n");
     this->kickUser(client);
 }
 
 void Channel::invite(Client *src, Client *target) {
-    this->server->sendData(target->getFD(), "INVITE " + src->getNickName() + " " + this->nameChannel);
+    this->server->sendData(target->getFD(), "INVITE " + src->getNickName() + " " + this->nameChannel + "\r\n");
 }

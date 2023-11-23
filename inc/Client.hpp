@@ -5,6 +5,7 @@
 
 class Server;
 class Channel;
+class CommandHandler;
 
 class Client {
 private:
@@ -17,6 +18,7 @@ private:
 public:
     Client(Server *server, int fd);
     ~Client();
+    Server *getServer(void);
     int getFD(void);
     std::string getNickName(void);
     std::string getUserName(void);

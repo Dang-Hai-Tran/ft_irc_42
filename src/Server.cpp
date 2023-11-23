@@ -13,8 +13,12 @@ std::vector<int> Server::getClientFDs(void) {
     return this->clientFDs;
 }
 
-int Server::getServerSocket(void) {
+int Server::getSocket(void) {
     return this->serverSocket;
+}
+
+std::string Server::getPassword(void) {
+    return this->password;
 }
 
 Server::~Server() {
@@ -99,9 +103,6 @@ void Server::receiveData(int clientSocket) {
             message.append(std::string(buffer, bytesRead));
         }
     }
-    if (DEBUG) {
-        std::cout << "Received message: " << message;
-    }
     this->handleMessage(message, clientSocket);
 }
 
@@ -130,91 +131,27 @@ void Server::sendData(int clientSocket, std::string message) {
 
 void Server::handleMessage(std::string message, int clientSocket) {
     trimEndOfLine(message);
-    // find first ':' in message
-    size_t firstColon = message.find(':');
-    std::string commandAll;
-    if (firstColon == std::string::npos) {
-        commandAll = message;
-        message = "";
-    } else {
-        commandAll = message.substr(0, firstColon);
-        message = message.substr(firstColon);
-    }
-    std::vector<std::string> commandPart = splitString(commandAll, ' ');
+    std::vector<std::string> args = splitString(message, ' ');
     if (DEBUG) {
-        std::cout << "Command and args: ";
-        printVector(commandPart);
+        std::cout << "Args :";
+        printVector(args);
     }
-    if (commandPart.size() == 0) {
+    if (args.size() == 0) {
         return;
     }
-    std::string command = commandPart[0];
+    std::string command = args[0];
+    CommandHandler *cmd = NULL;
     if (command == "PASS") {
-        if (commandPart.size() < 2) {
-            this->sendData(clientSocket, "ERROR :Password to login server required\r\n");
-        } else {
-            std::string password = commandPart[1];
-            if (password == this->password) {
-                this->sendData(clientSocket, "PASS :Password accepted\r\n");
-            } else {
-                this->sendData(clientSocket, "ERROR :Invalid password\r\n");
-            }
-        }
+        cmd = new Pass(this);
     } else if (command == "NICK") {
-        if (command.size() < 2) {
-            this->sendData(clientSocket, "ERROR :Nickname required\r\n");
-        } else {
-            std::string nickname = commandPart[1];
-            bool nicknameExists = false;
-            for (size_t i = 0; i < this->registeredClients.size(); i++) {
-                if (this->registeredClients[i]->getNickName() == nickname) {
-                    nicknameExists = true;
-                    break;
-                }
-            }
-            if (nicknameExists) {
-                this->sendData(clientSocket, "ERROR :Nickname already in use\r\n");
-            } else {
-                // Add a client with nickname
-                Client *newClient = new Client(this, clientSocket);
-                newClient->setNickName(nickname);
-                this->registeredClients.push_back(newClient);
-                this->sendData(clientSocket, "NICK :Nickname accepted\r\n");
-            }
-        }
+        cmd = new Nick(this);
     } else if (command == "JOIN") {
-        if (commandPart.size() < 2) {
-            this->sendData(clientSocket, "ERROR :Channel name required\r\n");
-        } else {
-            std::string channelName = commandPart[1];
-            std::string channelPassword = "";
-            if (commandPart.size() == 3) {
-                std::string password = commandPart[2];
-            }
-            bool channelExists = false;
-            for (size_t i = 0; i < this->channels.size(); i++) {
-                if (this->channels[i]->getNameChannel() == channelName) {
-                    channelExists = true;
-                    break;
-                }
-            }
-            if (channelExists) {
-                // Add a new client to a channel exists
-                this->getChannel(channelName)->addUser(this->registeredClients[this->getClientIndex(clientSocket)]);
-            } else {
-                // Create a new channel
-                Channel *channel;
-                if (channelPassword != "") {
-                    channel = new Channel(this, channelName, password);
-                } else {
-                    channel = new Channel(this, channelName);
-                }
-                this->addChannel(channel);
-                // Add a new client to a channel exists
-                this->getChannel(channelName)->addUser(this->registeredClients[this->getClientIndex(clientSocket)]);
-            }
-        }
+        cmd = new Join(this);
+    } else {
+        this->sendData(clientSocket, "Error :Command not found\r\n");
+        return;
     }
+    cmd->execute(clientSocket, args);
 };
 
 void Server::addChannel(Channel *channel) {
@@ -239,6 +176,10 @@ Channel *Server::getChannel(std::string channelName) {
         }
     }
     return NULL;
+}
+
+std::vector<Channel *> Server::getChannels() {
+    return this->channels;
 }
 
 int Server::getClientIndex(int clientSocket) {

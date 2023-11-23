@@ -10,9 +10,7 @@ class Channel;
 class CommandHandler {
 protected:
     Server *server;
-    std::string command;
     std::vector<std::string> args;
-    std::string message;
 
 public:
     CommandHandler();
@@ -21,11 +19,36 @@ public:
     virtual void execute(int clientSocket, std::vector<std::string> args) = 0;
 };
 
+// Pass class to handle PASS command
 class Pass : public CommandHandler {
 public:
-    Pass(Server *Server);
+    Pass(Server *server);
     ~Pass();
-    void execute(int clientSocket, std::vector<std::string> args); 
+    void execute(int clientSocket, std::vector<std::string> args);
 };
+
+// Nick class to handle NICK command
+class Nick : public CommandHandler {
+public:
+    Nick(Server *server);
+    ~Nick();
+    void execute(int clientSocket, std::vector<std::string> args);
+};
+
+// Join class to handle JOIN command
+class Join : public CommandHandler {
+public:
+    Join(Server *server);
+    ~Join();
+    void execute(int clientSocket, std::vector<std::string> args);
+};
+
+// User class to handle USER command
+// class User : public CommandHandler {
+// public:
+//     User(Server *server);
+//     ~User();
+//     void execute(int clientSocket, std::vector<std::string> args);
+// };
 
 #endif

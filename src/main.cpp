@@ -6,9 +6,9 @@ void handleSignal(int signal) {
     if (signal == SIGINT) {
         for (size_t i = 0; i < server.getClientFDs().size(); i++) {
             int socket = server.getClientFDs()[i];
-            server.sendData(socket, "Server closed");
+            server.sendData(socket, "Server closed\r\n");
         }
-        close(server.getServerSocket());
+        close(server.getSocket());
         exit(1);
     }
 }

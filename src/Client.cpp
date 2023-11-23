@@ -4,6 +4,9 @@ Client::Client(Server *server, int fd) : server(server), fd(fd) {}
 
 Client::~Client(){};
 
+Server *Client::getServer(void) {
+    return this->server;
+}
 int Client::getFD(void) {
     return this->fd;
 }
