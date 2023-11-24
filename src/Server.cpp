@@ -3,6 +3,8 @@
 Server::Server(){};
 Server::Server(int port, std::string password) : port(port), password(password) {
     this->startTime = getCurrentTime();
+    this->m_nbrClients = 0;
+    this->m_nbrConnections = 0;
 };
 
 std::vector<Client *> Server::getRegisteredClients(void) {
@@ -22,9 +24,6 @@ std::string Server::getPassword(void) {
 }
 
 Server::~Server() {
-    for (size_t i = 0; i < this->registeredClients.size(); i++) {
-        delete this->registeredClients[i];
-    }
     for (size_t i = 0; i < this->channels.size(); i++) {
         delete this->channels[i];
     }
@@ -37,7 +36,8 @@ void Server::setNonBlocking() {
 }
 
 void Server::setPollFds(void) {
-    this->pollFDs.clear();
+    if (this->pollFDs.size() > 0)
+        this->pollFDs.clear();
     struct pollfd serverPollFD;
     serverPollFD.fd = this->serverSocket;
     serverPollFD.events = POLLIN;
@@ -55,15 +55,16 @@ void Server::waitEvents(void) {
     if (pollResult > 0) {
         for (size_t i = 0; i < this->pollFDs.size(); i++) {
             // If revents == 0 no events occurred
-            if (this->pollFDs[i].revents == 0)
-                continue;
-            // Handle event on socket server
-            if (i == 0)
-                this->acceptConnection();
-            // Handle event on socket clients
-            else if (i > 0) {
-                this->receiveData(this->pollFDs[i].fd);
+            if (this->pollFDs[i].revents & POLLIN) {
+                // Handle event on socket server
+                if (i == 0)
+                    this->acceptConnection();
+                // Handle event on socket clients
+                else if (i > 0) {
+                    this->receiveData(this->pollFDs[i].fd);
+                }
             }
+            
         }
     } else if (pollResult < 0) {
         throw std::runtime_error("ERROR :Waiting connections failed");
@@ -84,6 +85,10 @@ void Server::acceptConnection(void) {
     if (DEBUG) {
         std::cout << "New connection fd: " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
     }
+    int i = this->m_getNbrConnections();
+    Client& client = this->m_client[i - 1];
+    client.m_setSocket(clientSocket);
+    ft_guide(client);
 }
 
 void Server::receiveData(int clientSocket) {
@@ -103,13 +108,21 @@ void Server::receiveData(int clientSocket) {
             message.append(std::string(buffer, bytesRead));
         }
     }
-    this->handleMessage(message, clientSocket);
+    for (int i = 0; i < this->m_getNbrConnections(); i++) {
+        if (this->m_client[i].m_getSocket() == clientSocket) {
+            Client &client = this->m_client[i];
+            client.m_setInput(message);
+            get_input(*this, client);
+            break;
+        }
+    }
 }
 
 void Server::addClientSocket(int clientSocket) {
     this->clientFDs.push_back(clientSocket);
     this->setNonBlocking();
     this->setPollFds();
+    this->m_nbrConnections++;
 }
 
 void Server::delClientSocket(int clientSocket) {
@@ -119,6 +132,14 @@ void Server::delClientSocket(int clientSocket) {
     }
     this->setNonBlocking();
     this->setPollFds();
+    this->m_nbrConnections--;
+    for (int i = 0; i < this->m_getNbrConnections(); i++) {
+        if (this->m_client[i].m_getSocket() == clientSocket) {
+            Client &client = this->m_client[i];
+            reset_data(client);
+            break;
+        }
+    }
     close(clientSocket);
 }
 
@@ -129,30 +150,6 @@ void Server::sendData(int clientSocket, std::string message) {
     }
 }
 
-void Server::handleMessage(std::string message, int clientSocket) {
-    trimEndOfLine(message);
-    std::vector<std::string> args = splitString(message, ' ');
-    if (DEBUG) {
-        std::cout << "Args :";
-        printVector(args);
-    }
-    if (args.size() == 0) {
-        return;
-    }
-    std::string command = args[0];
-    CommandHandler *cmd = NULL;
-    if (command == "PASS") {
-        cmd = new Pass(this);
-    } else if (command == "NICK") {
-        cmd = new Nick(this);
-    } else if (command == "JOIN") {
-        cmd = new Join(this);
-    } else {
-        this->sendData(clientSocket, "Error :Command not found\r\n");
-        return;
-    }
-    cmd->execute(clientSocket, args);
-};
 
 void Server::addChannel(Channel *channel) {
     this->channels.push_back(channel);
@@ -184,7 +181,7 @@ std::vector<Channel *> Server::getChannels() {
 
 int Server::getClientIndex(int clientSocket) {
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
-        if (this->registeredClients[i]->getFD() == clientSocket) {
+        if (this->registeredClients[i]->m_getSocket() == clientSocket) {
             return (int)i;
         }
     }
@@ -193,7 +190,7 @@ int Server::getClientIndex(int clientSocket) {
 
 Client *Server::getClient(int clientSocket) {
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
-        if (this->registeredClients[i]->getFD() == clientSocket) {
+        if (this->registeredClients[i]->m_getSocket() == clientSocket) {
             return this->registeredClients[i];
         }
     }
@@ -236,4 +233,31 @@ void Server::start(void) {
     while (true) {
         this->waitEvents();
     }
+}
+
+/* Number Clients */
+void	Server::m_addClient(void)
+{
+	this->m_nbrClients++;
+}
+
+int	Server::m_getNbrClients(void) const
+{
+	return (this->m_nbrClients);
+}
+
+/* Number connections */
+void		Server::m_connect(void)
+{
+	this->m_nbrConnections++;
+}
+
+void		Server::m_disconnect(void)
+{
+	this->m_nbrConnections--;
+}
+
+int	Server::m_getNbrConnections(void) const
+{
+	return (this->m_nbrConnections);
 }

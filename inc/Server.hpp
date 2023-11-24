@@ -1,11 +1,12 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#define MAX_CLIENTS 32
+
 #include "irc.hpp"
 
 class Client;
 class Channel;
-class CommandHandler;
 
 class Server {
 private:
@@ -20,8 +21,16 @@ private:
     std::vector<Client *> admins;
     void setNonBlocking();
     void setPollFds(void);
+    int m_nbrClients;
+    int m_nbrConnections;
 
 public:
+    Client m_client[MAX_CLIENTS];
+    void m_connect(void);
+    void m_addClient(void);
+    int			m_getNbrClients(void) const;
+	void		m_disconnect(void);
+	int			m_getNbrConnections(void) const;
     Server();
     Server(int port, std::string password);
     ~Server();
@@ -35,7 +44,6 @@ public:
     void sendData(int clientSocket, std::string message);
     void addClientSocket(int clientSocket);
     void delClientSocket(int clientSocket);
-    void handleMessage(std::string message, int clientSocket);
     void addChannel(Channel *channel);
     void delChannel(std::string channelName);
     Channel *getChannel(std::string channelName);

@@ -1,4 +1,4 @@
-#include "irc.hpp"
+#include "../inc/irc.hpp"
 
 Channel::Channel() {
     this->nameChannel = "";
@@ -100,7 +100,7 @@ void Channel::addUser(Client *client) {
     }
     // Check if the user is already in the channel
     for (size_t i = 0; i < this->users.size(); i++) {
-        if (this->users[i]->getNickName() == client->getNickName()) {
+        if (this->users[i]->m_getNickName() == client->m_getNickName()) {
             return;
         }
     }
@@ -109,7 +109,7 @@ void Channel::addUser(Client *client) {
 
 void Channel::kickUser(Client *client) {
     for (size_t i = 0; i < this->users.size(); i++) {
-        if (this->users[i]->getNickName() == client->getNickName()) {
+        if (this->users[i]->m_getNickName() == client->m_getNickName()) {
             this->users.erase(this->users.begin() + i);
             return;
         }
@@ -117,17 +117,17 @@ void Channel::kickUser(Client *client) {
 }
 
 void Channel::kickUser(Client *client, std::string reason) {
-    this->server->sendData(client->getFD(), "KICK " + this->nameChannel + " " + client->getNickName() + " :" + reason + "\r\n");
+    this->server->sendData(client->m_getSocket(), "KICK " + this->nameChannel + " " + client->m_getNickName() + " :" + reason + "\r\n");
     this->kickUser(client);
 }
 
 void Channel::invite(Client *src, Client *target) {
-    this->server->sendData(target->getFD(), "INVITE " + src->getNickName() + " " + this->nameChannel + "\r\n");
+    this->server->sendData(target->m_getSocket(), "INVITE " + src->m_getNickName() + " " + this->nameChannel + "\r\n");
 }
 
 bool Channel::isAdmin(Client *client) {
     for (size_t i = 0; i < this->admins.size(); i++) {
-        if (this->admins[i]->getNickName() == client->getNickName()) {
+        if (this->admins[i]->m_getNickName() == client->m_getNickName()) {
             return true;
         }
     }
