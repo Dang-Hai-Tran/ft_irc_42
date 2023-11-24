@@ -45,6 +45,7 @@ void	get_input(Server& server, Client& client)
 
 		std::string	cmd = str.substr(0, m);
 		cmd = ft_delete_space(cmd);
+		std::cout << "[" << cmd << "]" << std::endl;
 		if (cmd[0] == '/' && cmd[1])
 		{
 			client.m_setInput(cmd);

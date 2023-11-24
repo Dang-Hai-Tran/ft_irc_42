@@ -7,7 +7,9 @@ void	ft_command_login(Server& server, Client& client)
 	if (parameter == "" || ft_nbrSpace(parameter) != 0)
 		return (error_syntax(client));
 
+	std::cout << "inside" << std::endl;
 	int	id = ft_find_username(server, parameter);
+	std::cout << "id = " << id << std::endl;
 	if (id == 0)
 	{
 		ft_send(client, 4, "(!) This account name never existed");

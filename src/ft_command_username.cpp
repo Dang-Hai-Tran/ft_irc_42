@@ -24,6 +24,7 @@ bool	ft_check_username(Server& server, Client& client, std::string userName)
 {
 	int	id = ft_find_username(server, userName);
 
+	std::cout << "id = " << id << std::endl;
 	if (id == 0)
 	{
 		client.m_setUserName(userName);
@@ -103,6 +104,7 @@ void	created_successfully(Server& server, Client& client)
 	// update status
 	if (client.m_getStatusS())
 		return ;
+	server.getRegisteredClients().push_back(&client);
 	server.m_addClient();
 	client.m_setID(server.m_getNbrClients());
 	if (client.m_getID() == 1)

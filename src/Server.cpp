@@ -41,11 +41,13 @@ void Server::setPollFds(void) {
     struct pollfd serverPollFD;
     serverPollFD.fd = this->serverSocket;
     serverPollFD.events = POLLIN;
+    serverPollFD.revents = 0;
     this->pollFDs.push_back(serverPollFD);
     for (size_t i = 0; i < this->clientFDs.size(); i++) {
         struct pollfd clientPollFD;
         clientPollFD.fd = this->clientFDs[i];
         clientPollFD.events = POLLIN;
+        clientPollFD.revents = 0;
         this->pollFDs.push_back(clientPollFD);
     }
 }
@@ -85,8 +87,8 @@ void Server::acceptConnection(void) {
     if (DEBUG) {
         std::cout << "New connection fd: " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
     }
-    int i = this->m_getNbrConnections();
-    Client& client = this->m_client[i - 1];
+    int i = this->m_getNbrClients();
+    Client& client = this->m_client[i];
     client.m_setSocket(clientSocket);
     ft_guide(client);
 }
@@ -132,14 +134,15 @@ void Server::delClientSocket(int clientSocket) {
     }
     this->setNonBlocking();
     this->setPollFds();
-    this->m_nbrConnections--;
     for (int i = 0; i < this->m_getNbrConnections(); i++) {
         if (this->m_client[i].m_getSocket() == clientSocket) {
             Client &client = this->m_client[i];
             reset_data(client);
+            std::cout << "--> RESET: " << client.m_getUserName() << std::endl;
             break;
         }
     }
+    this->m_nbrConnections--;
     close(clientSocket);
 }
 

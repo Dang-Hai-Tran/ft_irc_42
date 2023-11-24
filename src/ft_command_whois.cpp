@@ -14,14 +14,16 @@
 
 int	ft_find_username(Server& server, std::string& userName)
 {
-	int	i(0);
-	int	nb_clients = server.m_getNbrClients();
+	size_t	i(0);
+	// int	nb_clients = server.m_getNbrClients();
 
-	while (i < nb_clients)
+	std::cout << "Total: " << server.getRegisteredClients().size() << std::endl;
+	while (i < server.getRegisteredClients().size())
 	{
-		std::string un = server.m_client[i].m_getUserName();
+		Client* client = server.getRegisteredClients()[i];
+		std::string un = client->m_getUserName();
 		if (un == userName)
-			return (i + 1);
+			return (client->m_getID());
 		i++;
 	}
 	return (0);
