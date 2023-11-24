@@ -67,7 +67,6 @@ class	Client
 		// connected
 		void		m_setConnected(bool status);
 		bool		m_isConnected(void) const;
-	
 	private:
 		int			m_socket;
 		int			m_id;
