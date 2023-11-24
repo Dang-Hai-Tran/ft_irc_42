@@ -41,11 +41,13 @@ void Server::setPollFds(void) {
     struct pollfd serverPollFD;
     serverPollFD.fd = this->serverSocket;
     serverPollFD.events = POLLIN;
+    serverPollFD.revents = 0;
     this->pollFDs.push_back(serverPollFD);
     for (size_t i = 0; i < this->clientFDs.size(); i++) {
         struct pollfd clientPollFD;
         clientPollFD.fd = this->clientFDs[i];
         clientPollFD.events = POLLIN;
+        clientPollFD.revents = 0;
         this->pollFDs.push_back(clientPollFD);
     }
 }
@@ -64,7 +66,6 @@ void Server::waitEvents(void) {
                     this->receiveData(this->pollFDs[i].fd);
                 }
             }
-            
         }
     } else if (pollResult < 0) {
         throw std::runtime_error("ERROR :Waiting connections failed");
@@ -86,7 +87,7 @@ void Server::acceptConnection(void) {
         std::cout << "New connection fd: " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
     }
     int i = this->m_getNbrConnections();
-    Client& client = this->m_client[i - 1];
+    Client &client = this->m_client[i - 1];
     client.m_setSocket(clientSocket);
     ft_guide(client);
 }
@@ -149,7 +150,6 @@ void Server::sendData(int clientSocket, std::string message) {
         throw std::runtime_error("ERROR :Sending data to client");
     }
 }
-
 
 void Server::addChannel(Channel *channel) {
     this->channels.push_back(channel);
@@ -236,28 +236,23 @@ void Server::start(void) {
 }
 
 /* Number Clients */
-void	Server::m_addClient(void)
-{
-	this->m_nbrClients++;
+void Server::m_addClient(void) {
+    this->m_nbrClients++;
 }
 
-int	Server::m_getNbrClients(void) const
-{
-	return (this->m_nbrClients);
+int Server::m_getNbrClients(void) const {
+    return (this->m_nbrClients);
 }
 
 /* Number connections */
-void		Server::m_connect(void)
-{
-	this->m_nbrConnections++;
+void Server::m_connect(void) {
+    this->m_nbrConnections++;
 }
 
-void		Server::m_disconnect(void)
-{
-	this->m_nbrConnections--;
+void Server::m_disconnect(void) {
+    this->m_nbrConnections--;
 }
 
-int	Server::m_getNbrConnections(void) const
-{
-	return (this->m_nbrConnections);
+int Server::m_getNbrConnections(void) const {
+    return (this->m_nbrConnections);
 }
