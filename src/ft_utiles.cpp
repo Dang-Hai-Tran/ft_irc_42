@@ -58,7 +58,7 @@ int	ft_nbrSpace(const std::string& str)
 	return (nbr_space);
 }
 
-void	error_syntax(Client& client)
+void	error_syntax(Client* client)
 {
 	ft_send(client, 4, "(!) Wrong syntax");
 	return ;

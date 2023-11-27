@@ -1,8 +1,8 @@
 #include "../inc/irc.hpp"
 
-void	ft_command_outside(Server& server, Client& client)
+void	ft_command_outside(Server& server, Client* client)
 {
-	std::string	cmd = client.m_getCmd();
+	std::string	cmd = client->m_getCmd();
 
 	if (cmd == "HELP")
 		ft_command_help(client);
@@ -16,49 +16,49 @@ void	ft_command_outside(Server& server, Client& client)
 		ft_command_nickname(server, client);
 	else if (cmd == "PRIVMSG")
 		ft_command_privmsg(server, client);
-	else if (client.m_getStatusC() == false)
+	else if (client->m_getStatusC() == false)
 		ft_send(client, 4, "(!) This command is invalid");
 }
 
-void	reset_data(Client& client)
+void	reset_data(Client* client)
 {
-	client.m_setSocket(0);
-	client.m_setConnected(false);
-	client.m_setStatusS(false);
-	client.m_setStatusC(false);
-	client.m_setInput("");
-	client.m_setCmd("");
-	client.m_setParameter("");
+	client->m_setSocket(0);
+	client->m_setConnected(false);
+	client->m_setStatusS(false);
+	client->m_setStatusC(false);
+	client->m_setInput("");
+	client->m_setCmd("");
+	client->m_setParameter("");
 }
 
-void	ft_guide(Client& client)
+void	ft_guide(Client* client)
 {
 	ft_send(client, 3, "(i) Use /HELP for instructions");
-	if (client.m_isConnected() == false)
+	if (client->m_isConnected() == false)
 	{
-		ft_send(client, 3, "(i) You need to login with /PASSWORD");
-		ft_send(client, 3, "Command: /PASSWORD server_password");
+		ft_send(client, 3, "(i) You need to login with /PASS");
+		ft_send(client, 3, "Command: /PASS server_password");
 	}
-	else if (client.m_getStatusS() == false)
+	else if (client->m_getStatusS() == false)
 	{
 		ft_send(client, 3, "(i) Use /LOGIN to login");
 		ft_send(client, 3, "Command: /LOGIN username");
 	}
 }
 
-void	ft_run(Server& server, Client& client)
+void	ft_run(Server& server, Client* client)
 {
-	std::string	cmd = client.m_getCmd();
+	std::string	cmd = client->m_getCmd();
 
 	if (cmd == "HELP")
 		ft_command_help(client);
-	else if (client.m_isConnected() == false)
-		ft_requesPassword(server, client);
-	else if (client.m_getStatusS() == false)
-		ft_requesUserName(server, client);
-	else if (client.m_getNickName() == "")
-		ft_requesNickName(server, client);
-	else if (client.m_getStatusC() == false)
+	else if (client->m_isConnected() == false)
+		ft_requestPassword(server, client);
+	else if (client->m_getStatusS() == false)
+		ft_requestUserName(server, client);
+	else if (client->m_getNickName() == "")
+		ft_requestNickName(server, client);
+	else if (client->m_getStatusC() == false)
 		ft_command_outside(server, client);
 	else
 		std::cout << "Inside a channel !!!" << std::endl;

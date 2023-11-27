@@ -12,11 +12,11 @@
 
 #include "../inc/irc.hpp"
 
-void	ft_command_who(Server& server, Client& client)
+void	ft_command_who(Server& server, Client* client)
 {
 	int	i(0);
-	int	nb_clients = server.m_getNbrClients();
-	std::string	parameter = client.m_getParameter();
+	int	nb_clients = server.getRegisteredClients().size();
+	std::string	parameter = client->m_getParameter();
 
 	if (parameter != "")
 		return (error_syntax(client));
@@ -24,17 +24,17 @@ void	ft_command_who(Server& server, Client& client)
 	ft_send(client, 4, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]");
 	while (i < nb_clients)
 	{
-		Client& user = server.m_client[i];
-		std::string id = int_to_string(user.m_getID());
+		Client* user = server.getRegisteredClients()[i];
+		std::string id = int_to_string(user->m_getID());
 		ft_send(client, 2, "[ " + id + " | ");
 
-		if (user.m_getStatusS())
+		if (user->m_getStatusS())
 			ft_send(client, 1, "ON ]: ");
 		else
 			ft_send(client, 1, "OFF ]: ");
 
-		ft_send(client, 1, user.m_getNickName() + " ");
-		ft_send(client, 3, "(" + user.m_getRealName() + ")");
+		ft_send(client, 1, user->m_getNickName() + " ");
+		ft_send(client, 3, "(" + user->m_getRealName() + ")");
 		i++;
 	}
 }

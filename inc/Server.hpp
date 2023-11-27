@@ -21,22 +21,20 @@ private:
     std::vector<Client *> admins;
     void setNonBlocking();
     void setPollFds(void);
-    int m_nbrClients;
-    int m_nbrConnections;
+
+    // xuluu
+    std::vector<Client *>   m_listConnection;
 
 public:
-    Client m_client[MAX_CLIENTS];
-    void m_connect(void);
-    void m_addClient(void);
-    int			m_getNbrClients(void) const;
-	void		m_disconnect(void);
-	int			m_getNbrConnections(void) const;
+    // xuluu
+    std::vector<Client *>   &m_getListConnection(void);
+
     Server();
     Server(int port, std::string password);
     ~Server();
     int getSocket(void);
     std::string getPassword(void);
-    std::vector<Client *> getRegisteredClients(void);
+    std::vector<Client *> &getRegisteredClients(void);
     std::vector<int> getClientFDs(void);
     void waitEvents(void);
     void acceptConnection(void);

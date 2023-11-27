@@ -10,6 +10,7 @@ class	Client
 {
 	public:
 		Client(void);
+		Client(Client& objet);
 		~Client(void);
 
 		Client&	operator=(const Client& objet);

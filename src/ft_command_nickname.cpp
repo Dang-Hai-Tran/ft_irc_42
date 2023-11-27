@@ -12,37 +12,51 @@
 
 #include "../inc/irc.hpp"
 
-bool	ft_nickName_exist(Server & server, Client & client, const std::string & nickName)
+int	ft_find_username(Server& server, std::string& userName)
 {
 	int	i(0);
-	int	nb_clients = server.m_getNbrClients();
-	int	id = client.m_getID();
+	int	nb_clients = server.getRegisteredClients().size();
 
 	while (i < nb_clients)
 	{
-		std::string	nn = server.m_client[i].m_getNickName();
-		if (nn == nickName)
-		{
-			if (i == id - 1)
-				return (0);
-			ft_send(client, 4, "(!) NICKNAME: [" + nickName + "] has been used");
-			return (1);
-		}
+		Client*	client = server.getRegisteredClients()[i];
+		std::string un = client->m_getUserName();
+		if (un == userName)
+			return (client->m_getID());
 		i++;
 	}
 	return (0);
 }
 
-void	ft_command_nickname(Server& server, Client& client)
+int	ft_find_nickname(Server& server, std::string& nickName)
 {
-	std::string	parameter = client.m_getParameter();
+	int	i(0);
+	int	nb_clients = server.getRegisteredClients().size();
+
+	while (i < nb_clients)
+	{
+		Client*	client = server.getRegisteredClients()[i];
+		std::string nn = client->m_getNickName();
+		if (nn == nickName)
+			return (client->m_getID());
+		i++;
+	}
+	return (0);
+}
+
+void	ft_command_nickname(Server& server, Client* client)
+{
+	std::string	parameter = client->m_getParameter();
 
 	if (parameter == "" || ft_nbrSpace(parameter) != 0)
 		return (error_syntax(client));
 
-	if (ft_nickName_exist(server, client, parameter))
+	int	id = ft_find_nickname(server, parameter);
+	if (id != 0)
+	{
+		ft_send(client, 4, "(!) NICKNAME: [" + parameter + "] has been used");
 		return ;
-	
-	client.m_setNickName(parameter);
+	}
+	client->m_setNickName(parameter);
 	ft_send(client, 4, "(✓) You're now know as [" + parameter + "]");
 }

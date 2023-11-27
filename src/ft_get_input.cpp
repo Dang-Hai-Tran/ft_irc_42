@@ -26,10 +26,9 @@ int	ft_nbrNewLine(std::string& str)
 	return (nbr_newline);
 }
 
-void	get_input(Server& server, Client& client)
+void	get_input(Server& server, Client* client)
 {
-	// std::cout << "Input: " << str << std::endl;
-	std::string str = client.m_getInput();
+	std::string str = client->m_getInput();
 
 	if (ft_isStringEmpty(str) || str[0] == '\n')
 		return ;
@@ -44,21 +43,21 @@ void	get_input(Server& server, Client& client)
 			m++;
 
 		std::string	cmd = str.substr(0, m);
-		cmd = ft_delete_space(cmd);
-		std::cout << "[" << cmd << "]" << std::endl;
+		// std::cout << "[" << cmd << "]" << std::endl;
 		if (cmd[0] == '/' && cmd[1])
 		{
-			client.m_setInput(cmd);
+			cmd = ft_delete_space(cmd);
+			client->m_setInput(cmd);
 			get_command_parameter(server, client);
 		}
-		else if (client.m_getStatusC() == false)
+		else if (client->m_getStatusC() == false)
 		{
 			ft_send(client, 4, "(!) Command start with '/'");
 			ft_send(client, 1, "\n--------------------------------------------------\n");
 		}
 		else
 		{
-			ft_send(client, 4, "[" + client.m_getNickName() + "]");
+			ft_send(client, 4, "[" + client->m_getNickName() + "]");
 			ft_send(client, 4, cmd);
 		}
 

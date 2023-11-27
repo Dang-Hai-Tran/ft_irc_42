@@ -13,7 +13,7 @@ void	ft_requestPassword(Server& server, Client* client)
 	ft_command_password(server, client);
 }
 
-void	ft_requestUserName(Server& server, Client* client)
+void	ft_requestUserName(Server& server, Client* &client)
 {
 	std::string cmd = client->m_getCmd();
 

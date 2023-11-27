@@ -12,17 +12,17 @@
 
 #include "../inc/irc.hpp"
 
-void	ft_conversation(Server& server, Client& client, int start, int id)
+void	ft_conversation(Server& server, Client* client, int start, int id)
 {
-	std::string	parameter = client.m_getParameter();
+	std::string	parameter = client->m_getParameter();
 	std::string	message = parameter.substr(start , parameter.size());
 
 	if (message.size() < 2 || message[0] != ':')
 		return (error_syntax(client));
 	message = parameter.substr(start + 1, parameter.size());
 
-	std::string	sender = client.m_getUserName();
-	Client& recipient = server.m_client[id];
+	std::string	sender = client->m_getUserName();
+	Client* recipient = server.getRegisteredClients()[id];
 
 	ft_send(recipient, 4, "");
 	ft_send(recipient, 4, "(!) You have a message from: " + sender);
@@ -30,9 +30,9 @@ void	ft_conversation(Server& server, Client& client, int start, int id)
 	ft_send(recipient, 3, message + "\n");
 }
 
-void	ft_command_privmsg(Server& server, Client& client)
+void	ft_command_privmsg(Server& server, Client* client)
 {
-	std::string	parameter = client.m_getParameter();
+	std::string	parameter = client->m_getParameter();
 
 	if (parameter == "" || ft_nbrSpace(parameter) < 1)
 		return (error_syntax(client));
@@ -48,7 +48,7 @@ void	ft_command_privmsg(Server& server, Client& client)
 		ft_send(client, 4, "(!) User does not exist");
 		return ;
 	}
-	else if (id == client.m_getID())
+	else if (id == client->m_getID())
 		return ;
 	ft_conversation(server, client, i + 1, id - 1);
 }

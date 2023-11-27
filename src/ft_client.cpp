@@ -34,6 +34,13 @@ Client::Client(void)
 	this->m_adminChannel = false;
 }
 
+Client::Client(Client& objet)
+{
+	if (this == &objet)
+		return ;
+	*this = objet;
+}
+
 Client::~Client(void) {}
 
 Client&	Client::operator=(const Client& objet)
