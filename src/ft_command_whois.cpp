@@ -81,9 +81,6 @@ void	ft_command_whois(Server& server, Client* client)
 	if (parameter == "" || ft_nbrSpace(parameter) != 0)
 		return (error_syntax(client));
 
-	if (is_adminServer(client) == false)
-		return ;
-
 	int	id = ft_find_nickname(server, parameter);
 	if (id == 0)
 	{

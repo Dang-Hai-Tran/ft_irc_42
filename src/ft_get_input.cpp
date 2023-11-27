@@ -53,6 +53,7 @@ void	get_input(Server& server, Client* client)
 		else if (client->m_getStatusC() == false)
 		{
 			ft_send(client, 4, "(!) Command start with '/'");
+			ft_send(client, 4, "(i) Use /HELP for instructions");
 			ft_send(client, 1, "\n--------------------------------------------------\n");
 		}
 		else

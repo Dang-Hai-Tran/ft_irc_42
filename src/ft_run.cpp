@@ -17,7 +17,10 @@ void	ft_command_outside(Server& server, Client* client)
 	else if (cmd == "PRIVMSG")
 		ft_command_privmsg(server, client);
 	else if (client->m_getStatusC() == false)
+	{
 		ft_send(client, 4, "(!) This command is invalid");
+		ft_send(client, 4, "(i) Use /HELP for instructions");
+	}
 }
 
 void	reset_data(Client* client)
@@ -33,10 +36,9 @@ void	reset_data(Client* client)
 
 void	ft_guide(Client* client)
 {
-	ft_send(client, 3, "(i) Use /HELP for instructions");
 	if (client->m_isConnected() == false)
 	{
-		ft_send(client, 3, "(i) You need to login with /PASS");
+		ft_send(client, 3, "(i) Use /PASS to access the server");
 		ft_send(client, 3, "Command: /PASS server_password");
 	}
 	else if (client->m_getStatusS() == false)

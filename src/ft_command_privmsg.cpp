@@ -21,7 +21,7 @@ void	ft_conversation(Server& server, Client* client, int start, int id)
 		return (error_syntax(client));
 	message = parameter.substr(start + 1, parameter.size());
 
-	std::string	sender = client->m_getUserName();
+	std::string	sender = client->m_getNickName();
 	Client* recipient = server.getRegisteredClients()[id];
 
 	ft_send(recipient, 4, "");

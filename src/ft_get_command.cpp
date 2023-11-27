@@ -49,6 +49,7 @@ void	get_command_parameter(Server& server, Client* client)
 	if (is_upperCase(cmd) == false)
 	{
 		ft_send(client, 4, "(!) Command must be capitalized");
+		ft_send(client, 4, "(i) Use /HELP for instructions");
 		return ;
 	}
 	client->m_setCmd(cmd);

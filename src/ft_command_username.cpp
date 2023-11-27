@@ -89,16 +89,7 @@ std::string	get_parameter(std::string& str)
 void	created_successfully(Server& server, Client* client)
 {
 	std::string	userName = client->m_getUserName();
-
 	ft_send(client, 4, "(✓) Helloooooo [" + userName + "] !!!");
-	
-	// delete
-	ft_send(client, 4, "realname = " + client->m_getRealName());
-	bool	mode = client->m_getMode();
-	if (mode == 0)
-		ft_send(client, 4, "Mode: Normal");
-	else
-		ft_send(client, 4, "Mode: Invisible");
 
 	// update status
 	if (client->m_getStatusS())

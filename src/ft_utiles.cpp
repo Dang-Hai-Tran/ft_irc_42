@@ -61,6 +61,7 @@ int	ft_nbrSpace(const std::string& str)
 void	error_syntax(Client* client)
 {
 	ft_send(client, 4, "(!) Wrong syntax");
+	ft_send(client, 3, "(i) Use /HELP for instructions");
 	return ;
 }
 
