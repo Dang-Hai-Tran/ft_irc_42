@@ -26,6 +26,27 @@ int	ft_nbrNewLine(std::string& str)
 	return (nbr_newline);
 }
 
+void	ft_connection_with_nc(Server& server, Client* client, std::string& cmd)
+{
+	if (cmd[0] == '/' && cmd[1])
+	{
+		cmd = ft_delete_space(cmd);
+		client->m_setInput(cmd);
+		get_command_parameter(server, client);
+	}
+	else if (client->m_getStatusC() == false)
+	{
+		ft_send(client, 4, "(!) Command start with '/'");
+		ft_send(client, 4, "(i) Use /HELP for instructions");
+		ft_send(client, 1, "\n--------------------------------------------------\n");
+	}
+	else
+	{
+		ft_send(client, 4, "[" + client->m_getNickName() + "]");
+		ft_send(client, 4, cmd);
+	}
+}
+
 void	get_input(Server& server, Client* client)
 {
 	std::string str = client->m_getInput();
@@ -43,24 +64,25 @@ void	get_input(Server& server, Client* client)
 			m++;
 
 		std::string	cmd = str.substr(0, m);
-		// std::cout << "[" << cmd << "]" << std::endl;
-		if (cmd[0] == '/' && cmd[1])
+		// std::cout << cmd << std::endl;
+
+		// using IRSSI
+		if (cmd == "CAP LS\r")
+			client->m_setModeClient(true);
+		else if (client->m_usingIrssi())
 		{
-			cmd = ft_delete_space(cmd);
+			cmd = str.substr(0, cmd.size() - 1);
 			client->m_setInput(cmd);
-			get_command_parameter(server, client);
-		}
-		else if (client->m_getStatusC() == false)
-		{
-			ft_send(client, 4, "(!) Command start with '/'");
-			ft_send(client, 4, "(i) Use /HELP for instructions");
-			ft_send(client, 1, "\n--------------------------------------------------\n");
+			ft_irssi_get_input(server, client);
 		}
 		else
 		{
-			ft_send(client, 4, "[" + client->m_getNickName() + "]");
-			ft_send(client, 4, cmd);
+			ft_connection_with_nc(server, client, cmd);
 		}
+
+		// Wrong password
+		// if (client->m_isConnected() == false)
+		// 	return ;
 
 		str = str.substr(m + 1, str.size());
 		i++;

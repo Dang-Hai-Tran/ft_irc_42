@@ -44,7 +44,7 @@ int	ft_find_nickname(Server& server, std::string& nickName)
 	return (0);
 }
 
-void	ft_command_nickname(Server& server, Client* client)
+void	ft_command_nick(Server& server, Client* client)
 {
 	std::string	parameter = client->m_getParameter();
 
@@ -58,5 +58,5 @@ void	ft_command_nickname(Server& server, Client* client)
 		return ;
 	}
 	client->m_setNickName(parameter);
-	ft_send(client, 4, "(✓) You're now know as [" + parameter + "]");
+	// ft_send(client, 4, "(✓) You're now know as [" + parameter + "]");
 }

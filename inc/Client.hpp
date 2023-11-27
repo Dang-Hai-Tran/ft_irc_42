@@ -68,7 +68,11 @@ class	Client
 		// connected
 		void		m_setConnected(bool status);
 		bool		m_isConnected(void) const;
-	
+
+		// irssi
+		void		m_setModeClient(bool mode);
+		bool		m_usingIrssi(void) const;
+
 	private:
 		int			m_socket;
 		int			m_id;
@@ -81,6 +85,7 @@ class	Client
 		std::string	m_cmd;
 		std::string	m_parameter;
 		
+		bool		m_irssi;
 		bool		m_connected;
 		bool		m_statusS;
 		bool		m_statusC;

@@ -7,13 +7,13 @@ void	ft_command_outside(Server& server, Client* client)
 	if (cmd == "HELP")
 		ft_command_help(client);
 	else if (cmd == "USER")
-		ft_command_username(server, client);
+		ft_command_user(server, client);
 	else if (cmd == "WHO")
 		ft_command_who(server, client);
 	else if (cmd == "WHOIS")
 		ft_command_whois(server, client);
 	else if (cmd == "NICK")
-		ft_command_nickname(server, client);
+		ft_command_nick(server, client);
 	else if (cmd == "PRIVMSG")
 		ft_command_privmsg(server, client);
 	else if (client->m_getStatusC() == false)

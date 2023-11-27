@@ -1,6 +1,6 @@
 #include "../inc/irc.hpp"
 
-void	ft_command_password(Server& server, Client* client)
+void	ft_command_pass(Server& server, Client* client)
 {
 	std::string	parameter = client->m_getParameter();
 
@@ -12,8 +12,8 @@ void	ft_command_password(Server& server, Client* client)
 		ft_send(client, 4, "(!) Wrong password");
 		return ;
 	}
-	ft_send(client, 4, "|//////////////////////////////////////|");
-	ft_send(client, 4, "|//     Welcome to my server IRC     //|");
-	ft_send(client, 4, "|//////////////////////////////////////|");
+	// ft_send(client, 4, "|//////////////////////////////////////|\r");
+	// ft_send(client, 4, "|//     Welcome to my server IRC     //|\r");
+	// ft_send(client, 4, "|//////////////////////////////////////|\r");
 	client->m_setConnected(true);
 }

@@ -10,7 +10,7 @@ void	ft_requestPassword(Server& server, Client* client)
 		ft_send(client, 4, "Command: /PASS server_password");
 		return ;
 	}
-	ft_command_password(server, client);
+	ft_command_pass(server, client);
 }
 
 void	ft_requestUserName(Server& server, Client* &client)
@@ -20,7 +20,7 @@ void	ft_requestUserName(Server& server, Client* &client)
 	if (cmd == "LOGIN")
 		ft_command_login(server, client);
 	else if (cmd == "USER")
-		ft_command_username(server, client);
+		ft_command_user(server, client);
 	else
 	{
 		ft_send(client, 4, "(i) You need a USERNAME to continue the command !");
@@ -34,9 +34,9 @@ void	ft_requestNickName(Server& server, Client* client)
 	std::string cmd = client->m_getCmd();
 
 	if (cmd == "NICK")
-		ft_command_nickname(server, client);
+		ft_command_nick(server, client);
 	else if (cmd == "USER")
-		ft_command_username(server, client);
+		ft_command_user(server, client);
 	else
 	{
 		ft_send(client, 4, "(i) You need a NICKNAME to continue the command !");

@@ -25,6 +25,7 @@ Client::Client(void)
 	this->m_cmd = "";
 	this->m_parameter = "";
 
+	this->m_irssi = false;
 	this->m_connected = false;
 	this->m_statusS = false;
 	this->m_statusC = false;
@@ -58,6 +59,7 @@ Client&	Client::operator=(const Client& objet)
 		this->m_cmd = objet.m_getCmd();
 		this->m_parameter = objet.m_getParameter();
 
+		this->m_irssi = objet.m_usingIrssi();
 		this->m_connected = objet.m_isConnected();
 		this->m_statusS = objet.m_getStatusS();
 		this->m_statusC = objet.m_getStatusC();
@@ -222,4 +224,15 @@ void		Client::m_setConnected(bool status)
 bool		Client::m_isConnected(void) const
 {
 	return (this->m_connected);
+}
+
+/************************************************/
+void	Client::m_setModeClient(bool mode)
+{
+	this->m_irssi = mode;
+}
+
+bool	Client::m_usingIrssi(void) const
+{
+	return (this->m_irssi);
 }

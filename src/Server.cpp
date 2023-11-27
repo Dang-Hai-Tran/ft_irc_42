@@ -77,7 +77,7 @@ void    ft_add_connection(Server& server, int socket)
     Client* client = new Client;
     client->m_setSocket(socket);
     server.m_getListConnection().push_back(client);
-    ft_guide(client);
+    // ft_guide(client);
 }
 
 void Server::acceptConnection(void) {

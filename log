@@ -1,0 +1,6 @@
+<< CAP LS
+<< PASS 123
+<< NICK xluu
+<< USER xuluu xuluu localhost :Xuan tien LUU
+>> NICK 
+>> xuluu xuluu 001 :Welcome to the Localhost Network, xluu[!xuluu xuluu@Xuan tien LUU]

@@ -102,7 +102,7 @@ void	created_successfully(Server& server, Client* client)
 	client->m_setStatusS(true);
 }
 
-void	ft_command_username(Server& server, Client* client)
+void	ft_command_user(Server& server, Client* client)
 {
 	std::string	parameter = client->m_getParameter();
 	int	min_space = 3;
