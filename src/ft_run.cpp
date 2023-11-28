@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_run.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/28 17:19:03 by xuluu             #+#    #+#             */
+/*   Updated: 2023/11/28 17:19:05 by xuluu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/irc.hpp"
 
-void	ft_command_outside(Server& server, Client* client)
+void	ft_command_outside(Server& server, Client* &client)
 {
 	std::string	cmd = client->m_getCmd();
 
@@ -18,8 +30,8 @@ void	ft_command_outside(Server& server, Client* client)
 		ft_command_privmsg(server, client);
 	else if (client->m_getStatusC() == false)
 	{
-		ft_send(client, 4, "(!) This command is invalid");
-		ft_send(client, 4, "(i) Use /HELP for instructions");
+		ft_send(client, "(!) This command is invalid");
+		ft_send(client, "(i) Use /HELP for instructions");
 	}
 }
 
@@ -38,32 +50,44 @@ void	ft_guide(Client* client)
 {
 	if (client->m_isConnected() == false)
 	{
-		ft_send(client, 3, "(i) Use /PASS to access the server");
-		ft_send(client, 3, "Command: /PASS server_password");
+		ft_send(client, "(i) Use /PASS to access the server");
+		ft_send(client, "Command: /PASS server_password");
 	}
 	else if (client->m_getStatusS() == false)
 	{
-		ft_send(client, 3, "(i) Use /LOGIN to login");
-		ft_send(client, 3, "Command: /LOGIN username");
+		ft_send(client, "(i) Use /LOGIN to login");
+		ft_send(client, "Command: /LOGIN username");
 	}
 }
 
-void	ft_run(Server& server, Client* client)
+bool	ft_run(Server& server, Client* client)
 {
 	std::string	cmd = client->m_getCmd();
 
 	if (cmd == "HELP")
 		ft_command_help(client);
 	else if (client->m_isConnected() == false)
-		ft_requestPassword(server, client);
-	else if (client->m_getStatusS() == false)
-		ft_requestUserName(server, client);
+	{
+		if (!ft_requestPassword(server, client))
+			return (0);
+	}
 	else if (client->m_getNickName() == "")
-		ft_requestNickName(server, client);
+	{
+		if (!ft_requestNickName(server, client))
+			return (0);
+	}
+	else if (client->m_getStatusS() == false)
+	{
+		if (!ft_requestUserName(server, client))
+			return (0);
+	}
 	else if (client->m_getStatusC() == false)
 		ft_command_outside(server, client);
 	else
 		std::cout << "Inside a channel !!!" << std::endl;
-	ft_send(client, 1, "\n--------------------------------------------------\n");
+
+	std::cout << "2 --> " << client << std::endl;
+	ft_send(client, "\n--------------------------------------------------\n");
 	ft_guide(client);
+	return (1);
 }

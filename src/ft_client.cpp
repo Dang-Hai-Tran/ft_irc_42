@@ -30,7 +30,7 @@ Client::Client(void)
 	this->m_statusS = false;
 	this->m_statusC = false;
 
-	this->m_invisible = false;
+	this->m_invisible = true;
 	this->m_adminServer = false;
 	this->m_adminChannel = false;
 }

@@ -14,17 +14,13 @@
 
 void	ft_connected_successfully(Client* client)
 {
-	std::string	userName = client->m_getUserName();
 	std::string	nickName = client->m_getNickName();
-	std::string	host = client->m_getRealName();
-
-	std::string	text = ":localhost 001 " + nickName + " :Welcome to the IRC Network " + nickName + "!" + userName + "@" + host + "\r\n";
-	send(client->m_getSocket(), text.c_str(), text.size(), 0);
+	std::string	text = ":localhost 001 " + nickName + " :Welcome to the IRC Network";
+	ft_send(client, text);
 }
 
 void	ft_irssi_get_username(Server& server, Client* client)
 {
-	(void)server;
 	std::string	parameter = client->m_getParameter();
 	int	nbr_space = ft_nbrSpace(parameter);
 	int	compter(0);
@@ -38,14 +34,14 @@ void	ft_irssi_get_username(Server& server, Client* client)
 	}
 	std::string	userName = parameter.substr(0, i - 1);
 	client->m_setUserName(userName);
+	connected_successfully(server, client);
 
-	// created_successfully(server, client);
+	// connected_successfully(server, client);
 	ft_connected_successfully(client);
 }
 
 void	ft_irssi_get_realname(Server& server, Client* client)
 {
-	(void)server;
 	std::string	parameter = client->m_getParameter();
 
 	size_t	i = parameter.size() - 1;
@@ -60,9 +56,8 @@ void	ft_irssi_get_realname(Server& server, Client* client)
 	ft_irssi_get_username(server, client);
 }
 
-void	ft_irssi_get_input(Server& server, Client* client)
+bool	ft_irssi_get_input(Server& server, Client* client)
 {
-	(void)server;
 	std::string	str = client->m_getInput();
 
 	int	i(0);
@@ -75,15 +70,30 @@ void	ft_irssi_get_input(Server& server, Client* client)
 	client->m_setParameter(parameter);
 
 	if (cmd == "PASS")
+	{
 		ft_command_pass(server, client);
+		if (!client->m_isConnected())
+			return (0);
+	}
 	else if (cmd == "NICK")
+	{
 		ft_command_nick(server, client);
+		if (client->m_getNickName() == "")
+			return (0);
+	}
 	else if (cmd == "USER")
+	{
 		ft_irssi_get_realname(server, client);
+		if (client->m_getUserName() == "")
+			return (0);
+	}
+	else if (cmd == "WHOIS")
+		ft_command_whois(server, client);
 	else
 	{
 		std::cout << str << std::endl;
 		// std::cout << "--> cmd: " << cmd << std::endl;
 		// std::cout << "--> parameter: " << parameter << std::endl;
 	}
+	return (1);
 }

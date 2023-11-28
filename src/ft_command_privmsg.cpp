@@ -24,10 +24,10 @@ void	ft_conversation(Server& server, Client* client, int start, int id)
 	std::string	sender = client->m_getNickName();
 	Client* recipient = server.getRegisteredClients()[id];
 
-	ft_send(recipient, 4, "");
-	ft_send(recipient, 4, "(!) You have a message from: " + sender);
-	ft_send(recipient, 2, "[" + sender + "]: ");
-	ft_send(recipient, 3, message + "\n");
+	ft_send(recipient, "");
+	ft_send(recipient, "(!) You have a message from: " + sender);
+	ft_send(recipient, "[" + sender + "]: ");
+	ft_send(recipient, message + "\n");
 }
 
 void	ft_command_privmsg(Server& server, Client* client)
@@ -45,7 +45,7 @@ void	ft_command_privmsg(Server& server, Client* client)
 	int	id = ft_find_nickname(server, nickName);
 	if (id == 0)
 	{
-		ft_send(client, 4, "(!) User does not exist");
+		ft_send(client, "(!) User does not exist");
 		return ;
 	}
 	else if (id == client->m_getID())

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_utiles.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/28 17:19:22 by xuluu             #+#    #+#             */
+/*   Updated: 2023/11/28 17:19:25 by xuluu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/irc.hpp"
 
 /* Check string empty */
@@ -60,8 +72,8 @@ int	ft_nbrSpace(const std::string& str)
 
 void	error_syntax(Client* client)
 {
-	ft_send(client, 4, "(!) Wrong syntax");
-	ft_send(client, 3, "(i) Use /HELP for instructions");
+	ft_send(client, "(!) Wrong syntax");
+	ft_send(client, "(i) Use /HELP for instructions");
 	return ;
 }
 

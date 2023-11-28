@@ -24,22 +24,17 @@ bool	ft_check_username(Server& server, Client* client, std::string userName)
 {
 	int	id = ft_find_username(server, userName);
 
-	if (id == 0)
+	if (id != 0 && id != client->m_getID())
 	{
-		client->m_setUserName(userName);
-		return (1);
-	}
-	else if (id == client->m_getID())
-	{
-		if (client->m_getStatusS() == false)
+		Client*	user = server.getRegisteredClients()[id - 1];
+		if (user->m_getStatusS())
 		{
-			ft_send(client, 4, "(!) Use /LOGIN before use /USER");
-			return (0);
+			ft_send(client, "(!) USERNAME: [" + userName + "] has been used");
+			return (reset_data_username(client));
 		}
-		return (1);
 	}
-	ft_send(client, 4, "(!) USERNAME: [" + userName + "] has been used");
-	return (reset_data_username(client));
+	client->m_setUserName(userName);
+	return (1);
 }
 
 // 8: invisible, 0: normal
@@ -49,9 +44,9 @@ bool	ft_check_mode(Client* client, std::string& mode)
 		|| (mode[0] != '0' && mode[0] != '8'))
 		return (reset_data_username(client));
 
-	client->m_setMode(0);
-	if (mode == "8")
-		client->m_setMode(1);
+	client->m_setMode(1);
+	if (mode == "0")
+		client->m_setMode(0);
 	return (1);
 }
 
@@ -86,23 +81,7 @@ std::string	get_parameter(std::string& str)
 	return (new_str);
 }
 
-void	created_successfully(Server& server, Client* client)
-{
-	std::string	userName = client->m_getUserName();
-	ft_send(client, 4, "(✓) Helloooooo [" + userName + "] !!!");
-
-	// update status
-	if (client->m_getStatusS())
-		return ;
-
-	server.getRegisteredClients().push_back(client);
-	client->m_setID(server.getRegisteredClients().size());
-	if (client->m_getID() == 1)
-		client->m_setAdminServer(true);
-	client->m_setStatusS(true);
-}
-
-void	ft_command_user(Server& server, Client* client)
+void	ft_command_user(Server& server, Client* &client)
 {
 	std::string	parameter = client->m_getParameter();
 	int	min_space = 3;
@@ -125,5 +104,5 @@ void	ft_command_user(Server& server, Client* client)
 	if (ft_check_realname(client, parameter) == false)
 		return (error_syntax(client));
 
-	created_successfully(server, client);
+	connected_successfully(server, client);
 }

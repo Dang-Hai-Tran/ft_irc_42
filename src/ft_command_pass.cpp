@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_command_pass.cpp                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/28 17:17:38 by xuluu             #+#    #+#             */
+/*   Updated: 2023/11/28 17:17:40 by xuluu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/irc.hpp"
 
 void	ft_command_pass(Server& server, Client* client)
@@ -9,11 +21,9 @@ void	ft_command_pass(Server& server, Client* client)
 
 	if (parameter != server.getPassword())
 	{
-		ft_send(client, 4, "(!) Wrong password");
+		ft_send(client, "(!) Wrong password");
 		return ;
 	}
-	// ft_send(client, 4, "|//////////////////////////////////////|\r");
-	// ft_send(client, 4, "|//     Welcome to my server IRC     //|\r");
-	// ft_send(client, 4, "|//////////////////////////////////////|\r");
+	ft_send(client, "(✓) Login successful.");
 	client->m_setConnected(true);
 }

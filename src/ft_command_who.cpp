@@ -21,20 +21,20 @@ void	ft_command_who(Server& server, Client* client)
 	if (parameter != "")
 		return (error_syntax(client));
 
-	ft_send(client, 4, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]");
+	ft_send(client, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]");
 	while (i < nb_clients)
 	{
 		Client* user = server.getRegisteredClients()[i];
-		std::string id = int_to_string(user->m_getID());
-		ft_send(client, 2, "[ " + id + " | ");
 
+		std::string id = "[ " + int_to_string(user->m_getID()) + " | ";
+		std::string	status = "OFF ]: ";
 		if (user->m_getStatusS())
-			ft_send(client, 1, "ON ]: ");
-		else
-			ft_send(client, 1, "OFF ]: ");
-
-		ft_send(client, 1, user->m_getNickName() + " ");
-		ft_send(client, 3, "(" + user->m_getRealName() + ")");
+			status = "ON ]: ";
+		std::string	nickName = user->m_getNickName() + " ";
+		std::string	realName = "(" + user->m_getRealName() + ")";
+		
+		std::string	text = id + status + nickName + realName;
+		ft_send(client, text);
 		i++;
 	}
 }

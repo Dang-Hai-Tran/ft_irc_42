@@ -52,11 +52,15 @@ void	ft_command_nick(Server& server, Client* client)
 		return (error_syntax(client));
 
 	int	id = ft_find_nickname(server, parameter);
-	if (id != 0)
+	if (id != 0 && id != client->m_getID())
 	{
-		ft_send(client, 4, "(!) NICKNAME: [" + parameter + "] has been used");
-		return ;
+		Client*	user = server.getRegisteredClients()[id - 1];
+		if (user->m_getStatusS())
+		{
+			ft_send(client, "(!) NICKNAME: [" + parameter + "] has been used");
+			return ;
+		}
 	}
 	client->m_setNickName(parameter);
-	// ft_send(client, 4, "(✓) You're now know as [" + parameter + "]");
+	ft_send(client, "(✓) You're now know as [" + parameter + "]");
 }
