@@ -1,6 +1,6 @@
 #include "../inc/irc.hpp"
 
-void	ft_requesPassword(Server& server, Client& client)
+void	ft_requestPassword(Server& server, Client& client)
 {
 	std::string cmd = client.m_getCmd();
 
@@ -13,7 +13,7 @@ void	ft_requesPassword(Server& server, Client& client)
 	ft_command_password(server, client);
 }
 
-void	ft_requesUserName(Server& server, Client& client)
+void	ft_requestUserName(Server& server, Client& client)
 {
 	std::string cmd = client.m_getCmd();
 
@@ -29,7 +29,7 @@ void	ft_requesUserName(Server& server, Client& client)
 	}
 }
 
-void	ft_requesNickName(Server& server, Client& client)
+void	ft_requestNickName(Server& server, Client& client)
 {
 	std::string cmd = client.m_getCmd();
 

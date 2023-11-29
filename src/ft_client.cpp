@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.cpp                                         :+:      :+:    :+:   */
+/*   ft_client.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:00:31 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/20 19:00:33 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/11/29 09:01:05 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,4 +215,21 @@ void		Client::m_setConnected(bool status)
 bool		Client::m_isConnected(void) const
 {
 	return (this->m_connected);
+}
+
+std::vector<Channel *> &Client::getChannelsUserIn(void) {
+	return this->channels;
+}
+
+void Client::addChannel(Channel *channel) {
+	this->getChannelsUserIn().push_back(channel);
+}
+
+void Client::delChannel(Channel *channel) {
+	for (size_t i = 0; i < this->getChannelsUserIn().size(); i++) {
+		if (this->getChannelsUserIn()[i]->getNameChannel() == channel->getNameChannel()) {
+			this->getChannelsUserIn().erase(this->getChannelsUserIn().begin() + i);
+			break;
+		}
+	}
 }

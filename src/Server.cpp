@@ -7,11 +7,11 @@ Server::Server(int port, std::string password) : port(port), password(password) 
     this->m_nbrConnections = 0;
 };
 
-std::vector<Client *> Server::getRegisteredClients(void) {
+std::vector<Client *> &Server::getRegisteredClients(void) {
     return this->registeredClients;
 };
 
-std::vector<int> Server::getClientFDs(void) {
+std::vector<int> &Server::getClientFDs(void) {
     return this->clientFDs;
 }
 
@@ -86,6 +86,7 @@ void Server::acceptConnection(void) {
     if (DEBUG) {
         std::cout << "New connection fd: " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
     }
+    this->sendData(clientSocket, "Welcome to the IRC server!\r\n");
     int i = this->m_getNbrConnections();
     Client &client = this->m_client[i - 1];
     client.m_setSocket(clientSocket);
@@ -108,6 +109,9 @@ void Server::receiveData(int clientSocket) {
         } else {
             message.append(std::string(buffer, bytesRead));
         }
+    }
+    if (DEBUG) {
+        std::cout << "Client fd: " << clientSocket << " write: " << message;
     }
     for (int i = 0; i < this->m_getNbrConnections(); i++) {
         if (this->m_client[i].m_getSocket() == clientSocket) {
@@ -137,6 +141,10 @@ void Server::delClientSocket(int clientSocket) {
     for (int i = 0; i < this->m_getNbrConnections(); i++) {
         if (this->m_client[i].m_getSocket() == clientSocket) {
             Client &client = this->m_client[i];
+            std::vector<Channel *> channels = client.getChannelsUserIn();
+            for (size_t i = 0; i < channels.size(); i++) {
+                channels[i]->delUser(&client);
+            }
             reset_data(client);
             break;
         }
@@ -175,7 +183,7 @@ Channel *Server::getChannel(std::string channelName) {
     return NULL;
 }
 
-std::vector<Channel *> Server::getChannels() {
+std::vector<Channel *> &Server::getChannels() {
     return this->channels;
 }
 
@@ -255,4 +263,14 @@ void Server::m_disconnect(void) {
 
 int Server::m_getNbrConnections(void) const {
     return (this->m_nbrConnections);
+}
+
+std::vector<Client *> Server::getOnServerClients(void) {
+    std::vector<Client *> onServerClients;
+    for (size_t i = 0; i < this->registeredClients.size(); i++) {
+        if (this->registeredClients[i]->m_getStatusS() == true) {
+            onServerClients.push_back(this->registeredClients[i]);
+        }
+    }
+    return onServerClients;
 }

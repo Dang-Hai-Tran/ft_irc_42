@@ -67,6 +67,11 @@ class	Client
 		// connected
 		void		m_setConnected(bool status);
 		bool		m_isConnected(void) const;
+
+		std::vector<Channel *> &getChannelsUserIn(void);
+		void addChannel(Channel *channel);
+		void delChannel(Channel *channel);
+
 	private:
 		int			m_socket;
 		int			m_id;
@@ -86,6 +91,8 @@ class	Client
 		bool		m_invisible;
 		bool		m_adminServer;
 		bool		m_adminChannel;
+		
+		std::vector<Channel *> channels;
 };
 
 #endif

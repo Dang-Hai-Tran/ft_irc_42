@@ -28,16 +28,16 @@ public:
     Client m_client[MAX_CLIENTS];
     void m_connect(void);
     void m_addClient(void);
-    int			m_getNbrClients(void) const;
-	void		m_disconnect(void);
-	int			m_getNbrConnections(void) const;
+    int m_getNbrClients(void) const;
+    void m_disconnect(void);
+    int m_getNbrConnections(void) const;
     Server();
     Server(int port, std::string password);
     ~Server();
     int getSocket(void);
     std::string getPassword(void);
-    std::vector<Client *> getRegisteredClients(void);
-    std::vector<int> getClientFDs(void);
+    std::vector<Client *> &getRegisteredClients(void);
+    std::vector<int> &getClientFDs(void);
     void waitEvents(void);
     void acceptConnection(void);
     void receiveData(int clientSocket);
@@ -47,10 +47,11 @@ public:
     void addChannel(Channel *channel);
     void delChannel(std::string channelName);
     Channel *getChannel(std::string channelName);
-    std::vector<Channel *> getChannels(void);
+    std::vector<Channel *> &getChannels(void);
     int getClientIndex(int clientSocket);
     Client *getClient(int clientSocket);
     void start(void);
+    std::vector<Client *> getOnServerClients(void);
 };
 
 #endif

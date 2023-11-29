@@ -37,7 +37,8 @@ std::vector<std::string> splitString(std::string str, char c) {
     std::string part;
     std::istringstream partStream(str);
     while (std::getline(partStream, part, c)) {
-        strs.push_back(part);
+        if (!part.empty())
+            strs.push_back(part);
     }
     return strs;
 }

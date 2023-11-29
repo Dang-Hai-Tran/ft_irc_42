@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_help.cpp                                   :+:      :+:    :+:   */
+/*   ft_command_help.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:01:55 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/20 19:01:57 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/11/25 15:06:58 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_infor_help(Client& client)
 
 void	ft_infor_password(Client& client)
 {
-	ft_send(client, 4, "* Command: /PASS server_password");
+	ft_send(client, 4, "* Command: /PASS password");
 	ft_send(client, 4, "Use: login to the IRC server");
 }
 
