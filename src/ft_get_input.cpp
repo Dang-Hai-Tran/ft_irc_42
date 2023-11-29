@@ -79,7 +79,7 @@ void	get_input(Server& server, Client* client)
 			m++;
 
 		std::string	cmd = str.substr(0, m);
-		// std::cout << cmd << std::endl;
+		std::cout << cmd << std::endl;
 
 		// using IRSSI
 		if (cmd == "CAP LS\r")
