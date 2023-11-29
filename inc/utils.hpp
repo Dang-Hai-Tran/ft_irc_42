@@ -48,6 +48,7 @@ bool	ft_requestNickName(Server& server, Client* client);
 void	get_input(Server& server, Client* client);
 bool	get_command_parameter(Server& server, Client* client);
 void	ft_command_outside(Server& server, Client* &client);
+void	ft_command_inside(Server& server, Client* &client);
 
 bool	is_adminServer(Client* client);
 
@@ -72,6 +73,7 @@ void	ft_command_nick(Server& server, Client* client);
 // command USER
 void	ft_command_user(Server& server, Client* &client);
 void	connected_successfully(Server& server, Client* &client);
+void	ft_irssi_get_realname(Server& server, Client* client);
 void	show_username(Server& server);
 
 // command WHO
@@ -82,8 +84,5 @@ void	ft_command_whois(Server& server, Client* client);
 
 // command PRIVMSG
 void	ft_command_privmsg(Server& server, Client* client);
-
-/************************************************************/
-bool	ft_irssi_get_input(Server& server, Client* client);
 
 #endif

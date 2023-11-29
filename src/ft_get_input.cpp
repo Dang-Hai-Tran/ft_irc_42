@@ -31,6 +31,7 @@ bool	ft_connection_with_nc(Server& server, Client* client, std::string& cmd)
 	if (cmd[0] == '/' && cmd[1])
 	{
 		cmd = ft_delete_space(cmd);
+		cmd = cmd.substr(1, cmd.size());
 		client->m_setInput(cmd);
 		if (!get_command_parameter(server, client))
 			return (0);
@@ -40,13 +41,24 @@ bool	ft_connection_with_nc(Server& server, Client* client, std::string& cmd)
 		ft_send(client, "(!) Command start with '/'");
 		ft_send(client, "(i) Use /HELP for instructions");
 		ft_send(client, "\n--------------------------------------------------\n");
-		return (0);
+		if (!client->m_getStatusS())
+			return (0);
 	}
 	else
 	{
 		ft_send(client, "[" + client->m_getNickName() + "]");
 		ft_send(client, cmd);
 	}
+	return (1);
+}
+
+bool	ft_connection_with_irssi(Server& server, Client* client, std::string& cmd)
+{
+	cmd = cmd.substr(0, cmd.size() - 1);
+	client->m_setInput(cmd);
+
+	if (!get_command_parameter(server, client))
+		return (0);
 	return (1);
 }
 
@@ -74,10 +86,7 @@ void	get_input(Server& server, Client* client)
 			client->m_setModeClient(true);
 		else if (client->m_usingIrssi())
 		{
-			cmd = str.substr(0, cmd.size() - 1);
-			client->m_setInput(cmd);
-
-			if (!ft_irssi_get_input(server, client))
+			if (!ft_connection_with_irssi(server, client, cmd))
 			{
 				// close connection
 				server.delClientSocket(client->m_getSocket());

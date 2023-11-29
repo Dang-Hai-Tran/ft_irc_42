@@ -44,7 +44,7 @@ void	sign_in(Server& server, Client* &client, int id)
 	oldClient->m_setConnected(true);
 	oldClient->m_setStatusS(true);
 
-	std::cout << "1 --> " << oldClient << std::endl;
+	// std::cout << "1 --> " << oldClient << std::endl;
 	delete client;
 	client = oldClient;
 }
@@ -52,7 +52,14 @@ void	sign_in(Server& server, Client* &client, int id)
 void	connected_successfully(Server& server, Client* &client)
 {
 	std::string	userName = client->m_getUserName();
+	std::string	nickName = client->m_getNickName();
 	ft_send(client, "(✓) Helloooooo [" + userName + "] !!!");
+
+	if (client->m_usingIrssi()) // signal connected for IRSSI
+	{
+		std::string	text = ":localhost 001 " + nickName + " :Welcome to the IRC Network";
+		ft_send(client, text);
+	}
 
 	// update status
 	if (client->m_getStatusS())

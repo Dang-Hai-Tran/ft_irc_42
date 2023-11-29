@@ -36,7 +36,7 @@ bool	get_command_parameter(Server& server, Client* client)
 	while (str[i] && str[i] != ' ')
 		i++;
 	
-	std::string	cmd = str.substr(1, i - 1);
+	std::string	cmd = str.substr(0, i);
 	if (is_upperCase(cmd) == false)
 	{
 		ft_send(client, "(!) Command must be capitalized");

@@ -54,7 +54,13 @@ bool	ft_requestUserName(Server& server, Client* &client)
 		ft_send(client, "Command: /USER username 0 * :realname");
 		return (0);
 	}
-	ft_command_user(server, client);
+
+	// get username
+	if (client->m_usingIrssi())
+		ft_irssi_get_realname(server, client);
+	else
+		ft_command_user(server, client);
+
 	if (client->m_getUserName() == "")
 		return (0);
 	return (1);
