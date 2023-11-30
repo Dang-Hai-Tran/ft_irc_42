@@ -12,43 +12,70 @@
 
 #include "../inc/irc.hpp"
 
-void	ft_conversation(Server& server, Client& client, int start, int id)
+void	ft_conversation(Client* client, Channel* channel)
 {
-	std::string	parameter = client.m_getParameter();
-	std::string	message = parameter.substr(start , parameter.size());
+	std::string	message = client->m_getParameter();
 
 	if (message.size() < 2 || message[0] != ':')
 		return (error_syntax(client));
-	message = parameter.substr(start + 1, parameter.size());
+	message = message.substr(1, message.size());
 
-	std::string	sender = client.m_getUserName();
-	Client& recipient = server.m_client[id];
+	std::string	sender = client->m_getNickName();
+	size_t	i(0);
 
-	ft_send(recipient, 4, "");
-	ft_send(recipient, 4, "(!) You have a message from: " + sender);
-	ft_send(recipient, 2, "[" + sender + "]: ");
-	ft_send(recipient, 3, message + "\n");
+	while (i < channel->getUsers().size())
+	{
+		Client*	user = channel->getUsers()[i];
+		std::string	recipient = user->m_getNickName();
+		if (recipient != sender)
+		{
+			if (client->m_usingIrssi())
+				ft_send(user, message);
+			else
+				ft_send(user, "<" + recipient + "> " + message);
+		}
+		i++;
+	}
 }
 
-void	ft_command_privmsg(Server& server, Client& client)
+int	ft_find_namechannel(Server& server, std::string nameChannel)
 {
-	std::string	parameter = client.m_getParameter();
+	int	i(0);
 
-	if (parameter == "" || ft_nbrSpace(parameter) < 1)
+	while (i < (int)server.getChannels().size())
+	{
+		if (server.getChannels()[i]->getNameChannel() == nameChannel)
+			return (i + 1);
+		i++;
+	}
+	return (i);
+}
+
+void	ft_command_privmsg(Server& server, Client* client)
+{
+	std::string	parameter = client->m_getParameter();
+	// std::cout << parameter << std::endl;
+
+	if (parameter == "" || ft_nbrSpace(parameter) < 1 || parameter[0] != '#')
 		return (error_syntax(client));
 
 	int	i(0);
 	while (parameter[i] && parameter[i] != ' ')
 		i++;
 
-	std::string	nickName = parameter.substr(0, i);
-	int	id = ft_find_nickname(server, nickName);
+	std::string	nameChannel = parameter.substr(1, i);
+	// std::cout << "channel name: " << nameChannel << std::endl;
+
+	int	id = ft_find_namechannel(server, nameChannel);
 	if (id == 0)
 	{
-		ft_send(client, 4, "(!) User does not exist");
+		ft_send(client, "(!) This channel cannot be found");
 		return ;
 	}
-	else if (id == client.m_getID())
-		return ;
-	ft_conversation(server, client, i + 1, id - 1);
+
+	parameter = parameter.substr(i + 1, parameter.size());
+	// std::cout << "--> message: " << parameter << std::endl;
+	client->m_setParameter(parameter);
+
+	ft_conversation(client, server.getChannels()[id - 1]);
 }

@@ -2,7 +2,7 @@
 
 void commandChannel(Server &server, Client &client) {
     std::string cmd = client.m_getCmd();
-    std::string message = client.m_getInput();
+    std::string message = ft_delete_space(client.m_getInput());
     trimEndOfLine(message);
     std::cout << "Client fd: " << client.m_getSocket() << " send >> " << message << std::endl;
     if (cmd == "JOIN") {

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_input.cpp                                      :+:      :+:    :+:   */
+/*   ft_get_input.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:39:21 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/20 15:40:03 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/11/30 12:00:19 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,45 @@ int	ft_nbrNewLine(std::string& str)
 	return (nbr_newline);
 }
 
-void	get_input(Server& server, Client& client)
+bool	ft_connection_with_nc(Server& server, Client* client, std::string& cmd)
 {
-	// std::cout << "Input: " << str << std::endl;
-	std::string str = client.m_getInput();
+	if (cmd[0] == '/' && cmd[1])
+	{
+		cmd = ft_delete_space(cmd);
+		cmd = cmd.substr(1, cmd.size());
+		client->m_setInput(cmd);
+		if (!get_command_parameter(server, client))
+			return (0);
+	}
+	else if (client->m_getStatusC() == false)
+	{
+		ft_send(client, "(!) Command start with '/'");
+		ft_send(client, "(i) Use /HELP for instructions");
+		ft_send(client, "\n--------------------------------------------------\n");
+		if (!client->m_getStatusS())
+			return (0);
+	}
+	else
+	{
+		ft_send(client, "[" + client->m_getNickName() + "]");
+		ft_send(client, cmd);
+	}
+	return (1);
+}
+
+bool	ft_connection_with_irssi(Server& server, Client* client, std::string& cmd)
+{
+	cmd = cmd.substr(0, cmd.size() - 1);
+	client->m_setInput(cmd);
+
+	if (!get_command_parameter(server, client))
+		return (0);
+	return (1);
+}
+
+void	get_input(Server& server, Client* client)
+{
+	std::string str = client->m_getInput();
 
 	if (ft_isStringEmpty(str) || str[0] == '\n')
 		return ;
@@ -44,21 +79,28 @@ void	get_input(Server& server, Client& client)
 			m++;
 
 		std::string	cmd = str.substr(0, m);
-		cmd = ft_delete_space(cmd);
-		if (cmd[0] == '/' && cmd[1])
+		std::cout << cmd << std::endl;
+
+		// using IRSSI
+		if (cmd == "CAP LS\r")
+			client->m_setModeClient(true);
+		else if (client->m_usingIrssi())
 		{
-			client.m_setInput(cmd);
-			get_command_parameter(server, client);
-		}
-		else if (client.m_getStatusC() == false)
-		{
-			ft_send(client, 4, "(!) Command start with '/'");
-			ft_send(client, 1, "\n--------------------------------------------------\n");
+			if (!ft_connection_with_irssi(server, client, cmd))
+			{
+				// close connection
+				server.delClientSocket(client->m_getSocket());
+				return ;
+			}
 		}
 		else
 		{
-			ft_send(client, 4, "[" + client.m_getNickName() + "]");
-			ft_send(client, 4, cmd);
+			if (!ft_connection_with_nc(server, client, cmd))
+			{
+				// close connection
+				server.delClientSocket(client->m_getSocket());
+				return ;
+			}
 		}
 
 		str = str.substr(m + 1, str.size());

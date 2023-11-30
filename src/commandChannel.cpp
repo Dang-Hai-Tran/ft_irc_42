@@ -8,7 +8,9 @@ void commandJoin(Server *server, Client *client, std::string message) {
         return;
     }
     std::vector<std::string> listChannelName = splitString(args[1], ',');
-    std::vector<std::string> listPassword = splitString(args[2], ',');
+    std::vector<std::string> listPassword;
+    if (args.size() == 3)
+        listPassword = splitString(args[2], ',');
     if (listChannelName.size() != listPassword.size() && listPassword.size() != 0) {
         server->sendData(client->m_getSocket(), "Usage: JOIN <channel>,<channel>... <password>,<password>...\r\n");
         return;

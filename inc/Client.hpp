@@ -10,6 +10,7 @@ class	Client
 {
 	public:
 		Client(void);
+		Client(Client& objet);
 		~Client(void);
 
 		Client&	operator=(const Client& objet);
@@ -68,6 +69,10 @@ class	Client
 		void		m_setConnected(bool status);
 		bool		m_isConnected(void) const;
 
+		// irssi
+		void		m_setModeClient(bool mode);
+		bool		m_usingIrssi(void) const;
+		
 		std::vector<Channel *> &getChannelsUserIn(void);
 		void addChannel(Channel *channel);
 		void delChannel(Channel *channel);
@@ -84,6 +89,7 @@ class	Client
 		std::string	m_cmd;
 		std::string	m_parameter;
 		
+		bool		m_irssi;
 		bool		m_connected;
 		bool		m_statusS;
 		bool		m_statusC;
@@ -93,6 +99,7 @@ class	Client
 		bool		m_adminChannel;
 		
 		std::vector<Channel *> channels;
+
 };
 
 #endif

@@ -12,29 +12,29 @@
 
 #include "../inc/irc.hpp"
 
-void	ft_command_who(Server& server, Client& client)
+void	ft_command_who(Server& server, Client* client)
 {
 	int	i(0);
-	int	nb_clients = server.m_getNbrClients();
-	std::string	parameter = client.m_getParameter();
+	int	nb_clients = server.getRegisteredClients().size();
+	std::string	parameter = client->m_getParameter();
 
 	if (parameter != "")
 		return (error_syntax(client));
 
-	ft_send(client, 4, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]");
+	ft_send(client, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]");
 	while (i < nb_clients)
 	{
-		Client& user = server.m_client[i];
-		std::string id = int_to_string(user.m_getID());
-		ft_send(client, 2, "[ " + id + " | ");
+		Client* user = server.getRegisteredClients()[i];
 
-		if (user.m_getStatusS())
-			ft_send(client, 1, "ON ]: ");
-		else
-			ft_send(client, 1, "OFF ]: ");
-
-		ft_send(client, 1, user.m_getNickName() + " ");
-		ft_send(client, 3, "(" + user.m_getRealName() + ")");
+		std::string id = "[ " + int_to_string(user->m_getID()) + " | ";
+		std::string	status = "OFF ]: ";
+		if (user->m_getStatusS())
+			status = "ON ]: ";
+		std::string	nickName = user->m_getNickName() + " ";
+		std::string	realName = "(" + user->m_getRealName() + ")";
+		
+		std::string	text = id + status + nickName + realName;
+		ft_send(client, text);
 		i++;
 	}
 }

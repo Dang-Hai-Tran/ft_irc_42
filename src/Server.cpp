@@ -3,8 +3,6 @@
 Server::Server(){};
 Server::Server(int port, std::string password) : port(port), password(password) {
     this->startTime = getCurrentTime();
-    this->m_nbrClients = 0;
-    this->m_nbrConnections = 0;
 };
 
 std::vector<Client *> &Server::getRegisteredClients(void) {
@@ -24,9 +22,20 @@ std::string Server::getPassword(void) {
 }
 
 Server::~Server() {
+    for (size_t i = 0; i < this->m_listConnection.size(); i++) {
+        if (this->m_listConnection[i]->m_getID() == 0) {
+            delete this->m_listConnection[i];
+        }
+    }
+    for (size_t i = 0; i < this->registeredClients.size(); i++) {
+        delete this->registeredClients[i];
+    }
+    this->m_listConnection.clear();
+    this->registeredClients.clear();
     for (size_t i = 0; i < this->channels.size(); i++) {
         delete this->channels[i];
     }
+    this->channels.clear();
 }
 
 void Server::setNonBlocking() {
@@ -66,10 +75,20 @@ void Server::waitEvents(void) {
                     this->receiveData(this->pollFDs[i].fd);
                 }
             }
+            if (this->pollFDs[i].revents & POLLHUP) {
+                std::cout << "Connection lost" << std::endl;
+            }
         }
     } else if (pollResult < 0) {
         throw std::runtime_error("ERROR :Waiting connections failed");
     }
+}
+
+// xuluu
+void ft_add_connection(Server &server, int socket) {
+    Client *client = new Client;
+    client->m_setSocket(socket);
+    server.m_getListConnection().push_back(client);
 }
 
 void Server::acceptConnection(void) {
@@ -86,11 +105,22 @@ void Server::acceptConnection(void) {
     if (DEBUG) {
         std::cout << "New connection fd: " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
     }
-    this->sendData(clientSocket, "Welcome to the IRC server!\r\n");
-    int i = this->m_getNbrConnections();
-    Client &client = this->m_client[i - 1];
-    client.m_setSocket(clientSocket);
-    ft_guide(client);
+    ft_add_connection(*this, clientSocket);
+}
+
+void ft_input(Server &server, int socket, std::string &input) {
+    size_t i(0);
+    std::vector<Client *> clients = server.m_getListConnection();
+
+    while (i < clients.size()) {
+        int sk = clients[i]->m_getSocket();
+        if (sk == socket) {
+            clients[i]->m_setInput(input);
+            get_input(server, clients[i]);
+            break;
+        }
+        i++;
+    }
 }
 
 void Server::receiveData(int clientSocket) {
@@ -113,21 +143,13 @@ void Server::receiveData(int clientSocket) {
     if (DEBUG) {
         std::cout << "Client fd: " << clientSocket << " write: " << message;
     }
-    for (int i = 0; i < this->m_getNbrConnections(); i++) {
-        if (this->m_client[i].m_getSocket() == clientSocket) {
-            Client &client = this->m_client[i];
-            client.m_setInput(message);
-            get_input(*this, client);
-            break;
-        }
-    }
+    ft_input(*this, clientSocket, message);
 }
 
 void Server::addClientSocket(int clientSocket) {
     this->clientFDs.push_back(clientSocket);
     this->setNonBlocking();
     this->setPollFds();
-    this->m_nbrConnections++;
 }
 
 void Server::delClientSocket(int clientSocket) {
@@ -137,17 +159,19 @@ void Server::delClientSocket(int clientSocket) {
     }
     this->setNonBlocking();
     this->setPollFds();
-    this->m_nbrConnections--;
-    for (int i = 0; i < this->m_getNbrConnections(); i++) {
-        if (this->m_client[i].m_getSocket() == clientSocket) {
-            Client &client = this->m_client[i];
-            std::vector<Channel *> channels = client.getChannelsUserIn();
-            for (size_t i = 0; i < channels.size(); i++) {
-                channels[i]->delUser(&client);
-            }
+    // xuluu
+    size_t i(0);
+    while (i < m_getListConnection().size()) {
+        if (m_getListConnection()[i]->m_getSocket() == clientSocket) {
+            Client *client = m_getListConnection()[i];
             reset_data(client);
+            if (client->m_getID() == 0) {
+                m_getListConnection().erase(m_getListConnection().begin() + i);
+                delete client;
+            }
             break;
         }
+        i++;
     }
     close(clientSocket);
 }
@@ -243,26 +267,8 @@ void Server::start(void) {
     }
 }
 
-/* Number Clients */
-void Server::m_addClient(void) {
-    this->m_nbrClients++;
-}
-
-int Server::m_getNbrClients(void) const {
-    return (this->m_nbrClients);
-}
-
-/* Number connections */
-void Server::m_connect(void) {
-    this->m_nbrConnections++;
-}
-
-void Server::m_disconnect(void) {
-    this->m_nbrConnections--;
-}
-
-int Server::m_getNbrConnections(void) const {
-    return (this->m_nbrConnections);
+std::vector<Client *> &Server::m_getListConnection(void) {
+    return (this->m_listConnection);
 }
 
 std::vector<Client *> Server::getOnServerClients(void) {

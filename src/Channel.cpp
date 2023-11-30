@@ -19,12 +19,8 @@ Channel::Channel(Server *server, std::string nameChannel, std::string password) 
 }
 
 Channel::~Channel() {
-    for (size_t i = 0; i < this->admins.size(); i++) {
-        delete this->admins[i];
-    }
-    for (size_t i = 0; i < this->users.size(); i++) {
-        delete this->users[i];
-    }
+    this->users.clear();
+    this->admins.clear();
 }
 
 std::string Channel::getNameChannel(void) {

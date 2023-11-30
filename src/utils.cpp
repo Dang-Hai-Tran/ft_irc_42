@@ -34,21 +34,19 @@ std::string getClientIpAddress(const struct sockaddr_in6 *clientAddress) {
 
 std::vector<std::string> splitString(std::string str, char c) {
     std::vector<std::string> strs;
-    std::string part;
-    std::istringstream partStream(str);
-    while (std::getline(partStream, part, c)) {
-        if (!part.empty())
+    std::string part = "";
+    for (size_t i = 0; i < str.size(); i++) {
+        if (str[i] == c && part != "") {
             strs.push_back(part);
+            part = "";
+        } else {
+            part += str[i];
+        }
+    }
+    if (part != "") {
+        strs.push_back(part);
     }
     return strs;
-}
-
-// Find client ip address from client socket
-std::string getIpAddressFromSocket(int fd) {
-    struct sockaddr_in6 clientAddress;
-    socklen_t clientAddressSize = sizeof(clientAddress);
-    getpeername(fd, (struct sockaddr *)&clientAddress, &clientAddressSize);
-    return getClientIpAddress(&clientAddress);
 }
 
 // Find client port from client socket
