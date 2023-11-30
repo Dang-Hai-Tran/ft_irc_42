@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   connection.cpp                                     :+:      :+:    :+:   */
+/*   ft_get_command.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:03:06 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/20 19:03:09 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/11/30 13:20:51 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ bool	get_command_parameter(Server& server, Client* client)
 	{
 		ft_send(client, "(!) Command must be capitalized");
 		ft_send(client, "(i) Use /HELP for instructions");
+		if (client->m_getStatusS())
+			return (1);
 		return (0);
 	}
 	client->m_setCmd(cmd);

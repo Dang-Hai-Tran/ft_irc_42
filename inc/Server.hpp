@@ -21,21 +21,18 @@ private:
     std::vector<Client *> admins;
     void setNonBlocking();
     void setPollFds(void);
-
-    // xuluu
     std::vector<Client *>   m_listConnection;
 
-public:
-    // xuluu
-    std::vector<Client *>   &m_getListConnection(void);
 
+public:
+    std::vector<Client *>   &m_getListConnection(void);
     Server();
     Server(int port, std::string password);
     ~Server();
     int getSocket(void);
     std::string getPassword(void);
     std::vector<Client *> &getRegisteredClients(void);
-    std::vector<int> getClientFDs(void);
+    std::vector<int> &getClientFDs(void);
     void waitEvents(void);
     void acceptConnection(void);
     void receiveData(int clientSocket);
@@ -45,10 +42,11 @@ public:
     void addChannel(Channel *channel);
     void delChannel(std::string channelName);
     Channel *getChannel(std::string channelName);
-    std::vector<Channel *> getChannels(void);
+    std::vector<Channel *> &getChannels(void);
     int getClientIndex(int clientSocket);
     Client *getClient(int clientSocket);
     void start(void);
+    std::vector<Client *> getOnServerClients(void);
 };
 
 #endif

@@ -72,6 +72,10 @@ class	Client
 		// irssi
 		void		m_setModeClient(bool mode);
 		bool		m_usingIrssi(void) const;
+		
+		std::vector<Channel *> &getChannelsUserIn(void);
+		void addChannel(Channel *channel);
+		void delChannel(Channel *channel);
 
 	private:
 		int			m_socket;
@@ -93,6 +97,9 @@ class	Client
 		bool		m_invisible;
 		bool		m_adminServer;
 		bool		m_adminChannel;
+		
+		std::vector<Channel *> channels;
+
 };
 
 #endif

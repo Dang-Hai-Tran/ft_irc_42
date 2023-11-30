@@ -9,7 +9,7 @@ std::vector<Client *> &Server::getRegisteredClients(void) {
     return this->registeredClients;
 };
 
-std::vector<int> Server::getClientFDs(void) {
+std::vector<int> &Server::getClientFDs(void) {
     return this->clientFDs;
 }
 
@@ -22,9 +22,20 @@ std::string Server::getPassword(void) {
 }
 
 Server::~Server() {
+    for (size_t i = 0; i < this->m_listConnection.size(); i++) {
+        if (this->m_listConnection[i]->m_getID() == 0) {
+            delete this->m_listConnection[i];
+        }
+    }
+    for (size_t i = 0; i < this->registeredClients.size(); i++) {
+        delete this->registeredClients[i];
+    }
+    this->m_listConnection.clear();
+    this->registeredClients.clear();
     for (size_t i = 0; i < this->channels.size(); i++) {
         delete this->channels[i];
     }
+    this->channels.clear();
 }
 
 void Server::setNonBlocking() {
@@ -64,7 +75,9 @@ void Server::waitEvents(void) {
                     this->receiveData(this->pollFDs[i].fd);
                 }
             }
-            
+            if (this->pollFDs[i].revents & POLLHUP) {
+                std::cout << "Connection lost" << std::endl;
+            }
         }
     } else if (pollResult < 0) {
         throw std::runtime_error("ERROR :Waiting connections failed");
@@ -72,12 +85,10 @@ void Server::waitEvents(void) {
 }
 
 // xuluu
-void    ft_add_connection(Server& server, int socket)
-{
-    Client* client = new Client;
+void ft_add_connection(Server &server, int socket) {
+    Client *client = new Client;
     client->m_setSocket(socket);
     server.m_getListConnection().push_back(client);
-    // ft_guide(client);
 }
 
 void Server::acceptConnection(void) {
@@ -94,25 +105,19 @@ void Server::acceptConnection(void) {
     if (DEBUG) {
         std::cout << "New connection fd: " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
     }
-
-    // xuluu
     ft_add_connection(*this, clientSocket);
 }
 
-// xuluu
-void    ft_input(Server& server, int socket, std::string& input)
-{
+void ft_input(Server &server, int socket, std::string &input) {
     size_t i(0);
-    std::vector<Client *>   clients = server.m_getListConnection();
+    std::vector<Client *> clients = server.m_getListConnection();
 
-    while (i < clients.size())
-    {
+    while (i < clients.size()) {
         int sk = clients[i]->m_getSocket();
-        if (sk == socket)
-        {
+        if (sk == socket) {
             clients[i]->m_setInput(input);
             get_input(server, clients[i]);
-            break ;
+            break;
         }
         i++;
     }
@@ -135,6 +140,9 @@ void Server::receiveData(int clientSocket) {
             message.append(std::string(buffer, bytesRead));
         }
     }
+    if (DEBUG) {
+        std::cout << "Client fd: " << clientSocket << " write: " << message;
+    }
     ft_input(*this, clientSocket, message);
 }
 
@@ -151,20 +159,17 @@ void Server::delClientSocket(int clientSocket) {
     }
     this->setNonBlocking();
     this->setPollFds();
-
     // xuluu
-    size_t  i(0);
-    while (i < m_getListConnection().size())
-    {
-        if (m_getListConnection()[i]->m_getSocket() == clientSocket)
-        {
-            Client* client = m_getListConnection()[i];
+    size_t i(0);
+    while (i < m_getListConnection().size()) {
+        if (m_getListConnection()[i]->m_getSocket() == clientSocket) {
+            Client *client = m_getListConnection()[i];
             reset_data(client);
-
-            if (client->m_getID() == 0) // not has ID
+            if (client->m_getID() == 0) {
+                m_getListConnection().erase(m_getListConnection().begin() + i);
                 delete client;
-
-            break ;
+            }
+            break;
         }
         i++;
     }
@@ -177,7 +182,6 @@ void Server::sendData(int clientSocket, std::string message) {
         throw std::runtime_error("ERROR :Sending data to client");
     }
 }
-
 
 void Server::addChannel(Channel *channel) {
     this->channels.push_back(channel);
@@ -203,7 +207,7 @@ Channel *Server::getChannel(std::string channelName) {
     return NULL;
 }
 
-std::vector<Channel *> Server::getChannels() {
+std::vector<Channel *> &Server::getChannels() {
     return this->channels;
 }
 
@@ -263,8 +267,16 @@ void Server::start(void) {
     }
 }
 
-/**************************************************************************/
-std::vector<Client *>   &Server::m_getListConnection(void)
-{
+std::vector<Client *> &Server::m_getListConnection(void) {
     return (this->m_listConnection);
+}
+
+std::vector<Client *> Server::getOnServerClients(void) {
+    std::vector<Client *> onServerClients;
+    for (size_t i = 0; i < this->registeredClients.size(); i++) {
+        if (this->registeredClients[i]->m_getStatusS() == true) {
+            onServerClients.push_back(this->registeredClients[i]);
+        }
+    }
+    return onServerClients;
 }

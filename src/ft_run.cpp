@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_run.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:19:03 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/28 17:19:05 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/11/30 12:54:04 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ bool	ft_run(Server& server, Client* client)
 		if (!ft_requestUserName(server, client))
 			return (0);
 	}
-	else if (client->m_getStatusC() == false)
-		ft_command_outside(server, client);
+	else if (client->m_getStatusC() == true || cmd == "JOIN")
+        commandChannel(server, *client);
 	else
-		ft_command_inside(server, client);
+		ft_command_outside(server, client);
 
 	// std::cout << "2 --> " << client << std::endl;
 	if (!client->m_usingIrssi() || client->m_getStatusS())

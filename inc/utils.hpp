@@ -15,6 +15,14 @@ std::vector<std::string> splitString(std::string str, char c);
 std::string getIpAddressFromSocket(int fd);
 int getPortFromSocket(int fd);
 void trimEndOfLine(std::string &str);
+void commandChannel(Server &server, Client &client);
+void commandJoin(Server *server, Client *client, std::string message);
+void commandPart(Server *server, Client *client, std::string message);
+void commandTopic(Server *server, Client *client, std::string message);
+void commandNames(Server *server, Client *client, std::string message);
+void commandInvite(Server *server, Client *client, std::string message);
+void commandKick(Server *server, Client *client, std::string message);
+void commandMode(Server *server, Client *client, std::string message);
 
 // Print vector of elements type T
 template <typename T>
@@ -84,5 +92,7 @@ void	ft_command_whois(Server& server, Client* client);
 
 // command PRIVMSG
 void	ft_command_privmsg(Server& server, Client* client);
+void	ft_conversation(Client* client, Channel* channel);
+void	ft_message(Client* client);
 
 #endif

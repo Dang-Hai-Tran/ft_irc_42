@@ -24,7 +24,7 @@
 #include "utils.hpp"
 
 #define DEFAULT_PORT 8888
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 1000
 #ifndef DEBUG
 # define DEBUG 0
 #endif

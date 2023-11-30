@@ -29,10 +29,10 @@ void	ft_conversation(Client* client, Channel* channel)
 		std::string	recipient = user->m_getNickName();
 		if (recipient != sender)
 		{
-			if (client->m_usingIrssi())
+			if (user->m_usingIrssi())
 				ft_send(user, message);
 			else
-				ft_send(user, "<" + recipient + "> " + message);
+				ft_send(user, "<" + sender + "> " + message);
 		}
 		i++;
 	}
@@ -78,4 +78,19 @@ void	ft_command_privmsg(Server& server, Client* client)
 	client->m_setParameter(parameter);
 
 	ft_conversation(client, server.getChannels()[id - 1]);
+}
+
+void	ft_message(Client* client)
+{
+	std::string	cmd = client->m_getInput();
+	std::string	message = ":" + cmd;
+	client->m_setParameter(message);
+
+	size_t	i(0);
+	while (i < client->getChannelsUserIn().size())
+	{
+		Channel*	channel = client->getChannelsUserIn()[i];
+		ft_conversation(client, channel);
+		i++;
+	}
 }
