@@ -117,11 +117,12 @@ void commandTopic(Server *server, Client *client, std::string message) {
     }
     if (args.size() == 3) {
         channel->setTopic(args[2]);
-        if (!args[2].empty())
+        if (args[2].empty())
             channel->sendMessageToAll("Topic of channel " + channel->getNameChannel() + " cleared");
         else
             channel->sendMessageToAll("Topic for " + channel->getNameChannel() + " set to : " + channel->getTopic());
     }
+    std::cout << client->m_getNickName() << " set topic of channel " << channel->getNameChannel() << " to " << channel->getTopic() << std::endl;
 }
 
 // NAMES <channel>{,<channel>} : See all users in channel
