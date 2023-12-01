@@ -102,7 +102,8 @@ void	get_input(Server& server, Client* client)
 			m++;
 
 		std::string	cmd = str.substr(0, m);
-		// std::cout << cmd << std::endl;
+		std::cout << cmd << std::endl;
+		
 		if (!ft_check_type_client(server, client, cmd))
 			break ;
 		str = str.substr(m + 1, str.size());

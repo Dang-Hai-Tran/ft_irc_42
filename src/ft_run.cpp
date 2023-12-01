@@ -101,14 +101,16 @@ bool	ft_run(Server& server, Client* client)
 			return (0);
 	}
 	else if (client->m_getStatusC() == true || cmd == "JOIN")
-        commandChannel(server, *client);
+		commandChannel(server, *client);
 	else
 		ft_command_outside(server, client);
 
 	// std::cout << "2 --> " << client << std::endl;
 	if (!client->m_usingIrssi() || client->m_getStatusS())
 	{
-		ft_send(client, "\n--------------------------------------------------\n");
+		if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING" || cmd == "QUIT")
+			return (1);
+		ft_send(client, "\n-----------------------------------------\n");
 		ft_guide(client);
 	}
 	return (1);

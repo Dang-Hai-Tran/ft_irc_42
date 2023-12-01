@@ -21,9 +21,11 @@ void	ft_command_pass(Server& server, Client* client)
 
 	if (parameter != server.getPassword())
 	{
-		ft_send(client, "(!) Wrong password");
+		if (!client->m_usingIrssi())
+			ft_send(client, "(!) Password incorrect");
 		return ;
 	}
-	ft_send(client, "(✓) Login successful.");
+
+	ft_send(client, "Password correct.");
 	client->m_setConnected(true);
 }

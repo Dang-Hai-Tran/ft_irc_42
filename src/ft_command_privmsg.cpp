@@ -37,7 +37,7 @@ void	ft_conversation(Client* client, Channel* channel)
 			else
 			{
 				message = message.substr(1, message.size());
-				ft_send(user, "<" + sender + "> " + message);
+				ft_send(user, "< " + sender + "> " + message);
 			}
 		}
 		i++;

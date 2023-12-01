@@ -12,20 +12,30 @@
 
 #include "../inc/irc.hpp"
 
+bool	ft_connection_failed(Client* client)
+{
+	std::string	text = "";
+	if (client->m_usingIrssi())
+		text = ":localhost 421 * :(!) Cannot connect to server (Connection timed out)";
+	else
+		text = "(!) Cannot connect to server (Connection timed out)";
+	ft_send(client, text);
+	return (0);
+}
+
 bool	ft_requestPassword(Server& server, Client* client)
 {
 	std::string cmd = client->m_getCmd();
+	std::string password = client->m_getParameter();
 
 	if (cmd != "PASS")
-	{
-		ft_send(client, "(i) Use /PASS to access the server");
-		ft_send(client, "Command: /PASS server_password");
-		return (0);
-	}
+		return (ft_connection_failed(client));
 	ft_command_pass(server, client);
-	if (client->m_isConnected() == false)
-		return (0);
-	return (1);
+	if (client->m_isConnected())
+		return (1);
+	if (client->m_usingIrssi())
+		ft_send(client, ":localhost 464 * :Password incorrect");
+	return (0);
 }
 
 bool	ft_requestNickName(Server& server, Client* client)
@@ -33,11 +43,7 @@ bool	ft_requestNickName(Server& server, Client* client)
 	std::string cmd = client->m_getCmd();
 
 	if (cmd != "NICK")
-	{
-		ft_send(client, "(i) Use /NICK to login");
-		ft_send(client, "Command: /NICK your_nickname");
-		return (0);
-	}
+		return (ft_connection_failed(client));
 	ft_command_nick(server, client);
 	if (client->m_getNickName() == "")
 		return (0);
@@ -49,12 +55,8 @@ bool	ft_requestUserName(Server& server, Client* &client)
 	std::string cmd = client->m_getCmd();
 
 	if (cmd != "USER")
-	{
-		ft_send(client, "(i) Use /USER to login");
-		ft_send(client, "Command: /USER username 0 * :realname");
-		return (0);
-	}
-
+		return (ft_connection_failed(client));
+	
 	// get username
 	if (client->m_usingIrssi())
 		ft_irssi_get_realname(server, client);

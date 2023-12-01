@@ -29,7 +29,13 @@ bool	ft_check_username(Server& server, Client* client, std::string userName)
 		Client*	user = server.getRegisteredClients()[id - 1];
 		if (user->m_getStatusS())
 		{
-			ft_send(client, "(!) USERNAME: [" + userName + "] has been used");
+			std::string	text = "";
+			if (client->m_usingIrssi())
+				text = ":localhost 433 * " + userName + " :Username is already in use";
+			else
+				text = "(!) Username is already in use";
+			std::cout << text << std::endl;
+			ft_send(client, text);
 			return (reset_data_username(client));
 		}
 	}
