@@ -75,5 +75,9 @@ void	ft_command_nick(Server& server, Client* client)
 		ft_send(client, ":" + oldNick + " NICK :" + newNick);
 	}
 	else
+	{
 		ft_send(client, "You're now know as [" + parameter + "]");
+		ft_send(client, "\n-----------------------------------------\n");
+		ft_guide(client);
+	}
 }
