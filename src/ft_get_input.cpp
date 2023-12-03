@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:39:21 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/30 12:00:19 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/03 11:19:13 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	get_input(Server& server, Client* client)
 			m++;
 
 		std::string	cmd = str.substr(0, m);
-		std::cout << cmd << std::endl;
+		// std::cout << cmd << std::endl;
 
 		// using IRSSI
 		if (cmd == "CAP LS\r")

@@ -1,21 +1,18 @@
 #include "../inc/irc.hpp"
 
-Channel::Channel(Server *server, std::string nameChannel) : server(server), nameChannel(nameChannel) {
-    this->havePassword = false;
-    this->inviteOnly = false;
-    this->haveMaxUsers = false;
-    this->haveMaxUsers = false;
-    this->maxUsers = std::numeric_limits<int>::max();
-    this->topicRestrictions = true;
-}
-
 Channel::Channel(Server *server, std::string nameChannel, std::string password) : server(server), nameChannel(nameChannel), password(password) {
-    this->havePassword = true;
+    if (password.empty()) {
+        this->havePassword = false;
+        this->mode = "";
+    } else {
+        this->havePassword = true;
+        this->mode = "+k";
+    }
     this->inviteOnly = false;
     this->haveMaxUsers = false;
     this->haveMaxUsers = false;
     this->maxUsers = std::numeric_limits<int>::max();
-    this->topicRestrictions = true;
+    this->topicRestrictions = false;
 }
 
 Channel::~Channel() {
@@ -102,17 +99,14 @@ void Channel::setMaxUsers(int maxUsers) {
 void Channel::setTopicRestriction(bool topicRestriction) {
     this->topicRestrictions = topicRestriction;
 }
-void Channel::addAdmins(Client *admin) {
-    this->admins.push_back(admin);
-}
-
-void Channel::addAdmins(std::vector<Client *> admins) {
-    this->admins.insert(this->admins.end(), admins.begin(), admins.end());
+void Channel::addAdmins(Client *user) {
+    if (!this->isAdmin(user))
+        this->admins.push_back(user);
 }
 
 void Channel::delAdmin(Client *client) {
     for (size_t i = 0; i < this->admins.size(); i++) {
-        if (this->getAdmins()[i]->m_getNickName() == client->m_getNickName()) {
+        if (this->getAdmins()[i] == client) {
             this->admins.erase(this->admins.begin() + i);
         }
         break;
@@ -120,46 +114,16 @@ void Channel::delAdmin(Client *client) {
 }
 
 void Channel::addUser(Client *client) {
-    // Check if the number of user is over the max number of user
-    if (this->haveMaxUsers) {
-        if (this->users.size() >= (size_t)this->maxUsers) {
-            return;
-        }
-    }
-    // Check if the user is already in the channel
-    for (size_t i = 0; i < this->users.size(); i++) {
-        if (this->users[i]->m_getNickName() == client->m_getNickName()) {
-            return;
-        }
-    }
     this->users.push_back(client);
 }
 
 void Channel::delUser(Client *client) {
     for (size_t i = 0; i < this->users.size(); i++) {
-        if (this->users[i]->m_getNickName() == client->m_getNickName()) {
+        if (this->users[i] == client) {
             this->users.erase(this->users.begin() + i);
             return;
         }
     }
-    // Delete from list admins if user is admin
-    if (this->isAdmin(client) == true)
-        this->delAdmin(client);
-}
-
-void Channel::kickUser(Client *client, std::string reason) {
-    if (!reason.empty())
-        this->sendMessageToAll("Kick " + client->m_getNickName() + " to channel " + this->nameChannel + " :" + reason + "\r\n");
-    else
-        this->sendMessageToAll("Kick " + client->m_getNickName() + " to channel " + this->nameChannel + "\r\n");
-    this->delUser(client);
-}
-
-void Channel::invite(Client *src, Client *target) {
-    this->server->sendData(target->m_getSocket(), src->m_getNickName() + " invite " + target->m_getNickName() + " join " + this->nameChannel + "\r\n");
-    // Check if target is in list of invited users
-    if (isInvited(target) == false)
-        this->invited.push_back(target);
 }
 
 bool Channel::isAdmin(Client *client) {
@@ -181,7 +145,7 @@ size_t Channel::getNumberAdmins(void) {
 
 void Channel::sendMessageToAll(std::string message) {
     for (size_t i = 0; i < this->users.size(); i++) {
-        this->server->sendData(this->users[i]->m_getSocket(), message + "\r\n");
+        this->server->sendData(this->users[i], message);
     }
 }
 
@@ -210,4 +174,49 @@ Client *Channel::getUserByNickName(std::string nickName) {
         }
     }
     return NULL;
+}
+
+std::string Channel::getListOfMembers(void) {
+    std::vector<Client *> users = this->getUsers();
+    std::string strList = "";
+    for (size_t i = 0; i < users.size(); i++) {
+        if (this->isAdmin(users[i]))
+            strList += "@";
+        strList += users[i]->m_getNickName();
+        if (i != users.size() - 1)
+            strList += " ";
+    }
+    return strList;
+}
+
+void Channel::addToInvited(Client *client) {
+    if (!this->isInvited(client)) {
+        this->invited.push_back(client);
+    }
+}
+
+void Channel::delFromInvited(Client *client) {
+    for (size_t i = 0; i < this->invited.size(); i++) {
+        if (client == this->invited[i]) {
+            this->invited.erase(this->invited.begin() + i);
+        }
+    }
+}
+
+std::string &Channel::getMode(void) {
+    return this->mode;
+}
+
+void Channel::addMode(std::string mode) {
+    if (this->mode.empty()) {
+        this->mode += "+";
+    }
+    this->mode += mode;
+}
+
+void Channel::delMode(std::string mode) {
+    size_t pos = this->mode.find(mode);
+    if (pos != std::string::npos) {
+        this->mode.erase(pos, 1);
+    }
 }

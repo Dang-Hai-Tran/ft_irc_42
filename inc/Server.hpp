@@ -22,6 +22,7 @@ private:
     void setNonBlocking();
     void setPollFds(void);
     std::vector<Client *>   m_listConnection;
+    std::string serverName;
 
 
 public:
@@ -47,6 +48,10 @@ public:
     Client *getClient(int clientSocket);
     void start(void);
     std::vector<Client *> getOnServerClients(void);
+    void sendData(Client *client, std::string message);
+    std::string getServerName(void);
+    void delChannel(Channel *channel);
+    Client *getClientByNickName(std::string nick);
 };
 
 #endif

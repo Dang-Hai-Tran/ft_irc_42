@@ -3,6 +3,7 @@
 Server::Server(){};
 Server::Server(int port, std::string password) : port(port), password(password) {
     this->startTime = getCurrentTime();
+    this->serverName = "irc.42.fr";
 };
 
 std::vector<Client *> &Server::getRegisteredClients(void) {
@@ -100,11 +101,9 @@ void Server::acceptConnection(void) {
         throw std::runtime_error("ERROR :Accepting connection failed");
     }
     this->addClientSocket(clientSocket);
-    std::string ip = getClientIpAddress(&clientAddress);
+    std::string ip = getIpAddressFromSockaddr(&clientAddress);
     int port = ntohs(clientAddress.sin6_port);
-    if (DEBUG) {
-        std::cout << "New connection fd: " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
-    }
+    std::cout << "New connection from client fd " << clientSocket << ",ip: " << ip << ",port: " << port << std::endl;
     ft_add_connection(*this, clientSocket);
 }
 
@@ -140,10 +139,9 @@ void Server::receiveData(int clientSocket) {
             message.append(std::string(buffer, bytesRead));
         }
     }
-    if (DEBUG) {
-        std::cout << "Client fd: " << clientSocket << " write: " << message;
-    }
-    ft_input(*this, clientSocket, message);
+    std::cout << std::left << std::setw(40) << "[Client] Message received from client " << clientSocket << " << " << message;
+    if (message.size() > 0)
+        ft_input(*this, clientSocket, message);
 }
 
 void Server::addClientSocket(int clientSocket) {
@@ -181,6 +179,7 @@ void Server::sendData(int clientSocket, std::string message) {
     if (bytesSent < 0) {
         throw std::runtime_error("ERROR :Sending data to client");
     }
+    std::cout << std::left << std::setw(40) << "[Server] Message sent to client " << clientSocket << " >> " << message;
 }
 
 void Server::addChannel(Channel *channel) {
@@ -193,7 +192,17 @@ void Server::delChannel(std::string channelName) {
         if (this->channels[i]->getNameChannel() == channelName) {
             delete this->channels[i];
             this->channels.erase(this->channels.begin() + i);
-            break;
+            return;
+        }
+    }
+}
+
+void Server::delChannel(Channel *channel) {
+    for (size_t i = 0; i < this->channels.size(); i++) {
+        if (this->channels[i] == channel) {
+            delete channel;
+            this->channels.erase(this->channels.begin() + i);
+            return;
         }
     }
 }
@@ -279,4 +288,23 @@ std::vector<Client *> Server::getOnServerClients(void) {
         }
     }
     return onServerClients;
+}
+
+void Server::sendData(Client *client, std::string message) {
+    this->sendData(client->m_getSocket(), message);
+}
+
+std::string Server::getServerName(void) {
+    return this->serverName;
+}
+
+Client *Server::getClientByNickName(std::string nick) {
+    Client *target = NULL;
+    for (size_t i = 0; i < this->getOnServerClients().size(); i++) {
+        if (this->getOnServerClients()[i]->m_getNickName() == nick) {
+            target = this->getOnServerClients()[i];
+            break;
+        }
+    }
+    return target;
 }

@@ -17,11 +17,17 @@
 #include <unistd.h>
 #include <vector>
 #include <limits>
+#include <time.h>
+#include <ctime>
+#include <sstream>
+#include <iomanip>
+
 
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 #include "utils.hpp"
+#include "reply.hpp"
 
 #define DEFAULT_PORT 8888
 #define BUFFER_SIZE 1000

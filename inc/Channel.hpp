@@ -5,7 +5,6 @@
 
 class Client;
 class Server;
-class CommandHandler;
 
 class Channel {
 private:
@@ -21,9 +20,9 @@ private:
     bool haveMaxUsers;
     int maxUsers;
     bool topicRestrictions;
+    std::string mode;
 
 public:
-    Channel(Server *server, std::string nameChannel);
     Channel(Server *server, std::string nameChannel, std::string password);
     ~Channel();
     std::string getNameChannel(void);
@@ -47,12 +46,9 @@ public:
     void setMaxUsers(int maxUsers);
     void setTopicRestriction(bool topicRestriction);
     void addAdmins(Client *client);
-    void addAdmins(std::vector<Client *> users);
     void delAdmin(Client *client);
     void addUser(Client *);
     void delUser(Client *);
-    void kickUser(Client *, std::string reason);
-    void invite(Client *src, Client *target);
     bool isAdmin(Client *client);
     size_t getNumberUsers(void);
     size_t getNumberAdmins(void);
@@ -60,6 +56,12 @@ public:
     void sendMessageToAll(std::string message);
     bool isInvited(Client *client);
     Client *getUserByNickName(std::string nickName);
+    std::string getListOfMembers(void);
+    void addToInvited(Client *client);
+    void delFromInvited(Client *client);
+    std::string &getMode(void);
+    void addMode(std::string mode);
+    void delMode(std::string mode);
 };
 
 #endif
