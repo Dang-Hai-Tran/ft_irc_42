@@ -14,9 +14,6 @@ void commandChannel(Server &server, Client &client) {
     }
     if (cmd == "PART") {
         commandPart(&server, &client, input);
-        if (DEBUG) {
-            std::cout << "Go into commandPart" << std::endl;
-        }
     }
     if (cmd == "NAMES") {
         commandNames(&server, &client, input);
