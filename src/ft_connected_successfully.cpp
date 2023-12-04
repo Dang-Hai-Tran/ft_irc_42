@@ -64,6 +64,13 @@ void	connected_successfully(Server& server, Client* &client)
 	else
 		ft_send(client, "<--    Welcome to the IRC Network    -->");
 
+<<<<<<< HEAD
+=======
+	// number connection
+	std::string nbr_connection = int_to_string((int)server.m_getListConnection().size());
+	ft_send(client, "Number connection: " + nbr_connection);
+
+>>>>>>> origin/xuluu
 	// update status
 	if (client->m_getStatusS())
 		return ;

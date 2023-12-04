@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:00:31 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/30 15:35:03 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/04 18:26:33 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,7 @@ void Client::addChannel(Channel *channel) {
 
 void Client::delChannel(Channel *channel) {
     for (size_t i = 0; i < this->getChannelsUserIn().size(); i++) {
-        if (this->getChannelsUserIn()[i]->getNameChannel() == channel->getNameChannel()) {
+        if (this->getChannelsUserIn()[i] == channel) {
             this->getChannelsUserIn().erase(this->getChannelsUserIn().begin() + i);
             break;
         }

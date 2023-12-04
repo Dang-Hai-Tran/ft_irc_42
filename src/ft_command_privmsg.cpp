@@ -20,13 +20,21 @@ void	ft_conversation(Client* client, Channel* channel)
 		return (error_syntax(client));
 
 	std::string	sender = client->m_getNickName();
+<<<<<<< HEAD
 	size_t	i(0);
 
+=======
+	std::string	nameChannel = channel->getNameChannel();
+	message = ":" + sender + " PRIVMSG " + nameChannel + " " + message;
+	
+	size_t	i(0);
+>>>>>>> origin/xuluu
 	while (i < channel->getUsers().size())
 	{
 		Client*	user = channel->getUsers()[i];
 		std::string	recipient = user->m_getNickName();
 		if (recipient != sender)
+<<<<<<< HEAD
 		{
 			if (user->m_usingIrssi())
 			{
@@ -40,6 +48,9 @@ void	ft_conversation(Client* client, Channel* channel)
 				ft_send(user, "< " + sender + "> " + message);
 			}
 		}
+=======
+				ft_send(user, message);
+>>>>>>> origin/xuluu
 		i++;
 	}
 }

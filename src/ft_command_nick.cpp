@@ -57,12 +57,16 @@ void	ft_command_nick(Server& server, Client* client)
 		Client*	user = server.getRegisteredClients()[id - 1];
 		if (user->m_getStatusS())
 		{
+<<<<<<< HEAD
 			if (client->m_usingIrssi())
 			{
 				std::string text = ":localhost 433 * " + parameter + " :Nickname is already in use";
 				ft_send(client, text);
 			}
 			std::string text = "(!) Nickname is already in use";
+=======
+			std::string text = ":localhost 433 * " + parameter + " :Nickname is already in use";
+>>>>>>> origin/xuluu
 			ft_send(client, text);
 			return ;
 		}

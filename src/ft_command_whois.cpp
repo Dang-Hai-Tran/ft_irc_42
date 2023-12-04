@@ -12,6 +12,7 @@
 
 #include "../inc/irc.hpp"
 
+<<<<<<< HEAD
 void	print_adminServer(Client* client, Client* user)
 {
 	if (user->m_getAdminServer())
@@ -54,6 +55,58 @@ void	print_mode(Client* client, Client* user)
 
 void	ft_display_informations(Server& server, Client* client, int id)
 {
+=======
+void	print_type_client(Client* client, Client* user)
+{
+	if (user->m_usingIrssi())
+		ft_send(client, "* USING: irssi");
+	else
+		ft_send(client, "* USING: nc");
+}
+
+void	print_adminServer(Client* client, Client* user)
+{
+	if (user->m_getAdminServer())
+		ft_send(client, "* ADMIN SERVER: true");
+	else
+		ft_send(client, "* ADMIN SERVER: false");
+}
+
+void	print_adminChannel(Client* client, Client* user)
+{
+	if (user->m_getAdminChannel())
+		ft_send(client, "* ADMIN CHANNEL: true");
+	else
+		ft_send(client, "* ADMIN CHANNEL: false");
+}
+
+void	print_statusS(Client* client, Client* user)
+{
+	if (user->m_getStatusS())
+		ft_send(client, "* STATUS ON SERVER: on");
+	else
+		ft_send(client, "* STATUS ON SERVER: off");
+}
+
+void	print_statusC(Client* client, Client* user)
+{
+	if (user->m_getStatusC())
+		ft_send(client, "* STATUS ON CHANNEL: on");
+	else
+		ft_send(client, "* STATUS ON CHANNEL: off");
+}
+
+void	print_mode(Client* client, Client* user)
+{
+	if (user->m_getMode())
+		ft_send(client, "* MODE: invisible");
+	else
+		ft_send(client, "* MODE: normal");
+}
+
+void	ft_display_informations(Server& server, Client* client, int id)
+{
+>>>>>>> origin/xuluu
 	Client*	user = server.m_getListConnection()[id];
 	std::string	numberID = int_to_string(user->m_getID());
 	std::string	userName = user->m_getUserName();
@@ -66,6 +119,7 @@ void	ft_display_informations(Server& server, Client* client, int id)
 	ft_send(client, "* NICKNAME: " + nickName);
 	ft_send(client, "* REALNAME: " + realName);
 
+	print_type_client(client, user);
 	print_mode(client, user);
 	print_adminServer(client, user);
 	print_adminChannel(client, user);
