@@ -34,17 +34,15 @@ std::string getIpAddressFromSockaddr(const struct sockaddr_in6 *sockaddr) {
 
 std::vector<std::string> splitString(std::string str, char c) {
     std::vector<std::string> strs;
-    std::string part = "";
     for (size_t i = 0; i < str.size(); i++) {
-        if (str[i] == c && part != "") {
-            strs.push_back(part);
-            part = "";
-        } else {
-            part += str[i];
+        if (str[i] != c) {
+            size_t begin = i;
+            size_t end = begin + 1;
+            while (end < str.size() && str[end] != c)
+                end++;
+            strs.push_back(str.substr(begin, end - begin));
+            i = end;
         }
-    }
-    if (part != "") {
-        strs.push_back(part);
     }
     return strs;
 }
@@ -68,7 +66,7 @@ void trimEndOfLine(std::string &str) {
 int getUnixTimestamp(void) {
     return std::time(NULL);
 }
-
+// Find message by :
 std::string cmdFindMessage(std::string input) {
     std::string message = "";
     size_t colonIndex = input.find(':');
