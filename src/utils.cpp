@@ -17,9 +17,9 @@ std::string getCurrentTime(void) {
     return std::string(buffer);
 }
 
-std::string getClientIpAddress(const struct sockaddr_in6 *clientAddress) {
+std::string getIpAddressFromSockaddr(const struct sockaddr_in6 *sockaddr) {
     char ipAddress[INET6_ADDRSTRLEN];
-    inet_ntop(AF_INET6, &(clientAddress->sin6_addr), ipAddress, INET6_ADDRSTRLEN);
+    inet_ntop(AF_INET6, &(sockaddr->sin6_addr), ipAddress, INET6_ADDRSTRLEN);
     std::string ip = std::string(ipAddress);
     if (ip.find("::ffff:") != std::string::npos) {
         ip = ip.substr(7);
@@ -34,17 +34,15 @@ std::string getClientIpAddress(const struct sockaddr_in6 *clientAddress) {
 
 std::vector<std::string> splitString(std::string str, char c) {
     std::vector<std::string> strs;
-    std::string part = "";
     for (size_t i = 0; i < str.size(); i++) {
-        if (str[i] == c && part != "") {
-            strs.push_back(part);
-            part = "";
-        } else {
-            part += str[i];
+        if (str[i] != c) {
+            size_t begin = i;
+            size_t end = begin + 1;
+            while (end < str.size() && str[end] != c)
+                end++;
+            strs.push_back(str.substr(begin, end - begin));
+            i = end;
         }
-    }
-    if (part != "") {
-        strs.push_back(part);
     }
     return strs;
 }
@@ -62,4 +60,45 @@ void trimEndOfLine(std::string &str) {
     if (!str.empty() && str[str.size() - 1] == '\n') {
         str.erase(str.size() - 1);
     }
+}
+
+// Get unix timestamp
+int getUnixTimestamp(void) {
+    return std::time(NULL);
+}
+// Find message by :
+std::string cmdFindMessage(std::string input) {
+    std::string message = "";
+    size_t colonIndex = input.find(':');
+    if (colonIndex != std::string::npos) {
+        if (colonIndex < input.size() - 1)
+            message = input.substr(colonIndex + 1);
+    }
+    return message;
+}
+
+std::vector<std::string> cmdFindArgs(std::string input) {
+    size_t colonIndex = input.find(':');
+    std::vector<std::string> args = splitString(input.substr(0, colonIndex), ' ');
+    return args;
+}
+
+// Parsing mode
+std::vector<std::string> parseModeString(std::string mode) {
+    std::vector<std::string> vectorMode;
+    if (mode.empty() || (mode[0] != '+' && mode[0] != '-'))
+        return vectorMode;
+    size_t i = 0;
+    while (i < mode.size()) {
+        if (mode[i] == '+' || mode[i] == '-') {
+            size_t begin = i;
+            size_t end = begin + 1;
+            while (end < mode.size() && mode[end] != '+' && mode[end] != '-')
+                end++;
+            std::string subMode = mode.substr(begin, end - begin);
+            vectorMode.push_back(subMode);
+            i = end;
+        }
+    }
+    return vectorMode;
 }

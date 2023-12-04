@@ -14,12 +14,17 @@ SRC			= $(wildcard $(SRC_PATH)*.cpp)
 OBJ_PATH	= ./obj/
 OBJ			= $(SRC:$(SRC_PATH)%.cpp=$(OBJ_PATH)%.o)
 
+TEST_PATH	= ./test/
+TEST_SRC	= $(wildcard $(TEST_PATH)*.cpp)
+TEST		= $(TEST_PATH)test
+
 # Debug
 DEBUG = 0
 DEBUG_FLAG = -D DEBUG=$(DEBUG)
 
 # Build rule
 all: $(OBJ_PATH) $(NAME)
+test: $(TEST)
 
 debugflag:
 	$(eval DEBUG=1)
@@ -44,7 +49,15 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 
+cleantest:
+	@rm -rf $(TEST)
+
+$(TEST): $(TEST_SRC)
+	@$(CC) $(CFLAGS) $(TEST_SRC) -o $@
+	@$(TEST)
+
 # Remake
 re: fclean all
+retest: cleantest test
 
 .PHONY: all re clean fclean
