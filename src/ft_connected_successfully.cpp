@@ -55,14 +55,14 @@ void	connected_successfully(Server& server, Client* &client)
 	std::string	nickName = client->m_getNickName();
 	ft_send(client, "Helloooooo [" + userName + "] !!!");
 
-	ft_send(client, "\n-----------------------------------------\n");
+	ft_send(client, "\n----------------------------------------\n");
 	if (client->m_usingIrssi()) // signal connected for IRSSI
 	{
-		std::string	text = ":localhost 001 " + nickName + " :<-- Welcome to the IRC Network -->";
+		std::string	text = ":localhost 001 " + nickName + " :<--    Welcome to the IRC Network    -->";
 		ft_send(client, text);
 	}
 	else
-		ft_send(client, "<-- Welcome to the IRC Network -->");
+		ft_send(client, "<--    Welcome to the IRC Network    -->");
 
 	// update status
 	if (client->m_getStatusS())

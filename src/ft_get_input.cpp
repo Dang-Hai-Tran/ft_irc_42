@@ -46,7 +46,7 @@ bool	ft_connection_with_nc(Server& server, Client* client, std::string& cmd)
 	{
 		ft_send(client, "(!) Command start with '/'");
 		ft_send(client, "(i) Use /HELP for instructions");
-		ft_send(client, "\n--------------------------------------------------\n");
+		ft_send(client, "\n-------------------------------------------------\n");
 		run = client->m_getStatusS();
 	}
 

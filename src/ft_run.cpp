@@ -137,7 +137,7 @@ bool	ft_run(Server& server, Client* client)
 	{
 		if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING")
 			return (1);
-		ft_send(client, "\n-----------------------------------------\n");
+		ft_send(client, "\n----------------------------------------\n");
 		if (!client->m_usingIrssi())
 		{
 			std::string	text = "<" + client->m_getNickName() + "> ";

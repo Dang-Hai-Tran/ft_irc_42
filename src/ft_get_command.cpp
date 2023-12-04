@@ -41,7 +41,7 @@ bool	get_command_parameter(Server& server, Client* client)
 	{
 		ft_send(client, "(!) Command must be capitalized");
 		ft_send(client, "(i) Use /HELP for instructions");
-		ft_send(client, "\n-----------------------------------------\n");
+		ft_send(client, "\n----------------------------------------\n");
 		if (client->m_getStatusS())
 			return (1);
 		return (0);

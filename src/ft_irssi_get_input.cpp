@@ -15,17 +15,11 @@
 void	ft_irssi_get_username(Server& server, Client* client)
 {
 	std::string	parameter = client->m_getParameter();
-	int	nbr_space = ft_nbrSpace(parameter);
-	int	compter(0);
 	int	i(0);
 
-	while (parameter[i] && compter < nbr_space)
-	{
-		if (parameter[i] == ' ')
-			compter++;
+	while (parameter[i] && parameter[i] != ' ')
 		i++;
-	}
-	std::string	userName = parameter.substr(0, i - 1);
+	std::string	userName = parameter.substr(0, i);
 	client->m_setUserName(userName);
 
 	connected_successfully(server, client);
