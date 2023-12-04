@@ -25,8 +25,6 @@ void commandPart(Server *server, Client *client, std::string input) {
             continue;
         }
         channel->delUser(client);
-        if (channel->isAdmin(client))
-            channel->delAdmin(client);
         client->delChannel(channel);
         std::cout << nick << " has left channel " << channelName << std::endl;
         // Send leaving message to all users in channel

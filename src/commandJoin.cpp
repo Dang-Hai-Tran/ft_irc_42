@@ -2,6 +2,9 @@
 
 // JOIN <channel>{,<channel>} [<key>{,<key>}]
 void commandJoin(Server *server, Client *client, std::string input) {
+    if (DEBUG) {
+        std::cout << "Address of client in command join: " << client << std::endl;
+    }
     std::vector<std::string> args = splitString(input, ' ');
     std::string nick = client->m_getNickName();
     std::string username = client->m_getUserName();
