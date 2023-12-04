@@ -125,7 +125,7 @@ void ft_input(Server &server, int socket, std::string &input) {
 void Server::receiveData(int clientSocket) {
     std::string message;
     char buffer[BUFFER_SIZE];
-    buffer[0] = 0;
+    memset(buffer, 0, sizeof(buffer));
     while (!strchr(buffer, '\n')) {
         memset(buffer, 0, sizeof(buffer));
         ssize_t bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
@@ -167,6 +167,11 @@ void Server::delClientSocket(int clientSocket) {
                 m_getListConnection().erase(m_getListConnection().begin() + i);
                 delete client;
             }
+            std::vector<Channel *> listChannel = client->getChannelsUserIn();
+            for (size_t i = 0; i < listChannel.size(); i++) {
+                listChannel[i]->delUser(client);
+            }
+            listChannel.clear();
             break;
         }
         i++;
