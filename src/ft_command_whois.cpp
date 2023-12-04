@@ -1,61 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_whois.cpp                                  :+:      :+:    :+:   */
+/*   ft_command_whois.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:02:52 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/20 19:02:54 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/12/04 18:35:15 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/irc.hpp"
 
-<<<<<<< HEAD
-void	print_adminServer(Client* client, Client* user)
-{
-	if (user->m_getAdminServer())
-		ft_send(client, "* ADMIN SERVER: true");
-	else
-		ft_send(client, "* ADMIN SERVER: false");
-}
-
-void	print_adminChannel(Client* client, Client* user)
-{
-	if (user->m_getAdminChannel())
-		ft_send(client, "* ADMIN CHANNEL: true");
-	else
-		ft_send(client, "* ADMIN CHANNEL: false");
-}
-
-void	print_statusS(Client* client, Client* user)
-{
-	if (user->m_getStatusS())
-		ft_send(client, "* STATUS ON SERVER: on");
-	else
-		ft_send(client, "* STATUS ON SERVER: off");
-}
-
-void	print_statusC(Client* client, Client* user)
-{
-	if (user->m_getStatusC())
-		ft_send(client, "* STATUS ON CHANNEL: on");
-	else
-		ft_send(client, "* STATUS ON CHANNEL: off");
-}
-
-void	print_mode(Client* client, Client* user)
-{
-	if (user->m_getMode())
-		ft_send(client, "* MODE: invisible");
-	else
-		ft_send(client, "* MODE: normal");
-}
-
-void	ft_display_informations(Server& server, Client* client, int id)
-{
-=======
 void	print_type_client(Client* client, Client* user)
 {
 	if (user->m_usingIrssi())
@@ -106,7 +62,6 @@ void	print_mode(Client* client, Client* user)
 
 void	ft_display_informations(Server& server, Client* client, int id)
 {
->>>>>>> origin/xuluu
 	Client*	user = server.m_getListConnection()[id];
 	std::string	numberID = int_to_string(user->m_getID());
 	std::string	userName = user->m_getUserName();

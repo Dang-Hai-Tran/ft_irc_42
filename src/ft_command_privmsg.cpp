@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_privmsg.cpp                                :+:      :+:    :+:   */
+/*   ft_command_privmsg.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:02:14 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/20 19:02:16 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/12/04 18:34:16 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,37 +20,16 @@ void	ft_conversation(Client* client, Channel* channel)
 		return (error_syntax(client));
 
 	std::string	sender = client->m_getNickName();
-<<<<<<< HEAD
-	size_t	i(0);
-
-=======
 	std::string	nameChannel = channel->getNameChannel();
 	message = ":" + sender + " PRIVMSG " + nameChannel + " " + message;
 	
 	size_t	i(0);
->>>>>>> origin/xuluu
 	while (i < channel->getUsers().size())
 	{
 		Client*	user = channel->getUsers()[i];
 		std::string	recipient = user->m_getNickName();
 		if (recipient != sender)
-<<<<<<< HEAD
-		{
-			if (user->m_usingIrssi())
-			{
-				std::string	nameChannel = channel->getNameChannel();
-				message = ":" + sender + " PRIVMSG " + nameChannel + " " + message;
 				ft_send(user, message);
-			}
-			else
-			{
-				message = message.substr(1, message.size());
-				ft_send(user, "< " + sender + "> " + message);
-			}
-		}
-=======
-				ft_send(user, message);
->>>>>>> origin/xuluu
 		i++;
 	}
 }

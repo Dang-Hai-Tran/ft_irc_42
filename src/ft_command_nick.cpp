@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_nickname.cpp                               :+:      :+:    :+:   */
+/*   ft_command_nick.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 12:54:57 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/17 12:56:24 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/12/04 18:33:52 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,7 @@ void	ft_command_nick(Server& server, Client* client)
 		Client*	user = server.getRegisteredClients()[id - 1];
 		if (user->m_getStatusS())
 		{
-<<<<<<< HEAD
-			if (client->m_usingIrssi())
-			{
-				std::string text = ":localhost 433 * " + parameter + " :Nickname is already in use";
-				ft_send(client, text);
-			}
-			std::string text = "(!) Nickname is already in use";
-=======
 			std::string text = ":localhost 433 * " + parameter + " :Nickname is already in use";
->>>>>>> origin/xuluu
 			ft_send(client, text);
 			return ;
 		}
