@@ -26,18 +26,18 @@ void	ft_infor_nickname(Client* client)
 	ft_send(client, "Use: is used to change your nickname");
 }
 
-void	ft_infor_privmsg(Client* client)
-{
-	ft_send(client, "* Command: /PRIVMSG user, #channel :messages");
-	ft_send(client, "Use: send private messages to user or channel");
-}
-
 /**************************************************************/
 
 void	ft_infor_(Client* client)
 {
 	ft_send(client, "* Command: ");
 	ft_send(client, "Use: ");
+}
+
+void	ft_infor_clear(Client* client)
+{
+	ft_send(client, "* Command: /CLEAR");
+	ft_send(client, "Use: clear the windown");
 }
 
 void	ft_infor_help(Client* client)
@@ -49,12 +49,6 @@ void	ft_infor_help(Client* client)
 void	ft_infor_password(Client* client)
 {
 	ft_send(client, "* Command: /PASS server_password");
-	ft_send(client, "Use: login to the IRC server");
-}
-
-void	ft_infor_login(Client* client)
-{
-	ft_send(client, "* Command: /LOGIN username");
 	ft_send(client, "Use: login to the IRC server");
 }
 
@@ -77,9 +71,13 @@ void	ft_command_help(Client* client)
 	if (client->m_getParameter() != "")
 		return (error_syntax(client));
 
+	// general command
 	ft_infor_help(client);
 	ft_send(client, "   ---------------------------------------   ");
+	ft_infor_clear(client);
+	ft_send(client, "   ---------------------------------------   ");
 
+	// password
 	if (client->m_isConnected() == false)
 	{
 		ft_infor_password(client);
@@ -87,28 +85,20 @@ void	ft_command_help(Client* client)
 		return ;
 	}
 
-	if (client->m_getStatusS() == false)
-	{
-		ft_infor_login(client);
-		ft_send(client, "   ---------------------------------------   ");
-	}
-
-	ft_infor_username(client);
-	ft_send(client, "   ---------------------------------------   ");
-
-	if (client->m_getUserName() == "")
-		return ;
-
+	// nickname
 	ft_infor_nickname(client);
 	ft_send(client, "   ---------------------------------------   ");
-
 	if (client->m_getNickName() == "")
+		return ;
+
+	// username
+	ft_infor_username(client);
+	ft_send(client, "   ---------------------------------------   ");
+	if (client->m_getUserName() == "")
 		return ;
 
 	ft_infor_who(client);
 	ft_send(client, "   ---------------------------------------   ");
 	ft_infor_whois(client);
-	ft_send(client, "   ---------------------------------------   ");
-	ft_infor_privmsg(client);
 	ft_send(client, "   ---------------------------------------   ");
 }

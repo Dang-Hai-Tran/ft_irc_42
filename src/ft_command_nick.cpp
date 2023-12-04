@@ -57,10 +57,27 @@ void	ft_command_nick(Server& server, Client* client)
 		Client*	user = server.getRegisteredClients()[id - 1];
 		if (user->m_getStatusS())
 		{
-			ft_send(client, "(!) NICKNAME: [" + parameter + "] has been used");
+			if (client->m_usingIrssi())
+			{
+				std::string text = ":localhost 433 * " + parameter + " :Nickname is already in use";
+				ft_send(client, text);
+			}
+			std::string text = "(!) Nickname is already in use";
+			ft_send(client, text);
 			return ;
 		}
 	}
+	std::string	oldNick = client->m_getNickName();
 	client->m_setNickName(parameter);
-	ft_send(client, "(✓) You're now know as [" + parameter + "]");
+	if (client->m_usingIrssi())
+	{
+		std::string	newNick = client->m_getNickName();
+		ft_send(client, ":" + oldNick + " NICK :" + newNick);
+	}
+	else
+	{
+		ft_send(client, "You're now know as [" + parameter + "]");
+		ft_send(client, "\n-----------------------------------------\n");
+		ft_guide(client);
+	}
 }

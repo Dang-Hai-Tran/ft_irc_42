@@ -88,6 +88,11 @@ void ft_command_who(Server &server, Client *client);
 void ft_command_whois(Server &server, Client *client);
 
 // command PRIVMSG
-void ft_command_privmsg(Server &server, Client *client);
+void	ft_command_privmsg(Server& server, Client* client);
+void	ft_conversation(Client* client, Channel* channel);
+void	ft_message(Client* client);
+
+// command CLEAR
+void	ft_command_clear(Client* client);
 
 #endif

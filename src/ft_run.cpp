@@ -79,13 +79,28 @@ void	ft_guide(Client* client)
 	}
 }
 
-bool	ft_run(Server& server, Client* client)
+int	ft_general_command(Client* client)
 {
 	std::string	cmd = client->m_getCmd();
 
+	if (cmd == "QUIT")
+		return (0);
 	if (cmd == "HELP")
 		ft_command_help(client);
-	else if (client->m_isConnected() == false)
+	else if (cmd == "CLEAR")
+		ft_command_clear(client);
+	else if (cmd == "PING" && client->m_usingIrssi())
+		ft_send(client, "PONG :localhost");
+	else
+		return (1);
+	return (2);
+}
+
+bool	ft_request_informations(Server& server, Client* &client)
+{
+	std::string	cmd = client->m_getCmd();
+
+	if (client->m_isConnected() == false)
 	{
 		if (!ft_requestPassword(server, client))
 			return (0);
@@ -101,15 +116,33 @@ bool	ft_run(Server& server, Client* client)
 			return (0);
 	}
 	else if (client->m_getStatusC() == true || cmd == "JOIN")
-        commandChannel(server, *client);
+		commandChannel(server, *client);
 	else
 		ft_command_outside(server, client);
+	return (1);
+}
+
+bool	ft_run(Server& server, Client* client)
+{
+	std::string	cmd = client->m_getCmd();
+
+	int	code = ft_general_command(client);
+	if (code == 0)
+		return (0);
+	else if (code == 1 && !ft_request_informations(server, client))
+		return (0);
 
 	// std::cout << "2 --> " << client << std::endl;
-	if (!client->m_usingIrssi() || client->m_getStatusS())
+	if (client->m_getStatusS())
 	{
-		ft_send(client, "\n--------------------------------------------------\n");
-		ft_guide(client);
+		if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING")
+			return (1);
+		ft_send(client, "\n----------------------------------------\n");
+		if (!client->m_usingIrssi())
+		{
+			std::string	text = "<" + client->m_getNickName() + "> ";
+			send(client->m_getSocket(), text.c_str(), text.size(), 0);
+		}
 	}
 	return (1);
 }

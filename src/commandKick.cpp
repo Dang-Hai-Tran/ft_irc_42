@@ -43,5 +43,11 @@ void commandKick(Server *server, Client *client, std::string input) {
         // Send RPL_KICK to users on channel (kicked user included)
         channel->sendMessageToAll(RPL_KICK(user_id(srcNick, srcUsername), channelName, targetNick, reason));
         channel->delUser(target);
+        client->delChannel(channel);
+        if (client->getChannelsUserIn().size() == 0)
+            client->m_setStatusC(false);
+        if (DEBUG) {
+            std::cout << "Status C of client fd: "<< client->m_getSocket() << ", value: " << client->m_getStatusC() << std::endl;
+        }
     }
 }

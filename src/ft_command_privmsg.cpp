@@ -18,7 +18,6 @@ void	ft_conversation(Client* client, Channel* channel)
 
 	if (message.size() < 2 || message[0] != ':')
 		return (error_syntax(client));
-	message = message.substr(1, message.size());
 
 	std::string	sender = client->m_getNickName();
 	size_t	i(0);
@@ -29,10 +28,17 @@ void	ft_conversation(Client* client, Channel* channel)
 		std::string	recipient = user->m_getNickName();
 		if (recipient != sender)
 		{
-			if (client->m_usingIrssi())
+			if (user->m_usingIrssi())
+			{
+				std::string	nameChannel = channel->getNameChannel();
+				message = ":" + sender + " PRIVMSG " + nameChannel + " " + message;
 				ft_send(user, message);
+			}
 			else
-				ft_send(user, "<" + recipient + "> " + message);
+			{
+				message = message.substr(1, message.size());
+				ft_send(user, "< " + sender + "> " + message);
+			}
 		}
 		i++;
 	}
@@ -78,4 +84,19 @@ void	ft_command_privmsg(Server& server, Client* client)
 	client->m_setParameter(parameter);
 
 	ft_conversation(client, server.getChannels()[id - 1]);
+}
+
+void	ft_message(Client* client)
+{
+	std::string	cmd = client->m_getInput();
+	std::string	message = ":" + cmd;
+	client->m_setParameter(message);
+
+	size_t	i(0);
+	while (i < client->getChannelsUserIn().size())
+	{
+		Channel*	channel = client->getChannelsUserIn()[i];
+		ft_conversation(client, channel);
+		i++;
+	}
 }
