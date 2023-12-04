@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_connected_successfully.cpp                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:13:15 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/28 17:13:44 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/12/04 18:38:16 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,10 @@ void	connected_successfully(Server& server, Client* &client)
 	else
 		ft_send(client, "<--    Welcome to the IRC Network    -->");
 
-<<<<<<< HEAD
-=======
 	// number connection
 	std::string nbr_connection = int_to_string((int)server.m_getListConnection().size());
 	ft_send(client, "Number connection: " + nbr_connection);
 
->>>>>>> origin/xuluu
 	// update status
 	if (client->m_getStatusS())
 		return ;
