@@ -12,6 +12,14 @@
 
 #include "../inc/irc.hpp"
 
+void	print_type_client(Client* client, Client* user)
+{
+	if (user->m_usingIrssi())
+		ft_send(client, "* USING: irssi");
+	else
+		ft_send(client, "* USING: nc");
+}
+
 void	print_adminServer(Client* client, Client* user)
 {
 	if (user->m_getAdminServer())
@@ -66,6 +74,7 @@ void	ft_display_informations(Server& server, Client* client, int id)
 	ft_send(client, "* NICKNAME: " + nickName);
 	ft_send(client, "* REALNAME: " + realName);
 
+	print_type_client(client, user);
 	print_mode(client, user);
 	print_adminServer(client, user);
 	print_adminChannel(client, user);

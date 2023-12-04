@@ -20,26 +20,16 @@ void	ft_conversation(Client* client, Channel* channel)
 		return (error_syntax(client));
 
 	std::string	sender = client->m_getNickName();
+	std::string	nameChannel = channel->getNameChannel();
+	message = ":" + sender + " PRIVMSG " + nameChannel + " " + message;
+	
 	size_t	i(0);
-
 	while (i < channel->getUsers().size())
 	{
 		Client*	user = channel->getUsers()[i];
 		std::string	recipient = user->m_getNickName();
 		if (recipient != sender)
-		{
-			if (user->m_usingIrssi())
-			{
-				std::string	nameChannel = channel->getNameChannel();
-				message = ":" + sender + " PRIVMSG " + nameChannel + " " + message;
 				ft_send(user, message);
-			}
-			else
-			{
-				message = message.substr(1, message.size());
-				ft_send(user, "< " + sender + "> " + message);
-			}
-		}
 		i++;
 	}
 }
