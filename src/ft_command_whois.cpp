@@ -62,7 +62,7 @@ void	print_mode(Client* client, Client* user)
 
 void	ft_display_informations(Server& server, Client* client, int id)
 {
-	Client*	user = server.m_getListConnection()[id];
+	Client*	user = server.getRegisteredClients()[id];
 	std::string	numberID = int_to_string(user->m_getID());
 	std::string	userName = user->m_getUserName();
 	std::string	realName = user->m_getRealName();

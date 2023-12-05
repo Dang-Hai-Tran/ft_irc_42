@@ -118,6 +118,8 @@ void ft_input(Server &server, int socket, std::string &input) {
             Client* tmp = clients[i];
             clients[i]->m_setInput(input);
             get_input(server, clients[i]);
+
+            // new --> old
             if (tmp != clients[i])
             {
                 delete tmp;
@@ -181,6 +183,8 @@ void Server::delClientSocket(int clientSocket) {
             }
             listChannel.clear();
             m_getListConnection().erase(m_getListConnection().begin() + i);
+            if (client->m_getID() == 0)
+                delete client;
             break;
         }
         i++;

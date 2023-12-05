@@ -74,6 +74,7 @@ void ft_command_nick(Server &server, Client *client);
 void ft_command_user(Server &server, Client *&client);
 void connected_successfully(Server &server, Client *&client);
 void ft_irssi_get_realname(Server &server, Client *&client);
+bool ft_check_username(Server &server, Client *&client, std::string userName);
 
 // command WHO
 void ft_command_who(Server &server, Client *client);

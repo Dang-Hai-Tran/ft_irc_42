@@ -19,18 +19,13 @@ bool reset_data_username(Client *client) {
     return (0);
 }
 
-bool ft_check_username(Server &server, Client *client, std::string userName) {
+bool ft_check_username(Server &server, Client *&client, std::string userName) {
     int id = ft_find_username(server, userName);
 
     if (id != 0 && id != client->m_getID()) {
-        Client *user = server.getRegisteredClients()[id - 1];
-        if (user->m_getStatusS()) {
-            std::string text = "";
-            if (client->m_usingIrssi())
-                text = ":localhost 433 * " + userName + " :Username is already in use";
-            else
-                text = "(!) Username is already in use";
-            std::cout << text << std::endl;
+        Client *target = server.getRegisteredClients()[id - 1];
+        if (target->m_getStatusS()) {
+            std::string text = ":localhost 433 * " + userName + " :(!) Username is already in use";
             ft_send(client, text);
             return (reset_data_username(client));
         }

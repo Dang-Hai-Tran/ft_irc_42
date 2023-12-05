@@ -20,9 +20,8 @@ void	ft_irssi_get_username(Server& server, Client* &client)
 	while (parameter[i] && parameter[i] != ' ')
 		i++;
 	std::string	userName = parameter.substr(0, i);
-	client->m_setUserName(userName);
-
-	connected_successfully(server, client);
+	if (ft_check_username(server, client, userName))
+		connected_successfully(server, client);
 }
 
 void	ft_irssi_get_realname(Server& server, Client* &client)
