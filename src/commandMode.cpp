@@ -105,8 +105,9 @@ void setModeToChannel(Server *server, Client *client, Channel *channel, char mod
                 channel->sendMessageToAll(MODE_CHANNELMSGWITHPARAM(channelName, "+k", param));
             }
         } else if (modeOperator == '-') {
-            if (!param.empty()) {
-                server->sendData(client, ERR_INVALIDMODEPARAM(srcNick, channelName, "-k", param, "Param is not empty"));
+            std::string password = server->getPassword();
+            if (param != password) {
+                server->sendData(client, ERR_INVALIDMODEPARAM(srcNick, channelName, "-k", param, "Key is invalid"));
                 return;
             } else {
                 channel->setHavePassword(false);
