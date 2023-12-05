@@ -29,23 +29,30 @@ void sign_up(Server &server, Client *client) {
         client->m_setNickName(nickName);
     }
 }
-void sign_in(Server &server, Client *client, int id) {
+void sign_in(Server &server, Client *&client, int id) {
+    std::string input = client->m_getInput();
     std::string nickName = client->m_getNickName();
-    std::string realname = client->m_getRealName();
+    std::string realName = client->m_getRealName();
+    bool        typeClient = client->m_usingIrssi();
+    bool        mode = client->m_getMode();
+    int         socket = client->m_getSocket();
 
+    // update
     Client *oldClient = server.getRegisteredClients()[id];
-    if (DEBUG) {
-        std::cout << "Address of old client: " << std::endl;
-    }
+    oldClient->m_setSocket(socket);
+    oldClient->m_setInput(input);
+    oldClient->m_setNickName(nickName);
+    oldClient->m_setRealName(realName);
+    oldClient->m_setModeClient(typeClient);
+    oldClient->m_setMode(mode);
+    oldClient->m_setConnected(true);
+    oldClient->m_setStatusS(true);
 
-
-    // std::cout << "1 --> " << oldClient << std::endl;
-    int newSocket = client->m_getSocket();
     client = oldClient;
-    client->m_setSocket(newSocket);
+    std::cout << "2 --> " << client << std::endl;
 }
 
-void connected_successfully(Server &server, Client *client) {
+void connected_successfully(Server &server, Client *&client) {
     std::string userName = client->m_getUserName();
     std::string nickName = client->m_getNickName();
     ft_send(client, "Helloooooo [" + userName + "] !!!");

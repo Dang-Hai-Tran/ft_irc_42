@@ -12,16 +12,16 @@
 
 #include "../inc/irc.hpp"
 
-void ft_command_outside(Server &server, Client *client) {
+void ft_command_outside(Server &server, Client *&client) {
     std::string cmd = client->m_getCmd();
     // std::cout << cmd << std::endl;
 
     if (cmd == "HELP")
         ft_command_help(client);
-    else if (cmd == "WHO")
-        ft_command_who(server, client);
     else if (cmd == "USER")
         ft_command_user(server, client);
+    else if (cmd == "WHO")
+        ft_command_who(server, client);
     else if (cmd == "WHOIS")
         ft_command_whois(server, client);
     else if (cmd == "NICK")
@@ -45,18 +45,6 @@ void reset_data(Client *client) {
     client->m_setCmd("");
     client->m_setParameter("");
     client->m_setModeClient(false);
-}
-
-void copy_data(Server *server, Client *client) {
-    std::vector<Client *> listRegistered = server->getRegisteredClients();
-    for (size_t i = 0; i < listRegistered.size(); i++) {
-        Client *oldClient = listRegistered[i];
-        if (client->m_getID() == listRegistered[i]->m_getID()) {
-            oldClient->m_setNickName(client->m_getNickName());
-            oldClient->m_setUserName(client->m_getUserName());
-            oldClient->m_setRealName(client->m_getRealName());
-        }
-    }
 }
 
 void ft_guide(Client *client) {
@@ -88,7 +76,7 @@ int ft_general_command(Client *client) {
     return (2);
 }
 
-bool ft_request_informations(Server &server, Client *client) {
+bool ft_request_informations(Server &server, Client *&client) {
     std::string cmd = client->m_getCmd();
 
     if (client->m_isConnected() == false) {
@@ -107,7 +95,7 @@ bool ft_request_informations(Server &server, Client *client) {
     return (1);
 }
 
-bool ft_run(Server &server, Client *client) {
+bool ft_run(Server &server, Client *&client) {
     std::string cmd = client->m_getCmd();
 
     int code = ft_general_command(client);

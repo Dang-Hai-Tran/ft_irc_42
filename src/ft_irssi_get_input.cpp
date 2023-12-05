@@ -12,7 +12,7 @@
 
 #include "../inc/irc.hpp"
 
-void	ft_irssi_get_username(Server& server, Client* client)
+void	ft_irssi_get_username(Server& server, Client* &client)
 {
 	std::string	parameter = client->m_getParameter();
 	int	i(0);
@@ -25,7 +25,7 @@ void	ft_irssi_get_username(Server& server, Client* client)
 	connected_successfully(server, client);
 }
 
-void	ft_irssi_get_realname(Server& server, Client* client)
+void	ft_irssi_get_realname(Server& server, Client* &client)
 {
 	std::string	parameter = client->m_getParameter();
 

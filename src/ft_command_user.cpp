@@ -78,7 +78,7 @@ std::string get_parameter(std::string &str) {
     return (new_str);
 }
 
-void ft_command_user(Server &server, Client *client) {
+void ft_command_user(Server &server, Client *&client) {
     std::string parameter = client->m_getParameter();
     int min_space = 3;
 

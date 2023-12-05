@@ -28,7 +28,7 @@ bool	is_adminServer(Client* client)
 	return (admin);
 }
 
-bool	get_command_parameter(Server& server, Client* client)
+bool	get_command_parameter(Server& server, Client* &client)
 {
 	std::string str = client->m_getInput();
 	int	i(0);

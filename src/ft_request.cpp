@@ -47,7 +47,7 @@ bool ft_requestNickName(Server &server, Client *client) {
     return (1);
 }
 
-bool ft_requestUserName(Server &server, Client *client) {
+bool ft_requestUserName(Server &server, Client *&client) {
     std::string cmd = client->m_getCmd();
 
     if (cmd != "USER")

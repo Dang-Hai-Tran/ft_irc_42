@@ -88,6 +88,7 @@ void Server::waitEvents(void) {
 // xuluu
 void ft_add_connection(Server &server, int socket) {
     Client *client = new Client();
+    std::cout << "1 --> " << client << std::endl;
     client->m_setSocket(socket);
     server.m_getListConnection().push_back(client);
 }
@@ -114,8 +115,15 @@ void ft_input(Server &server, int socket, std::string &input) {
     while (i < clients.size()) {
         int sk = clients[i]->m_getSocket();
         if (sk == socket) {
+            Client* tmp = clients[i];
             clients[i]->m_setInput(input);
             get_input(server, clients[i]);
+            if (tmp != clients[i])
+            {
+                delete tmp;
+                server.m_getListConnection()[i] = clients[i];
+            }
+            std::cout << "3 --> " << clients[i] << std::endl;
             break;
         }
         i++;
@@ -157,12 +165,12 @@ void Server::delClientSocket(int clientSocket) {
     }
     this->setNonBlocking();
     this->setPollFds();
+
     // xuluu
     size_t i(0);
     while (i < this->m_getListConnection().size()) {
         if (m_getListConnection()[i]->m_getSocket() == clientSocket) {
             Client *client = m_getListConnection()[i];
-            copy_data(this, client);
             reset_data(client);
             std::vector<Channel *> listChannel = client->getChannelsUserIn();
             for (size_t j = 0; j < listChannel.size(); j++) {
@@ -173,13 +181,6 @@ void Server::delClientSocket(int clientSocket) {
             }
             listChannel.clear();
             m_getListConnection().erase(m_getListConnection().begin() + i);
-            size_t k;
-            for (k = 0; k < this->registeredClients.size(); k++) {
-                if (this->registeredClients[k] != client)
-                    break;
-            }
-            if (k == this->registeredClients.size())
-                delete client;
             break;
         }
         i++;

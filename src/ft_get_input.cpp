@@ -26,7 +26,7 @@ int	ft_nbrNewLine(std::string& str)
 	return (nbr_newline);
 }
 
-bool	ft_connection_with_nc(Server& server, Client* client, std::string& cmd)
+bool	ft_connection_with_nc(Server& server, Client* &client, std::string& cmd)
 {
 	bool	run = true;
 
@@ -56,7 +56,7 @@ bool	ft_connection_with_nc(Server& server, Client* client, std::string& cmd)
 	return (0);
 }
 
-bool	ft_connection_with_irssi(Server& server, Client* client, std::string& cmd)
+bool	ft_connection_with_irssi(Server& server, Client* &client, std::string& cmd)
 {
 	cmd = cmd.substr(0, cmd.size() - 1);
 	client->m_setInput(cmd);
@@ -67,7 +67,7 @@ bool	ft_connection_with_irssi(Server& server, Client* client, std::string& cmd)
 	return (0);
 }
 
-bool	ft_check_type_client(Server& server, Client* client, std::string cmd)
+bool	ft_check_type_client(Server& server, Client* &client, std::string cmd)
 {
 	// using IRSSI
 	if (cmd == "CAP LS\r")
@@ -85,7 +85,7 @@ bool	ft_check_type_client(Server& server, Client* client, std::string cmd)
 	return (1);
 }
 
-void	get_input(Server& server, Client* client)
+void	get_input(Server& server, Client* &client)
 {
 	std::string str = client->m_getInput();
 
@@ -109,4 +109,5 @@ void	get_input(Server& server, Client* client)
 		str = str.substr(m + 1, str.size());
 		i++;
 	}
+	// std::cout << "3 --> " << client << std::endl;
 }
