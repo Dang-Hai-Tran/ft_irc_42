@@ -87,7 +87,7 @@ void Server::waitEvents(void) {
 
 // xuluu
 void ft_add_connection(Server &server, int socket) {
-    Client *client = new Client;
+    Client *client = new Client();
     client->m_setSocket(socket);
     server.m_getListConnection().push_back(client);
 }
@@ -163,15 +163,16 @@ void Server::delClientSocket(int clientSocket) {
         if (m_getListConnection()[i]->m_getSocket() == clientSocket) {
             Client *client = m_getListConnection()[i];
             reset_data(client);
-            if (client->m_getID() == 0) {
-                m_getListConnection().erase(m_getListConnection().begin() + i);
-                delete client;
-            }
             std::vector<Channel *> listChannel = client->getChannelsUserIn();
-            for (size_t i = 0; i < listChannel.size(); i++) {
-                listChannel[i]->delUser(client);
+            for (size_t j = 0; j < listChannel.size(); j++) {
+                listChannel[j]->delUser(client);
+                if (listChannel[j]->isAdmin(client)) {
+                    listChannel[j]->delAdmin(client);
+                }
             }
             listChannel.clear();
+            m_getListConnection().erase(m_getListConnection().begin() + i);
+            delete client;
             break;
         }
         i++;

@@ -34,7 +34,7 @@ void commandJoin(Server *server, Client *client, std::string input) {
             continue;
         }
         // Check if channel is invite only, user is invited
-        if (channel->getInviteOnly() && !channel->isInvited(client)) {
+        if (channel->getInviteOnly() && !channel->isInvited(client) && !channel->isAdmin(client)) {
             server->sendData(client, ERR_INVITEONLYCHAN(nick, channelName));
             continue;
         }

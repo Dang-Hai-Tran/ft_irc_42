@@ -72,14 +72,12 @@ void ft_command_pass(Server &server, Client *client);
 void ft_command_login(Server &server, Client *&client);
 
 // command NICK
-void show_nickname(Server &server);
 void ft_command_nick(Server &server, Client *client);
 
 // command USER
 void ft_command_user(Server &server, Client *&client);
 void connected_successfully(Server &server, Client *&client);
 void ft_irssi_get_realname(Server &server, Client *client);
-void show_username(Server &server);
 
 // command WHO
 void ft_command_who(Server &server, Client *client);
@@ -88,11 +86,11 @@ void ft_command_who(Server &server, Client *client);
 void ft_command_whois(Server &server, Client *client);
 
 // command PRIVMSG
-void	ft_command_privmsg(Server& server, Client* client);
-void	ft_conversation(Client* client, Channel* channel);
-void	ft_message(Client* client);
+void ft_command_privmsg(Server &server, Client *client);
+void ft_conversation(Client *client, Channel *channel);
+void ft_message(Client *client);
 
 // command CLEAR
-void	ft_command_clear(Client* client);
+void ft_command_clear(Client *client);
 
 #endif
