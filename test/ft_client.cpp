@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:00:31 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 18:08:17 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/04 18:26:33 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,22 @@ Client::~Client(void) {
 
 Client &Client::operator=(const Client &objet) {
     if (this != &objet) {
+        this->m_socket = objet.m_getSocket();
         this->m_id = objet.m_getID();
+
         this->m_nickName = objet.m_getNickName();
         this->m_userName = objet.m_getUserName();
         this->m_realName = objet.m_getRealName();
+
+        this->m_input = objet.m_getInput();
+        this->m_cmd = objet.m_getCmd();
+        this->m_parameter = objet.m_getParameter();
+
+        this->m_irssi = objet.m_usingIrssi();
+        this->m_connected = objet.m_isConnected();
+        this->m_statusS = objet.m_getStatusS();
+        this->m_statusC = objet.m_getStatusC();
+
         this->m_invisible = objet.m_getMode();
         this->m_adminServer = objet.m_getAdminServer();
         this->m_adminChannel = objet.m_getAdminChannel();
@@ -60,7 +72,7 @@ Client &Client::operator=(const Client &objet) {
 /*************************************************************************/
 
 /* Nickname */
-void Client::m_setNickName( const std::string &nn) {
+void Client::m_setNickName(std::string &nn) {
     this->m_nickName = nn;
 }
 
@@ -69,7 +81,7 @@ std::string Client::m_getNickName(void) const {
 }
 
 /* User name */
-void Client::m_setUserName(const std::string un) {
+void Client::m_setUserName(std::string un) {
     this->m_userName = un;
 }
 
@@ -78,7 +90,7 @@ std::string Client::m_getUserName(void) const {
 }
 
 /* Real name */
-void Client::m_setRealName(const std::string rn) {
+void Client::m_setRealName(std::string rn) {
     this->m_realName = rn;
 }
 

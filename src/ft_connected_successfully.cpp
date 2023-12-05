@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:13:15 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 14:20:37 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/05 17:28:53 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void sign_up(Server &server, Client *client) {
         client->m_setNickName(nickName);
     }
 }
-void sign_in(Server &server, Client *&client, int id) {
+void sign_in(Server &server, Client *client, int id) {
     std::string nickName = client->m_getNickName();
     std::string realname = client->m_getRealName();
 
@@ -37,19 +37,15 @@ void sign_in(Server &server, Client *&client, int id) {
     if (DEBUG) {
         std::cout << "Address of old client: " << std::endl;
     }
-    oldClient->m_setNickName(nickName);
-    oldClient->m_setRealName(realname);
-    oldClient->m_setSocket(client->m_getSocket());
-    oldClient->m_setMode(client->m_getMode());
-    oldClient->m_setConnected(true);
-    oldClient->m_setStatusS(true);
+
 
     // std::cout << "1 --> " << oldClient << std::endl;
-    delete client;
+    int newSocket = client->m_getSocket();
     client = oldClient;
+    client->m_setSocket(newSocket);
 }
 
-void connected_successfully(Server &server, Client *&client) {
+void connected_successfully(Server &server, Client *client) {
     std::string userName = client->m_getUserName();
     std::string nickName = client->m_getNickName();
     ft_send(client, "Helloooooo [" + userName + "] !!!");

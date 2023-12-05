@@ -46,14 +46,13 @@ int ft_find_nickname(Server &server, std::string &nickName);
 
 // request
 bool ft_requestPassword(Server &server, Client *client);
-bool ft_requestUserName(Server &server, Client *&client);
+bool ft_requestUserName(Server &server, Client *client);
 bool ft_requestNickName(Server &server, Client *client);
 
 // get input
 void get_input(Server &server, Client *client);
 bool get_command_parameter(Server &server, Client *client);
-void ft_command_outside(Server &server, Client *&client);
-void ft_command_inside(Server &server, Client *&client);
+void ft_command_outside(Server &server, Client *client);
 
 bool is_adminServer(Client *client);
 
@@ -72,8 +71,8 @@ void ft_command_pass(Server &server, Client *client);
 void ft_command_nick(Server &server, Client *client);
 
 // command USER
-void ft_command_user(Server &server, Client *&client);
-void connected_successfully(Server &server, Client *&client);
+void ft_command_user(Server &server, Client *client);
+void connected_successfully(Server &server, Client *client);
 void ft_irssi_get_realname(Server &server, Client *client);
 
 // command WHO
@@ -89,5 +88,7 @@ void ft_message(Client *client);
 
 // command CLEAR
 void ft_command_clear(Client *client);
+
+void copy_data(Server *server, Client *client);
 
 #endif

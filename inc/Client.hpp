@@ -16,15 +16,15 @@ class	Client
 		Client&	operator=(const Client& objet);
 
 		// nickname
-		void		m_setNickName(std::string& nn);
+		void		m_setNickName(const std::string& nn);
 		std::string	m_getNickName(void) const;
 
 		// username
-		void		m_setUserName(std::string un);
+		void		m_setUserName(const std::string un);
 		std::string	m_getUserName(void) const;
 
 		// realname
-		void		m_setRealName(std::string rn);
+		void		m_setRealName(const std::string rn);
 		std::string	m_getRealName(void) const;
 
 		// socket

@@ -159,9 +159,10 @@ void Server::delClientSocket(int clientSocket) {
     this->setPollFds();
     // xuluu
     size_t i(0);
-    while (i < m_getListConnection().size()) {
+    while (i < this->m_getListConnection().size()) {
         if (m_getListConnection()[i]->m_getSocket() == clientSocket) {
             Client *client = m_getListConnection()[i];
+            copy_data(this, client);
             reset_data(client);
             std::vector<Channel *> listChannel = client->getChannelsUserIn();
             for (size_t j = 0; j < listChannel.size(); j++) {
@@ -172,7 +173,12 @@ void Server::delClientSocket(int clientSocket) {
             }
             listChannel.clear();
             m_getListConnection().erase(m_getListConnection().begin() + i);
-            if (client->m_getID() == 0)
+            size_t k;
+            for (k = 0; k < this->registeredClients.size(); k++) {
+                if (this->registeredClients[k] != client)
+                    break;
+            }
+            if (k == this->registeredClients.size())
                 delete client;
             break;
         }

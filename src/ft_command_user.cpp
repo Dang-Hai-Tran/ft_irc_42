@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 12:54:57 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 13:42:04 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/05 17:47:33 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ std::string get_parameter(std::string &str) {
     return (new_str);
 }
 
-void ft_command_user(Server &server, Client *&client) {
+void ft_command_user(Server &server, Client *client) {
     std::string parameter = client->m_getParameter();
     int min_space = 3;
 
