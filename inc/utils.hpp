@@ -53,7 +53,6 @@ bool ft_requestNickName(Server &server, Client *client);
 void get_input(Server &server, Client *client);
 bool get_command_parameter(Server &server, Client *client);
 void ft_command_outside(Server &server, Client *&client);
-void ft_command_inside(Server &server, Client *&client);
 
 bool is_adminServer(Client *client);
 
@@ -68,18 +67,13 @@ void ft_command_help(Client *client);
 // command PASSWORD
 void ft_command_pass(Server &server, Client *client);
 
-// command LOGIN
-void ft_command_login(Server &server, Client *&client);
-
 // command NICK
-void show_nickname(Server &server);
 void ft_command_nick(Server &server, Client *client);
 
 // command USER
-void ft_command_user(Server &server, Client *&client);
-void connected_successfully(Server &server, Client *&client);
+void ft_command_user(Server &server, Client *client);
+void connected_successfully(Server &server, Client *client);
 void ft_irssi_get_realname(Server &server, Client *client);
-void show_username(Server &server);
 
 // command WHO
 void ft_command_who(Server &server, Client *client);
