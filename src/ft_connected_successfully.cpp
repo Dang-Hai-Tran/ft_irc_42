@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:13:15 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 13:42:52 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/05 14:20:37 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ void sign_in(Server &server, Client *&client, int id) {
     std::string realname = client->m_getRealName();
 
     Client *oldClient = server.getRegisteredClients()[id];
+    if (DEBUG) {
+        std::cout << "Address of old client: " << std::endl;
+    }
     oldClient->m_setNickName(nickName);
     oldClient->m_setRealName(realname);
     oldClient->m_setSocket(client->m_getSocket());
@@ -70,6 +73,10 @@ void connected_successfully(Server &server, Client *&client) {
     int id = ft_find_username(server, userName);
     if (id == 0)
         sign_up(server, client);
-    else
+    else {
         sign_in(server, client, id - 1);
+        if (DEBUG) {
+            std::cout << "Address of newClient after assignment : " << client << std::endl;
+        }
+    }
 }

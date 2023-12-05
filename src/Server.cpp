@@ -172,7 +172,8 @@ void Server::delClientSocket(int clientSocket) {
             }
             listChannel.clear();
             m_getListConnection().erase(m_getListConnection().begin() + i);
-            delete client;
+            if (client->m_getID() == 0)
+                delete client;
             break;
         }
         i++;

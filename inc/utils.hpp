@@ -68,9 +68,6 @@ void ft_command_help(Client *client);
 // command PASSWORD
 void ft_command_pass(Server &server, Client *client);
 
-// command LOGIN
-void ft_command_login(Server &server, Client *&client);
-
 // command NICK
 void ft_command_nick(Server &server, Client *client);
 
