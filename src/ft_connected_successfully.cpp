@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:13:15 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 17:28:53 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/05 21:20:47 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void sign_in(Server &server, Client *&client, int id) {
     std::string input = client->m_getInput();
     std::string nickName = client->m_getNickName();
     std::string realName = client->m_getRealName();
-    bool        typeClient = client->m_usingIrssi();
-    bool        mode = client->m_getMode();
-    int         socket = client->m_getSocket();
+    bool typeClient = client->m_usingIrssi();
+    bool mode = client->m_getMode();
+    int socket = client->m_getSocket();
 
     // update
     Client *oldClient = server.getRegisteredClients()[id];
@@ -60,14 +60,10 @@ void connected_successfully(Server &server, Client *&client) {
     ft_send(client, "\n----------------------------------------\n");
     if (client->m_usingIrssi()) // signal connected for IRSSI
     {
-        std::string text = ":localhost 001 " + nickName + " :<--    Welcome to the IRC Network    -->";
+        std::string text = ":localhost 001 " + nickName + " :<--            Welcome to the IRC Network             -->";
         ft_send(client, text);
     } else
-        ft_send(client, "<--    Welcome to the IRC Network    -->");
-
-    // number connection
-    std::string nbr_connection = int_to_string((int)server.m_getListConnection().size());
-    ft_send(client, "Number connection: " + nbr_connection);
+        ft_send(client, "<--            Welcome to the IRC Network             -->");
 
     // update status
     if (client->m_getStatusS())
@@ -82,4 +78,10 @@ void connected_successfully(Server &server, Client *&client) {
             std::cout << "Address of newClient after assignment : " << client << std::endl;
         }
     }
+    // number connection
+    std::string nbr_connection = int_to_string((int)server.m_getListConnection().size());
+    std::string nbrRegisteredUsers = int_to_string((int)server.getRegisteredClients().size());
+    std::string nbrChannels = int_to_string((int)server.getChannels().size());
+    std::string message = "Actually, the server has " + nbr_connection + " users connected, " + nbrRegisteredUsers + " users registered, and " + nbrChannels + " channels created";
+    ft_send(client, message);
 }

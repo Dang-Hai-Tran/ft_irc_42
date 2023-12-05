@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:19:03 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 18:04:39 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/05 21:57:58 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,11 @@ void reset_data(Client *client) {
 
 void ft_guide(Client *client) {
     if (client->m_isConnected() == false) {
-        ft_send(client, "(i) Use /PASS to access the server");
-        ft_send(client, "Command: /PASS server_password");
+        ft_send(client, "(h) Usage: /PASS <password> to login server");
     } else if (client->m_getNickName() == "") {
-        ft_send(client, "(i) Use /NICK to login");
-        ft_send(client, "Command: /NICK your_nickname");
+        ft_send(client, "(h) Usage: /NICK <nickname> to set new nick");
     } else if (client->m_getUserName() == "") {
-        ft_send(client, "(i) Use /USER to login");
-        ft_send(client, "Command: /USER username 8 * :realname");
+        ft_send(client, "(h) Usage: /USER <username> 8 * :<realname> to set new username");
     }
 }
 
@@ -109,10 +106,6 @@ bool ft_run(Server &server, Client *&client) {
         if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING")
             return (1);
         ft_send(client, "\n----------------------------------------\n");
-        if (!client->m_usingIrssi()) {
-            std::string text = "<" + client->m_getNickName() + "> ";
-            send(client->m_getSocket(), text.c_str(), text.size(), 0);
-        }
     }
     return (1);
 }

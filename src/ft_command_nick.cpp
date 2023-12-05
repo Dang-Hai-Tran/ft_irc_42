@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 12:54:57 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/04 18:33:52 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/05 21:12:45 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_command_nick(Server& server, Client* client)
 	}
 	else
 	{
-		ft_send(client, "You're now know as [" + parameter + "]");
+		ft_send(client, "You're now known as [" + parameter + "]");
 		ft_send(client, "\n-----------------------------------------\n");
 		ft_guide(client);
 	}
