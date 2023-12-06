@@ -59,6 +59,7 @@ std::string sendPromptToOpenAI(const std::string &prompt) {
     const char *apiKey = std::getenv("OPENAI_API_KEY");
     if (apiKey == NULL) {
         std::cout << "OPENAI_API_KEY is not set" << std::endl;
+        curl_easy_cleanup(curl);
         return ret;
     }
 

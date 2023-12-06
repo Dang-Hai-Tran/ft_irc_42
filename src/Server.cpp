@@ -188,12 +188,12 @@ void ft_input(Server &server, int socket, std::string &input) {
  * @param clientSocket The socket for the client.
  */
 void Server::receiveData(int clientSocket) {
-    std::string message;
-    char buffer[BUFFER_SIZE];
+    static std::string message;
+    char buffer[BUFFER_SIZE + 1];
     memset(buffer, 0, sizeof(buffer));
     while (!strchr(buffer, '\n')) {
         memset(buffer, 0, sizeof(buffer));
-        ssize_t bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
+        ssize_t bytesRead = recv(clientSocket, buffer, BUFFER_SIZE, 0);
         if (bytesRead < 0 && errno != EWOULDBLOCK) {
             throw std::runtime_error("ERROR :Receiving data from client");
         } else if (bytesRead == 0) {
@@ -204,9 +204,12 @@ void Server::receiveData(int clientSocket) {
             message.append(std::string(buffer, bytesRead));
         }
     }
-    std::cout << std::left << std::setw(40) << "[Client] Message received from client " << clientSocket << " << " << message;
-    if (message.size() > 0)
+    size_t pos = message.find("\n");
+    std::string line = message.substr(0, pos);
+    std::cout << std::left << std::setw(40) << "[Client] Message received from client " << clientSocket << " << " << line;
+    if (line.size() > 0)
         ft_input(*this, clientSocket, message);
+    message.erase(0, pos + 1);
 }
 
 /**

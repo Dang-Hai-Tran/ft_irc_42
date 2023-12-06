@@ -30,7 +30,7 @@
 #include "reply.hpp"
 
 #define DEFAULT_PORT 8888
-#define BUFFER_SIZE 10000
+#define BUFFER_SIZE 3
 #ifndef DEBUG
 # define DEBUG 0
 #endif
