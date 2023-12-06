@@ -8,7 +8,6 @@ def create_connection(i):
         PORT = 5555
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(('localhost', PORT))
-        print(f"Client {i} connected successfully.")
         s.close()
     except socket.error as e:
         print(f"Client {i} failed to connect: {e}")
