@@ -1,5 +1,11 @@
 #include "../inc/irc.hpp"
 
+/**
+ * @brief Check if a string contains only digits.
+ * 
+ * @param str The string to check.
+ * @return bool True if the string contains only digits, false otherwise.
+ */
 bool strContainOnlyDigits(std::string str) {
     for (size_t i = 0; i < str.length(); i++) {
         if (!std::isdigit(str[i])) {
@@ -9,6 +15,11 @@ bool strContainOnlyDigits(std::string str) {
     return true;
 }
 
+/**
+ * @brief Get the current time as a string in the format "YYYY-MM-DD HH:MM:SS".
+ * 
+ * @return std::string The current time as a string.
+ */
 std::string getCurrentTime(void) {
     std::time_t currentTime = std::time(NULL);
     int bufferSize = 80;
@@ -17,6 +28,12 @@ std::string getCurrentTime(void) {
     return std::string(buffer);
 }
 
+/**
+ * @brief Get the IP address from a sockaddr_in6 structure.
+ * 
+ * @param sockaddr The sockaddr_in6 structure.
+ * @return std::string The IP address as a string.
+ */
 std::string getIpAddressFromSockaddr(const struct sockaddr_in6 *sockaddr) {
     char ipAddress[INET6_ADDRSTRLEN];
     inet_ntop(AF_INET6, &(sockaddr->sin6_addr), ipAddress, INET6_ADDRSTRLEN);
@@ -32,6 +49,13 @@ std::string getIpAddressFromSockaddr(const struct sockaddr_in6 *sockaddr) {
     return ip;
 }
 
+/**
+ * @brief Split a string into a vector of substrings based on a delimiter character.
+ * 
+ * @param str The string to split.
+ * @param c The delimiter character.
+ * @return std::vector<std::string> A vector of substrings.
+ */
 std::vector<std::string> splitString(std::string str, char c) {
     std::vector<std::string> strs;
     for (size_t i = 0; i < str.size(); i++) {
@@ -47,7 +71,12 @@ std::vector<std::string> splitString(std::string str, char c) {
     return strs;
 }
 
-// Find client port from client socket
+/**
+ * @brief Get the port number from a socket file descriptor.
+ * 
+ * @param fd The socket file descriptor.
+ * @return int The port number.
+ */
 int getPortFromSocket(int fd) {
     struct sockaddr_in6 clientAddress;
     socklen_t clientAddressSize = sizeof(clientAddress);
@@ -55,18 +84,32 @@ int getPortFromSocket(int fd) {
     return ntohs(clientAddress.sin6_port);
 }
 
-// Remove end of line of a string
+/**
+ * @brief Remove the end of line character from a string.
+ * 
+ * @param str The string to trim.
+ */
 void trimEndOfLine(std::string &str) {
     if (!str.empty() && str[str.size() - 1] == '\n') {
         str.erase(str.size() - 1);
     }
 }
 
-// Get unix timestamp
+/**
+ * @brief Get the current Unix timestamp.
+ * 
+ * @return int The Unix timestamp.
+ */
 int getUnixTimestamp(void) {
     return std::time(NULL);
 }
-// Find message by :
+
+/**
+ * @brief Find the message part of a command string.
+ * 
+ * @param input The command string.
+ * @return std::string The message part of the command.
+ */
 std::string cmdFindMessage(std::string input) {
     std::string message = "";
     size_t colonIndex = input.find(':');
@@ -77,13 +120,24 @@ std::string cmdFindMessage(std::string input) {
     return message;
 }
 
+/**
+ * @brief Find the arguments part of a command string.
+ * 
+ * @param input The command string.
+ * @return std::vector<std::string> A vector of arguments.
+ */
 std::vector<std::string> cmdFindArgs(std::string input) {
     size_t colonIndex = input.find(':');
     std::vector<std::string> args = splitString(input.substr(0, colonIndex), ' ');
     return args;
 }
 
-// Parsing mode
+/**
+ * @brief Parse a mode string and return a vector of submodes.
+ * 
+ * @param mode The mode string to parse.
+ * @return std::vector<std::string> A vector containing the submodes.
+ */
 std::vector<std::string> parseModeString(std::string mode) {
     std::vector<std::string> vectorMode;
     if (mode.empty() || (mode[0] != '+' && mode[0] != '-'))

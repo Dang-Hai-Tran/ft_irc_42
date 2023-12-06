@@ -1,6 +1,14 @@
 #include "../inc/irc.hpp"
 
-// PART <channel>{,<channel>} [<reason>]
+/**
+ * Handles the PART command, which allows a client to leave one or multiple channels.
+ * Syntax: PART <channel>{,<channel>} [<reason>]
+ * Example: PART #foobar
+ * 
+ * @param server The server object.
+ * @param client The client object.
+ * @param input The input string containing the command and its arguments.
+ */
 void commandPart(Server *server, Client *client, std::string input) {
     std::string nick = client->m_getNickName();
     std::string username = client->m_getUserName();

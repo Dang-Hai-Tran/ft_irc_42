@@ -1,6 +1,18 @@
+
 #include "../inc/irc.hpp"
 
-// TOPIC <channel> [<topic>]
+/**
+ * @brief Handles the TOPIC command.
+ *
+ * This function is responsible for handling the TOPIC command in the IRC server.
+ * It allows a client to set or clear the topic of a channel.
+ * Syntax: TOPIC <channel> [<topic>].
+ * Example: TOPIC #foobar :Hello world!
+ *
+ * @param server A pointer to the IRC server.
+ * @param client A pointer to the client who issued the command.
+ * @param input The input string containing the command and arguments.
+ */
 void commandTopic(Server *server, Client *client, std::string input) {
     std::string nick = client->m_getNickName();
     std::string topic = cmdFindMessage(input);

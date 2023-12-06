@@ -1,6 +1,14 @@
 #include "../inc/irc.hpp"
 
-// KICK <channel> <nickname>{,<nickname>} [<reason>]
+/**
+ * Kicks one or more users from a channel.
+ * Syntax: KICK <channel>{,<channel>} <user>{,<user>} [<comment>]
+ * Example: KICK #foobar JohnDoe
+ *
+ * @param server   Pointer to the server object.
+ * @param client   Pointer to the client object.
+ * @param input    The input string containing the command and arguments.
+ */
 void commandKick(Server *server, Client *client, std::string input) {
     std::vector<std::string> args = cmdFindArgs(input);
     std::string reason = cmdFindMessage(input);

@@ -1,6 +1,15 @@
+
 #include "../inc/irc.hpp"
 
-// NAMES <channel>{,<channel>} : See all users in channel
+/**
+ * @brief Implements the NAMES command, which allows a client to see all users in a channel.
+ * Syntax: NAMES <channel>{,<channel>}.
+ * Example: NAMES #foobar.
+ *
+ * @param server Pointer to the Server object.
+ * @param client Pointer to the Client object.
+ * @param input The input string containing the command and arguments.
+ */
 void commandNames(Server *server, Client *client, std::string input) {
     std::string nick = client->m_getNickName();
     std::vector<std::string> args = cmdFindArgs(input);
