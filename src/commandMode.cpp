@@ -1,9 +1,18 @@
+
 #include "../inc/irc.hpp"
 
 static void setModeToChannel(Server *server, Client *client, Channel *channel, char modeOperator, char modeCommand, std::string param);
 
-// MODE <channel> <mode> <arg>... : Change mode of channel
-// Accept only +-i, +-t, +-k, +-o, +-l
+/**
+ * Handles the MODE command, which changes the mode of a channel.
+ * Syntax: MODE <channel> <mode> <arg>...
+ * Example: MODE #foobar +i.
+ * Accept only +-i, +-t, +-k, +-o, +-l.
+ *
+ * @param server The server object.
+ * @param client The client object.
+ * @param input The input string containing the command and arguments.
+ */
 void commandMode(Server *server, Client *client, std::string input) {
     std::string nick = client->m_getNickName();
     std::string username = client->m_getUserName();
@@ -62,6 +71,15 @@ void commandMode(Server *server, Client *client, std::string input) {
     }
 }
 
+/**
+ * Set mode to channel.
+ * @param server The server object.
+ * @param client The client object.
+ * @param channel The channel object.
+ * @param modeOperator The mode operator (+ or -).
+ * @param modeCommand The mode command (i, t, k, o, l).
+ * @param param The parameter of mode command.
+ */
 void setModeToChannel(Server *server, Client *client, Channel *channel, char modeOperator, char modeCommand, std::string param) {
     std::string channelName = channel->getNameChannel();
     std::string srcNick = client->m_getNickName();

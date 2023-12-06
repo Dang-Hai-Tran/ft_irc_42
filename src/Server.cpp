@@ -1,27 +1,55 @@
 #include "../inc/irc.hpp"
 
+/**
+ * @brief Default constructor for the Server class.
+ */
 Server::Server(){};
+
+/**
+ * @brief Parameterized constructor for the Server class.
+ * @param port The port number for the server.
+ * @param password The password for the server.
+ */
 Server::Server(int port, std::string password) : port(port), password(password) {
     this->startTime = getCurrentTime();
     this->serverName = "irc.42.fr";
 };
 
+/**
+ * @brief Get the vector of registered clients.
+ * @return A reference to the vector of registered clients.
+ */
 std::vector<Client *> &Server::getRegisteredClients(void) {
     return this->registeredClients;
 };
 
+/**
+ * @brief Get the vector of client file descriptors.
+ * @return A reference to the vector of client file descriptors.
+ */
 std::vector<int> &Server::getClientFDs(void) {
     return this->clientFDs;
 }
 
+/**
+ * @brief Get the server socket.
+ * @return The server socket.
+ */
 int Server::getSocket(void) {
     return this->serverSocket;
 }
 
+/**
+ * @brief Get the server password.
+ * @return The server password.
+ */
 std::string Server::getPassword(void) {
     return this->password;
 }
 
+/**
+ * @brief Destructor for the Server class.
+ */
 Server::~Server() {
     for (size_t i = 0; i < this->m_listConnection.size(); i++) {
         if (this->m_listConnection[i]->m_getID() == 0) {
@@ -39,12 +67,19 @@ Server::~Server() {
     this->channels.clear();
 }
 
+/**
+ * @brief Set the server socket to non-blocking mode.
+ * @throws std::runtime_error if setting socket to non-blocking mode fails.
+ */
 void Server::setNonBlocking() {
     if (fcntl(this->serverSocket, F_SETFL, O_NONBLOCK) < 0) {
         throw std::runtime_error("ERROR :Setting socket to non-blocking mode failed");
     }
 }
 
+/**
+ * @brief Set the poll file descriptors for the server.
+ */
 void Server::setPollFds(void) {
     if (this->pollFDs.size() > 0)
         this->pollFDs.clear();
@@ -62,6 +97,10 @@ void Server::setPollFds(void) {
     }
 }
 
+/**
+ * @brief Wait for events on the server.
+ * @throws std::runtime_error if waiting for connections fails.
+ */
 void Server::waitEvents(void) {
     int pollResult = poll(this->pollFDs.begin().base(), this->pollFDs.size(), -1);
     if (pollResult > 0) {
@@ -85,7 +124,11 @@ void Server::waitEvents(void) {
     }
 }
 
-// xuluu
+/**
+ * @brief Add a connection to the server.
+ * @param server The server object.
+ * @param socket The socket for the connection.
+ */
 void ft_add_connection(Server &server, int socket) {
     Client *client = new Client();
     std::cout << "1 --> " << client << std::endl;
@@ -93,6 +136,9 @@ void ft_add_connection(Server &server, int socket) {
     server.m_getListConnection().push_back(client);
 }
 
+/**
+ * @brief Accept a connection on the server.
+ */
 void Server::acceptConnection(void) {
     int clientSocket;
     struct sockaddr_in6 clientAddress;
@@ -108,6 +154,12 @@ void Server::acceptConnection(void) {
     ft_add_connection(*this, clientSocket);
 }
 
+/**
+ * @brief Handle input from a client.
+ * @param server The server object.
+ * @param socket The socket for the client.
+ * @param input The input from the client.
+ */
 void ft_input(Server &server, int socket, std::string &input) {
     size_t i(0);
     std::vector<Client *> clients = server.m_getListConnection();
@@ -115,13 +167,12 @@ void ft_input(Server &server, int socket, std::string &input) {
     while (i < clients.size()) {
         int sk = clients[i]->m_getSocket();
         if (sk == socket) {
-            Client* tmp = clients[i];
+            Client *tmp = clients[i];
             clients[i]->m_setInput(input);
             get_input(server, clients[i]);
 
             // new --> old
-            if (tmp != clients[i])
-            {
+            if (tmp != clients[i]) {
                 delete tmp;
                 server.m_getListConnection()[i] = clients[i];
             }
@@ -132,6 +183,10 @@ void ft_input(Server &server, int socket, std::string &input) {
     }
 }
 
+/**
+ * @brief Receive data from a client.
+ * @param clientSocket The socket for the client.
+ */
 void Server::receiveData(int clientSocket) {
     std::string message;
     char buffer[BUFFER_SIZE];
@@ -154,12 +209,20 @@ void Server::receiveData(int clientSocket) {
         ft_input(*this, clientSocket, message);
 }
 
+/**
+ * @brief Add a client socket to the server.
+ * @param clientSocket The client socket to add.
+ */
 void Server::addClientSocket(int clientSocket) {
     this->clientFDs.push_back(clientSocket);
     this->setNonBlocking();
     this->setPollFds();
 }
 
+/**
+ * @brief Delete a client socket from the server.
+ * @param clientSocket The client socket to delete.
+ */
 void Server::delClientSocket(int clientSocket) {
     std::vector<int>::iterator it = std::find(this->clientFDs.begin(), this->clientFDs.end(), clientSocket);
     if (it != this->clientFDs.end()) {
@@ -192,6 +255,11 @@ void Server::delClientSocket(int clientSocket) {
     close(clientSocket);
 }
 
+/**
+ * @brief Send data to a client.
+ * @param clientSocket The socket for the client.
+ * @param message The message to send.
+ */
 void Server::sendData(int clientSocket, std::string message) {
     ssize_t bytesSent = send(clientSocket, message.c_str(), message.length(), 0);
     if (bytesSent < 0) {
@@ -200,10 +268,18 @@ void Server::sendData(int clientSocket, std::string message) {
     std::cout << std::left << std::setw(40) << "[Server] Message sent to client " << clientSocket << " >> " << message;
 }
 
+/**
+ * @brief Add a channel to the server.
+ * @param channel The channel to add.
+ */
 void Server::addChannel(Channel *channel) {
     this->channels.push_back(channel);
 }
 
+/**
+ * @brief Delete a channel from the server by channel name.
+ * @param channelName The name of the channel to delete.
+ */
 void Server::delChannel(std::string channelName) {
     // Delete channel from channels vector
     for (size_t i = 0; i < this->channels.size(); i++) {
@@ -215,6 +291,10 @@ void Server::delChannel(std::string channelName) {
     }
 }
 
+/**
+ * @brief Delete a channel from the server by channel object.
+ * @param channel The channel to delete.
+ */
 void Server::delChannel(Channel *channel) {
     for (size_t i = 0; i < this->channels.size(); i++) {
         if (this->channels[i] == channel) {
@@ -225,6 +305,11 @@ void Server::delChannel(Channel *channel) {
     }
 }
 
+/**
+ * @brief Get a channel from the server by channel name.
+ * @param channelName The name of the channel to get.
+ * @return The channel object, or NULL if not found.
+ */
 Channel *Server::getChannel(std::string channelName) {
     for (size_t i = 0; i < this->channels.size(); i++) {
         if (this->channels[i]->getNameChannel() == channelName) {
@@ -234,10 +319,19 @@ Channel *Server::getChannel(std::string channelName) {
     return NULL;
 }
 
+/**
+ * @brief Get the vector of channels on the server.
+ * @return A reference to the vector of channels.
+ */
 std::vector<Channel *> &Server::getChannels() {
     return this->channels;
 }
 
+/**
+ * @brief Get the index of a client in the registered clients vector.
+ * @param clientSocket The socket of the client.
+ * @return The index of the client, or -1 if not found.
+ */
 int Server::getClientIndex(int clientSocket) {
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
         if (this->registeredClients[i]->m_getSocket() == clientSocket) {
@@ -247,6 +341,11 @@ int Server::getClientIndex(int clientSocket) {
     return -1;
 }
 
+/**
+ * @brief Get a client object by client socket.
+ * @param clientSocket The socket of the client.
+ * @return The client object, or NULL if not found.
+ */
 Client *Server::getClient(int clientSocket) {
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
         if (this->registeredClients[i]->m_getSocket() == clientSocket) {
@@ -256,6 +355,9 @@ Client *Server::getClient(int clientSocket) {
     return NULL;
 }
 
+/**
+ * @brief Start the server.
+ */
 void Server::start(void) {
     this->serverSocket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
     if (this->serverSocket < 0) {
@@ -294,10 +396,18 @@ void Server::start(void) {
     }
 }
 
+/**
+ * @brief Get the list of connections on the server.
+ * @return A reference to the vector of connections.
+ */
 std::vector<Client *> &Server::m_getListConnection(void) {
     return (this->m_listConnection);
 }
 
+/**
+ * @brief Get the list of clients currently on the server.
+ * @return A vector of client objects.
+ */
 std::vector<Client *> Server::getOnServerClients(void) {
     std::vector<Client *> onServerClients;
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
@@ -308,14 +418,28 @@ std::vector<Client *> Server::getOnServerClients(void) {
     return onServerClients;
 }
 
+/**
+ * @brief Send data to a client.
+ * @param client The client object.
+ * @param message The message to send.
+ */
 void Server::sendData(Client *client, std::string message) {
     this->sendData(client->m_getSocket(), message);
 }
 
+/**
+ * @brief Get the server name.
+ * @return The server name.
+ */
 std::string Server::getServerName(void) {
     return this->serverName;
 }
 
+/**
+ * @brief Get a client object by nickname.
+ * @param nick The nickname of the client.
+ * @return The client object, or NULL if not found.
+ */
 Client *Server::getClientByNickName(std::string nick) {
     Client *target = NULL;
     for (size_t i = 0; i < this->getOnServerClients().size(); i++) {

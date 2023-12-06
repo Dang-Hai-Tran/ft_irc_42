@@ -1,6 +1,24 @@
 #include "../inc/irc.hpp"
 
-// INVITE <nickname> <channel> : Invite user to channel
+/**
+ * @file commandInvite.cpp
+ * @brief Implementation of the INVITE command.
+ * 
+ * The INVITE command is used to invite a user to a channel.
+ * 
+ * Syntax: INVITE <nickname> <channel>.
+ * 
+ * Example usage: INVITE JohnDoe #general.
+ * 
+ * If the command is successful, the server sends RPL_INVITING to the user who issued the command
+ * and RPL_INVITE to the target user.
+ * 
+ * If the command fails, the server sends an appropriate error message to the user who issued the command.
+ * 
+ * @param server Pointer to the Server object.
+ * @param client Pointer to the Client object who issued the command.
+ * @param input The input string containing the command and its arguments.
+ */
 void commandInvite(Server *server, Client *client, std::string input) {
     std::string srcNick = client->m_getNickName();
     std::string srcUsername = client->m_getUserName();

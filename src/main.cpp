@@ -2,6 +2,11 @@
 
 Server server;
 
+/**
+ * @brief Signal handler for handling SIGINT signal.
+ *
+ * @param signal The signal number.
+ */
 void handleSignal(int signal) {
     if (signal == SIGINT) {
         for (size_t i = 0; i < server.getClientFDs().size(); i++) {
@@ -13,6 +18,13 @@ void handleSignal(int signal) {
     }
 }
 
+/**
+ * @brief The entry point of the program.
+ *
+ * @param ac The number of command line arguments.
+ * @param av The array of command line arguments.
+ * @return int The exit status of the program.
+ */
 int main(int ac, char **av) {
     if (ac != 3) {
         std::cerr << "ERROR :Usage: ./ircserv <port> <password>" << std::endl;

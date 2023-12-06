@@ -1,6 +1,14 @@
 #include "../inc/irc.hpp"
 
-// JOIN <channel>{,<channel>} [<key>{,<key>}]
+/**
+ * Joins one or more channels with an optional password.
+ * Syntax: JOIN <channel>{,<channel>} [<key>{,<key>}]
+ * Example: JOIN #foobar fubar
+ *
+ * @param server   Pointer to the server object.
+ * @param client   Pointer to the client object.
+ * @param input    The input string containing the command and arguments.
+ */
 void commandJoin(Server *server, Client *client, std::string input) {
     if (DEBUG) {
         std::cout << "Address of client in command join: " << client << std::endl;
