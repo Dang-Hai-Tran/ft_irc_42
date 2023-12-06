@@ -3,7 +3,7 @@ NAME	= ircserv
 
 # Compiler
 CC		= c++
-CFLAGS	= -Werror -Wextra -Wall -g -std=c++98
+CFLAGS	= -Werror -Wextra -Wall -g -std=c++98 -fsanitize=leak -fsanitize=address
 
 # Build files
 INC_PATH	= ./inc/
