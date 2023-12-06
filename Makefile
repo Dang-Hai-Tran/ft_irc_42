@@ -3,7 +3,7 @@ NAME	= ircserv
 
 # Compiler
 CC		= c++
-CFLAGS	= -Werror -Wextra -Wall -g -std=c++98 -fsanitize=leak -fsanitize=address -lcurl
+CFLAGS	= -Werror -Wextra -Wall -g -std=c++98
 
 # Build files
 INC_PATH	= ./inc/
@@ -20,7 +20,7 @@ TEST		= $(TEST_PATH)test
 
 # Debug
 DEBUG = 0
-DEBUG_FLAG = -D DEBUG=$(DEBUG)
+DEBUG_FLAG = -D DEBUG=$(DEBUG) -lcurl
 
 # Build rule
 all: $(OBJ_PATH) $(NAME)

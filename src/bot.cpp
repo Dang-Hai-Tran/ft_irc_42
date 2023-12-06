@@ -10,7 +10,8 @@ static std::string sendPromptToOpenAI(const std::string &prompt);
 // Api endpoint : https://api.openai.com/v1/chat/completions
 void commandBot(Server *server, Client *client, std::string input) {
     std::string message = cmdFindMessage(input);
-    if (message.empty()) {
+    std::vector<std::string> args = cmdFindArgs(input);
+    if (message.empty() || args.size() != 1) {
         server->sendData(client, "(!) Usage: /BOT :<message>\r\n");
         return;
     }

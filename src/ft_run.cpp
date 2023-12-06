@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:19:03 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/06 15:04:50 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/06 16:38:15 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ bool ft_request_informations(Server &server, Client *&client) {
     } else if (client->m_getUserName() == "") {
         if (!ft_requestUserName(server, client))
             return (0);
-    } else if (client->m_getStatusC() == true || cmd == "JOIN" || cmd == "BOT")
+    } else if (client->m_getStatusC() == true || cmd == "JOIN" || cmd == "BOT" || cmd == "TRANSFER")
         commandChannel(server, *client);
     else
         ft_command_outside(server, client);
