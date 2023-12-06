@@ -30,6 +30,9 @@ void commandChannel(Server &server, Client &client) {
     if (cmd == "MODE") {
         commandMode(&server, &client, input);
     }
+    if (cmd == "BOT") {
+        commandBot(&server, &client, input);
+    }
     if (cmd == "PRIVMSG") // xuluu
         ft_command_privmsg(server, &client);
 }

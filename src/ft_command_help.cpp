@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:01:55 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 21:10:20 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/06 15:04:50 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void ft_infor_clear(Client *client) {
 }
 
 void ft_infor_help(Client *client) {
-    ft_send(client, "(h) Usage: /HELP to display all valid commands on server");
+    ft_send(client, "(!) Usage: /HELP to display all valid commands on server");
 }
 
 void ft_infor_password(Client *client) {
@@ -51,7 +51,7 @@ void ft_infor_who(Client *client) {
 }
 
 void ft_infor_whois(Client *client) {
-    ft_send(client, "(h) Usage: /WHOIS <nickname> to retrieve detailed information about a specific user connected to server");
+    ft_send(client, "(!) Usage: /WHOIS <nickname> to retrieve detailed information about a specific user connected to server");
 }
 
 /**************************************************************/

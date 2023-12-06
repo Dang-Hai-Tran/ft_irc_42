@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:19:03 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 21:57:58 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/06 15:04:50 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ void reset_data(Client *client) {
 
 void ft_guide(Client *client) {
     if (client->m_isConnected() == false) {
-        ft_send(client, "(h) Usage: /PASS <password> to login server");
+        ft_send(client, "(!) Usage: /PASS <password> to login server");
     } else if (client->m_getNickName() == "") {
-        ft_send(client, "(h) Usage: /NICK <nickname> to set new nick");
+        ft_send(client, "(!) Usage: /NICK <nickname> to set new nick");
     } else if (client->m_getUserName() == "") {
-        ft_send(client, "(h) Usage: /USER <username> 8 * :<realname> to set new username");
+        ft_send(client, "(!) Usage: /USER <username> 8 * :<realname> to set new username");
     }
 }
 
@@ -85,7 +85,7 @@ bool ft_request_informations(Server &server, Client *&client) {
     } else if (client->m_getUserName() == "") {
         if (!ft_requestUserName(server, client))
             return (0);
-    } else if (client->m_getStatusC() == true || cmd == "JOIN")
+    } else if (client->m_getStatusC() == true || cmd == "JOIN" || cmd == "BOT")
         commandChannel(server, *client);
     else
         ft_command_outside(server, client);

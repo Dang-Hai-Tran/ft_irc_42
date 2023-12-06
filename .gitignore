@@ -2,3 +2,4 @@
 obj
 ircserv
 test/test
+apiKey.env

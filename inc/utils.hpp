@@ -17,6 +17,8 @@ void commandNames(Server *server, Client *client, std::string input);
 void commandInvite(Server *server, Client *client, std::string input);
 void commandKick(Server *server, Client *client, std::string input);
 void commandMode(Server *server, Client *client, std::string input);
+void commandBot(Server *server, Client *client, std::string input);
+
 std::string cmdFindMessage(std::string input);
 std::vector<std::string> cmdFindArgs(std::string input);
 std::vector<std::string> parseModeString(std::string mode);

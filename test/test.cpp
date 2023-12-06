@@ -5,5 +5,6 @@ int main() {
     // testParseModeString();
     // testCmdFindMessage();
     // testSplitString();
-    testCmdFindArgs();
+    // testCmdFindArgs();
+    testExtractMessage();
 }
