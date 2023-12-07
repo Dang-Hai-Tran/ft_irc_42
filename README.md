@@ -1,6 +1,14 @@
 # IRC Server
 
-This project is an IRC (Internet Relay Chat) server implementation written in C++. It allows users to connect to the server and communicate with each other in real-time.
+This project is an implementation of an IRC (Internet Relay Chat) server written in C++. IRC is a protocol for live interactive Internet text messaging (chat) or synchronous conferencing. It is mainly designed for group communication in discussion forums, called channels, but also allows one-to-one communication via private message.
+
+## Features
+
+- Real-time communication: Users can connect to the server and communicate with each other in real-time.
+- Channel management: Users can create, join, and leave channels.
+- User management: Users can register and manage their accounts.
+- Message sending: Users can send private messages to each other or broadcast messages to a channel.
+- Command support: The server supports various IRC commands, such as `/PASS`, `/USER`, `/JOIN`, `/PART`, `/PRIVMSG`, and `/HELP`.
 
 ## Installation
 
@@ -13,18 +21,14 @@ To install and run the IRC server, follow these steps:
 
 ## Usage
 
-Once the server is running, clients can connect to it using an IRC client application. The server supports various IRC commands, such as joining channels, sending messages, and managing user accounts.
+Once the server is running, clients can connect to it using an IRC client application. Here are some examples of IRC commands:
 
-Here are some examples of IRC commands:
-
--   Login server: `/PASS <password>`
--   Register new user or specify user if exits: `/USER <user> <mode> * :<realname>`
--   Join a channel or create a channel if not exits: `/JOIN <channel> <password*>`
--   Leave a channel with given message: `/PART <channel> <message>`
--   Send a message: `/PRIVMSG <username or channel> :<message>`
--   Guide to use: `/HELP`
-
-For more information on IRC commands and usage, refer to the [RFC 2812 specification](https://www.rfc-editor.org/rfc/rfc2812.html).
+- Login server: `/PASS <password>`
+- Register new user or specify user if exits: `/USER <user> <mode> * :<realname>`
+- Join a channel or create a channel if not exits: `/JOIN <channel> <password*>`
+- Leave a channel with given message: `/PART <channel> <message>`
+- Send a message: `/PRIVMSG <username or channel> :<message>`
+- Guide to use: `/HELP`
 
 ## Contributing
 
