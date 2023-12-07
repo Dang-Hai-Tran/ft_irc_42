@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:19:03 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/06 16:38:15 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/07 15:48:08 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,10 @@ void ft_guide(Client *client) {
     }
 }
 
-int ft_general_command(Client *client) {
+int ft_general_command(Server *server, Client *client) {
     std::string cmd = client->m_getCmd();
+    std::string nick = client->m_getNickName();
+    std::string username = client->m_getUserName();
 
     if (cmd == "QUIT")
         return (0);
@@ -67,7 +69,7 @@ int ft_general_command(Client *client) {
     else if (cmd == "CLEAR")
         ft_command_clear(client);
     else if (cmd == "PING" && client->m_usingIrssi())
-        ft_send(client, "PONG :localhost");
+        server->sendData(client, RPL_PONG(user_id(nick, username), ""));
     else
         return (1);
     return (2);
@@ -95,7 +97,7 @@ bool ft_request_informations(Server &server, Client *&client) {
 bool ft_run(Server &server, Client *&client) {
     std::string cmd = client->m_getCmd();
 
-    int code = ft_general_command(client);
+    int code = ft_general_command(&server, client);
     if (code == 0)
         return (0);
     else if (code == 1 && !ft_request_informations(server, client))

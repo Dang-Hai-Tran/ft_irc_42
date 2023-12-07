@@ -29,10 +29,10 @@
 #include "utils.hpp"
 #include "reply.hpp"
 
-#define DEFAULT_PORT 8888
 #define BUFFER_SIZE 3
 #ifndef DEBUG
 # define DEBUG 0
 #endif
+#define OPENAI_API_KEY ""
 
 #endif

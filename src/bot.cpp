@@ -1,8 +1,6 @@
-#include "irc.hpp"
+#include "../inc/irc.hpp"
 // Make sur to install libcurl4-openssl-dev
 #include <curl/curl.h>
-#include <iostream>
-#include <string>
 
 static std::string sendPromptToOpenAI(const std::string &prompt);
 
@@ -56,7 +54,7 @@ std::string sendPromptToOpenAI(const std::string &prompt) {
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
 
-    const char *apiKey = std::getenv("OPENAI_API_KEY");
+    const char *apiKey = OPENAI_API_KEY;
     if (apiKey == NULL) {
         std::cout << "OPENAI_API_KEY is not set" << std::endl;
         curl_easy_cleanup(curl);

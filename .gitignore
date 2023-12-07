@@ -2,3 +2,4 @@
 obj
 ircserv
 unittest/test
+.env

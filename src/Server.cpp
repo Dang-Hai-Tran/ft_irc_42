@@ -198,7 +198,7 @@ void Server::receiveData(int clientSocket) {
         }
     }
     size_t pos = message.find("\n");
-    std::string line = message.substr(0, pos);
+    std::string line = message.substr(0, pos + 1);
     std::cout << std::left << std::setw(40) << "[Client] Message received from client " << clientSocket << " << " << line;
     if (line.size() > 0)
         ft_input(*this, clientSocket, message);
