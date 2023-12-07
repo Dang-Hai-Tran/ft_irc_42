@@ -38,7 +38,7 @@ void ft_send(Client *client, std::string output);
 void error_syntax(Client *client);
 int ft_nbrSpace(const std::string &str);
 bool ft_isStringEmpty(const std::string &str);
-bool is_upperCase(std::string &str);
+std::string upperCase(std::string &str);
 std::string ft_delete_space(const std::string &input);
 std::string str_without_space_start_end(const std::string &arg);
 std::string int_to_string(int nbr);

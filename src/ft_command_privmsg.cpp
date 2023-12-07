@@ -21,7 +21,7 @@ void	ft_conversation(Client* client, Channel* channel)
 
 	std::string	sender = client->m_getNickName();
 	std::string	nameChannel = channel->getNameChannel();
-	message = ":" + sender + " PRIVMSG " + nameChannel + " " + message;
+	message = ":" + sender + " PRIVMSG " + nameChannel + " " + message + "\r\n";
 	
 	size_t	i(0);
 	while (i < channel->getUsers().size())
@@ -29,7 +29,7 @@ void	ft_conversation(Client* client, Channel* channel)
 		Client*	user = channel->getUsers()[i];
 		std::string	recipient = user->m_getNickName();
 		if (recipient != sender)
-				ft_send(user, message);
+				send(user->m_getSocket(), message.c_str(), message.size(), 0);
 		i++;
 	}
 }

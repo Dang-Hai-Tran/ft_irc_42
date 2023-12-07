@@ -48,15 +48,16 @@ void sign_in(Server &server, Client *&client, int id) {
     oldClient->m_setConnected(true);
     oldClient->m_setStatusS(true);
 
+    Client*	tmp = client;
     client = oldClient;
+    delete	tmp;
     std::cout << "2 --> " << client << std::endl;
 }
 
-void connected_successfully(Server &server, Client *&client) {
-    std::string userName = client->m_getUserName();
+void	ft_welcome(Client* client)
+{
     std::string nickName = client->m_getNickName();
-    ft_send(client, "Helloooooo [" + userName + "] !!!");
-
+    
     ft_send(client, "\n----------------------------------------\n");
     if (client->m_usingIrssi()) // signal connected for IRSSI
     {
@@ -64,10 +65,18 @@ void connected_successfully(Server &server, Client *&client) {
         ft_send(client, text);
     } else
         ft_send(client, "<--            Welcome to the IRC Network             -->");
+}
 
+void connected_successfully(Server &server, Client *&client) {
+    std::string userName = client->m_getUserName();
+    ft_send(client, "Helloooooo [" + userName + "] !!!");
+    
     // update status
     if (client->m_getStatusS())
         return;
+
+    // print welcome
+    ft_welcome(client);
 
     int id = ft_find_username(server, userName);
     if (id == 0)

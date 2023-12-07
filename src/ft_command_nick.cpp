@@ -64,6 +64,7 @@ void	ft_command_nick(Server& server, Client* client)
 	}
 	std::string	oldNick = client->m_getNickName();
 	client->m_setNickName(parameter);
+	ft_send(client, "(i) The nickname can be changed after the username is created because there is a duplicate nick name in the server");
 	if (client->m_usingIrssi())
 	{
 		std::string	newNick = client->m_getNickName();

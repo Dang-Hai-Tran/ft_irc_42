@@ -162,20 +162,13 @@ void Server::acceptConnection(void) {
  */
 void ft_input(Server &server, int socket, std::string &input) {
     size_t i(0);
-    std::vector<Client *> clients = server.m_getListConnection();
+    std::vector<Client *> &clients = server.m_getListConnection();
 
     while (i < clients.size()) {
         int sk = clients[i]->m_getSocket();
         if (sk == socket) {
-            Client *tmp = clients[i];
             clients[i]->m_setInput(input);
             get_input(server, clients[i]);
-
-            // new --> old
-            if (tmp != clients[i]) {
-                delete tmp;
-                server.m_getListConnection()[i] = clients[i];
-            }
             std::cout << "3 --> " << clients[i] << std::endl;
             break;
         }

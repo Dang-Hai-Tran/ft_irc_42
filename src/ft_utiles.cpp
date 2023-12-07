@@ -43,17 +43,20 @@ std::string	str_without_space_start_end(const std::string& arg)
 	return (arg.substr(start, end - start + 1));
 }
 
-bool	is_upperCase(std::string& str)
+std::string	upperCase(std::string& str)
 {
 	int	i(0);
+	std::string	new_str = "";
 
 	while (str[i])
 	{
 		if (str[i] >= 'a' && str[i] <= 'z')
-			return (0);
+			new_str += str[i] - 32;
+		else
+			new_str += str[i];
 		i++;
 	}
-	return (1);
+	return (new_str);
 }
 
 int	ft_nbrSpace(const std::string& str)

@@ -38,4 +38,9 @@ void commandChannel(Server &server, Client &client) {
     }
     if (cmd == "PRIVMSG") // xuluu
         ft_command_privmsg(server, &client);
+    else
+    {
+	Client*	tmp = &client;
+	ft_command_outside(server, tmp);
+    }
 }

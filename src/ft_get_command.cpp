@@ -14,9 +14,25 @@
 
 void	ft_send(Client* client, std::string output)
 {
+	std::string	nickName = client->m_getNickName();
 	int	clientSocket = client->m_getSocket();
-	std::string	text = output + "\r\n";
-	send(clientSocket, text.c_str(), text.size(), 0);
+	
+	if (client->m_getStatusC() && client->m_usingIrssi())
+	{
+		size_t	i(0);
+		while (i < client->getChannelsUserIn().size())
+		{
+			std::string	nameChannel = client->getChannelsUserIn()[i]->getNameChannel();
+			std::string	text = ":" + nickName + " PRIVMSG " + nameChannel + " " + output + "\r\n";
+			send(clientSocket, text.c_str(), text.size(), 0);
+			i++;
+		}
+	}
+	else
+	{
+		std::string	text =	output + "\r\n";
+		send(clientSocket, text.c_str(), text.size(), 0);
+	}
 }
 
 bool	is_adminServer(Client* client)
@@ -37,15 +53,7 @@ bool	get_command_parameter(Server& server, Client* &client)
 		i++;
 	
 	std::string	cmd = str.substr(0, i);
-	if (is_upperCase(cmd) == false)
-	{
-		ft_send(client, "(!) Command must be capitalized");
-		ft_send(client, "(i) Use /HELP for instructions");
-		ft_send(client, "\n----------------------------------------\n");
-		if (client->m_getStatusS())
-			return (1);
-		return (0);
-	}
+	cmd = upperCase(cmd);
 	client->m_setCmd(cmd);
 	
 	std::string parameter = "";
