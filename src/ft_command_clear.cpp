@@ -14,6 +14,9 @@
 
 void	ft_command_clear(Client* client)
 {
+	if (client->m_usingIrssi())
+		return ;
+	
 	std::string	parameter = client->m_getParameter();
 	if (parameter != "")
 		return (error_syntax(client));
@@ -23,7 +26,7 @@ void	ft_command_clear(Client* client)
 
 	while (i < max_line)
 	{
-		ft_send(client, "\n");
+		ft_send(client, "\r\n");
 		i++;
 	}
 }

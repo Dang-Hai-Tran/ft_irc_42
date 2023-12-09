@@ -44,9 +44,27 @@ int	ft_find_nickname(Server& server, std::string& nickName)
 	return (0);
 }
 
+void	ft_nickname_accepted(Client* client, std::string nickName)
+{
+	std::string	oldNick = client->m_getNickName();
+	client->m_setNickName(nickName);
+
+	if (!client->m_getStatusS())
+		ft_send(client, "(i) The nickname can be changed after the username is created because there is a duplicate nick name in the server\r\n");
+
+	std::string	newNick = client->m_getNickName();
+	ft_send(client, RPL_NICK(oldNick, newNick, newNick));
+	if (!client->m_usingIrssi())
+	{
+		ft_send(client, "\n-----------------------------------------\r\n");
+		ft_guide(client);
+	}
+}
+
 void	ft_command_nick(Server& server, Client* client)
 {
 	std::string	parameter = client->m_getParameter();
+	std::string	socket = int_to_string(client->m_getSocket());
 
 	if (parameter == "" || ft_nbrSpace(parameter) != 0)
 		return (error_syntax(client));
@@ -57,23 +75,9 @@ void	ft_command_nick(Server& server, Client* client)
 		Client*	user = server.getRegisteredClients()[id - 1];
 		if (user->m_getStatusS())
 		{
-			std::string text = ":localhost 433 * " + parameter + " :Nickname is already in use";
-			ft_send(client, text);
+			ft_send(client, ERR_NICKNAMEINUSE(socket, parameter));
 			return ;
 		}
 	}
-	std::string	oldNick = client->m_getNickName();
-	client->m_setNickName(parameter);
-	ft_send(client, "(i) The nickname can be changed after the username is created because there is a duplicate nick name in the server");
-	if (client->m_usingIrssi())
-	{
-		std::string	newNick = client->m_getNickName();
-		ft_send(client, ":" + oldNick + " NICK :" + newNick);
-	}
-	else
-	{
-		ft_send(client, "You're now known as [" + parameter + "]");
-		ft_send(client, "\n-----------------------------------------\n");
-		ft_guide(client);
-	}
+	ft_nickname_accepted(client, parameter);
 }

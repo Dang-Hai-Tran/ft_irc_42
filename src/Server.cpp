@@ -3,7 +3,14 @@
 /**
  * @brief Default constructor for the Server class.
  */
-Server::Server(){};
+Server::Server(){
+    for (size_t i = 0; i < this->getClientFDs().size(); i++) {
+        int socket = this->getClientFDs()[i];
+        this->sendData(socket, "Server closed\r\n");
+        close(this->getClientFDs()[i]);
+    }
+    this->getClientFDs().clear();
+};
 
 /**
  * @brief Parameterized constructor for the Server class.

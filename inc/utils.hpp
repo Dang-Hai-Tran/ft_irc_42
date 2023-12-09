@@ -34,7 +34,7 @@ std::ostream &operator<<(std::ostream &os, const std::vector<T> &vec) {
 }
 
 // utiles
-void ft_send(Client *client, std::string output);
+void ft_send(Client *client, std::string text);
 void error_syntax(Client *client);
 int ft_nbrSpace(const std::string &str);
 bool ft_isStringEmpty(const std::string &str);

@@ -75,8 +75,12 @@ int	ft_nbrSpace(const std::string& str)
 
 void	error_syntax(Client* client)
 {
-	ft_send(client, "(!) Wrong syntax");
-	ft_send(client, "(i) Use /HELP for instructions");
+	std::string	nickName = client->m_getNickName();
+	std::string	command = client->m_getCmd();
+
+	if (nickName == "")
+		nickName = int_to_string(client->m_getSocket());
+	ft_send(client, ERR_NEEDMOREPARAMS(nickName, command));
 	return ;
 }
 

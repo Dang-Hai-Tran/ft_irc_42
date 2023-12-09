@@ -21,15 +21,14 @@ void	ft_conversation(Client* client, Channel* channel)
 
 	std::string	sender = client->m_getNickName();
 	std::string	nameChannel = channel->getNameChannel();
-	message = ":" + sender + " PRIVMSG " + nameChannel + " " + message + "\r\n";
 	
 	size_t	i(0);
 	while (i < channel->getUsers().size())
 	{
-		Client*	user = channel->getUsers()[i];
-		std::string	recipient = user->m_getNickName();
+		Client*	target = channel->getUsers()[i];
+		std::string	recipient = target->m_getNickName();
 		if (recipient != sender)
-				send(user->m_getSocket(), message.c_str(), message.size(), 0);
+			ft_send(target, RPL_PRIVMSG2(sender, nameChannel, message));
 		i++;
 	}
 }
@@ -50,8 +49,6 @@ int	ft_find_namechannel(Server& server, std::string nameChannel)
 void	ft_command_privmsg(Server& server, Client* client)
 {
 	std::string	parameter = client->m_getParameter();
-	// std::cout << parameter << std::endl;
-
 	if (parameter == "" || ft_nbrSpace(parameter) < 1 || parameter[0] != '#')
 		return (error_syntax(client));
 
@@ -60,8 +57,6 @@ void	ft_command_privmsg(Server& server, Client* client)
 		i++;
 
 	std::string	nameChannel = parameter.substr(1, i);
-	// std::cout << "channel name: " << nameChannel << std::endl;
-
 	int	id = ft_find_namechannel(server, nameChannel);
 	if (id == 0)
 	{
@@ -70,7 +65,6 @@ void	ft_command_privmsg(Server& server, Client* client)
 	}
 
 	parameter = parameter.substr(i + 1, parameter.size());
-	// std::cout << "--> message: " << parameter << std::endl;
 	client->m_setParameter(parameter);
 
 	ft_conversation(client, server.getChannels()[id - 1]);

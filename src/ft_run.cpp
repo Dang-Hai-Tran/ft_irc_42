@@ -49,11 +49,11 @@ void reset_data(Client *client) {
 
 void ft_guide(Client *client) {
     if (client->m_isConnected() == false) {
-        ft_send(client, "(!) Usage: /PASS <password> to login server");
+        ft_send(client, "(!) Usage: /PASS <password> to login server\r\n");
     } else if (client->m_getNickName() == "") {
-        ft_send(client, "(!) Usage: /NICK <nickname> to set new nick");
+        ft_send(client, "(!) Usage: /NICK <nickname> to set new nick\r\n");
     } else if (client->m_getUserName() == "") {
-        ft_send(client, "(!) Usage: /USER <username> 8 * :<realname> to set new username");
+        ft_send(client, "(!) Usage: /USER <username> 8 * :<realname> to set new username\r\n");
     }
 }
 

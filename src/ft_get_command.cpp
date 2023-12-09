@@ -12,27 +12,10 @@
 
 #include "../inc/irc.hpp"
 
-void	ft_send(Client* client, std::string output)
+void	ft_send(Client* client, std::string text)
 {
-	std::string	nickName = client->m_getNickName();
 	int	clientSocket = client->m_getSocket();
-	
-	if (client->m_getStatusC() && client->m_usingIrssi())
-	{
-		size_t	i(0);
-		while (i < client->getChannelsUserIn().size())
-		{
-			std::string	nameChannel = client->getChannelsUserIn()[i]->getNameChannel();
-			std::string	text = ":" + nickName + " PRIVMSG " + nameChannel + " " + output + "\r\n";
-			send(clientSocket, text.c_str(), text.size(), 0);
-			i++;
-		}
-	}
-	else
-	{
-		std::string	text =	output + "\r\n";
-		send(clientSocket, text.c_str(), text.size(), 0);
-	}
+	send(clientSocket, text.c_str(), text.size(), 0);
 }
 
 bool	is_adminServer(Client* client)

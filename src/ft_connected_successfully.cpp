@@ -57,19 +57,21 @@ void sign_in(Server &server, Client *&client, int id) {
 void	ft_welcome(Client* client)
 {
     std::string nickName = client->m_getNickName();
+    std::string socket = int_to_string(client->m_getSocket());
     
-    ft_send(client, "\n----------------------------------------\n");
-    if (client->m_usingIrssi()) // signal connected for IRSSI
-    {
-        std::string text = ":localhost 001 " + nickName + " :<--            Welcome to the IRC Network             -->";
-        ft_send(client, text);
-    } else
-        ft_send(client, "<--            Welcome to the IRC Network             -->");
+    ft_send(client, "\n----------------------------------------\r\n");
+    ft_send(client, RPL_WELCOME(socket, nickName));
 }
 
 void connected_successfully(Server &server, Client *&client) {
     std::string userName = client->m_getUserName();
-    ft_send(client, "Helloooooo [" + userName + "] !!!");
+    std::string nickName = client->m_getNickName();
+    
+    std::string text = "Hellooooo [" + userName + "]";
+    if (client->m_getStatusC())
+        ft_send(client, RPL_PRIVMSG2(nickName, "", text));
+    else
+        ft_send(client, text + "\r\n");
     
     // update status
     if (client->m_getStatusS())
@@ -81,16 +83,13 @@ void connected_successfully(Server &server, Client *&client) {
     int id = ft_find_username(server, userName);
     if (id == 0)
         sign_up(server, client);
-    else {
+    else
         sign_in(server, client, id - 1);
-        if (DEBUG) {
-            std::cout << "Address of newClient after assignment : " << client << std::endl;
-        }
-    }
+
     // number connection
     std::string nbr_connection = int_to_string((int)server.m_getListConnection().size());
     std::string nbrRegisteredUsers = int_to_string((int)server.getRegisteredClients().size());
     std::string nbrChannels = int_to_string((int)server.getChannels().size());
-    std::string message = "Actually, the server has " + nbr_connection + " users connected, " + nbrRegisteredUsers + " users registered, and " + nbrChannels + " channels created";
+    std::string message = "Actually, the server has " + nbr_connection + " users connected, " + nbrRegisteredUsers + " users registered, and " + nbrChannels + " channels created\r\n";
     ft_send(client, message);
 }
