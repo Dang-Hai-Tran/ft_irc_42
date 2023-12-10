@@ -17,7 +17,7 @@ void	print_list_user(Client*	client, std::vector<Client *> &list_user)
 	int	i(0);
 	int	nb_clients = list_user.size();
 
-	ft_send(client, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]");
+	ft_send(client, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]\r\n");
 	while (i < nb_clients)
 	{
 		Client* user = list_user[i];
@@ -29,7 +29,7 @@ void	print_list_user(Client*	client, std::vector<Client *> &list_user)
 		std::string	nickName = user->m_getNickName() + " ";
 		std::string	realName = "(" + user->m_getRealName() + ")";
 		
-		std::string	text = id + status + nickName + realName;
+		std::string	text = id + status + nickName + realName + "\r\n";
 		ft_send(client, text);
 		i++;
 	}

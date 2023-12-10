@@ -15,49 +15,49 @@
 void	print_type_client(Client* client, Client* user)
 {
 	if (user->m_usingIrssi())
-		ft_send(client, "* USING: irssi");
+		ft_send(client, "* USING: irssi\r\n");
 	else
-		ft_send(client, "* USING: nc");
+		ft_send(client, "* USING: nc\r\n");
 }
 
 void	print_adminServer(Client* client, Client* user)
 {
 	if (user->m_getAdminServer())
-		ft_send(client, "* ADMIN SERVER: true");
+		ft_send(client, "* ADMIN SERVER: true\r\n");
 	else
-		ft_send(client, "* ADMIN SERVER: false");
+		ft_send(client, "* ADMIN SERVER: false\r\n");
 }
 
 void	print_adminChannel(Client* client, Client* user)
 {
 	if (user->m_getAdminChannel())
-		ft_send(client, "* ADMIN CHANNEL: true");
+		ft_send(client, "* ADMIN CHANNEL: true\r\n");
 	else
-		ft_send(client, "* ADMIN CHANNEL: false");
+		ft_send(client, "* ADMIN CHANNEL: false\r\n");
 }
 
 void	print_statusS(Client* client, Client* user)
 {
 	if (user->m_getStatusS())
-		ft_send(client, "* STATUS ON SERVER: on");
+		ft_send(client, "* STATUS ON SERVER: on\r\n");
 	else
-		ft_send(client, "* STATUS ON SERVER: off");
+		ft_send(client, "* STATUS ON SERVER: off\r\n");
 }
 
 void	print_statusC(Client* client, Client* user)
 {
 	if (user->m_getStatusC())
-		ft_send(client, "* STATUS ON CHANNEL: on");
+		ft_send(client, "* STATUS ON CHANNEL: on\r\n");
 	else
-		ft_send(client, "* STATUS ON CHANNEL: off");
+		ft_send(client, "* STATUS ON CHANNEL: off\r\n");
 }
 
 void	print_mode(Client* client, Client* user)
 {
 	if (user->m_getMode())
-		ft_send(client, "* MODE: invisible");
+		ft_send(client, "* MODE: invisible\r\n");
 	else
-		ft_send(client, "* MODE: normal");
+		ft_send(client, "* MODE: normal\r\n");
 }
 
 void	ft_display_informations(Server& server, Client* client, int id)
@@ -69,10 +69,10 @@ void	ft_display_informations(Server& server, Client* client, int id)
 	std::string	nickName = user->m_getNickName();
 
 	// print
-	ft_send(client, "* USERNAME: " + userName); // delete
-	ft_send(client, "* ID: " + numberID);
-	ft_send(client, "* NICKNAME: " + nickName);
-	ft_send(client, "* REALNAME: " + realName);
+	ft_send(client, "* USERNAME: " + userName + "\r\n"); // delete
+	ft_send(client, "* ID: " + numberID + "\r\n");
+	ft_send(client, "* NICKNAME: " + nickName + "\r\n");
+	ft_send(client, "* REALNAME: " + realName + "\r\n");
 
 	print_type_client(client, user);
 	print_mode(client, user);
@@ -96,7 +96,7 @@ void	ft_command_whois(Server& server, Client* client)
 	int	id = ft_find_nickname(server, parameter);
 	if (id == 0)
 	{
-		ft_send(client, "(!) User does not exist");
+		ft_send(client, ERR_NOSUCHNICK(client->m_getNickName(), parameter));
 		return ;
 	}
 	ft_display_informations(server, client, id - 1);

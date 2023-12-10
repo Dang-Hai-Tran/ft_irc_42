@@ -3,14 +3,7 @@
 /**
  * @brief Default constructor for the Server class.
  */
-Server::Server(){
-    for (size_t i = 0; i < this->getClientFDs().size(); i++) {
-        int socket = this->getClientFDs()[i];
-        this->sendData(socket, "Server closed\r\n");
-        close(this->getClientFDs()[i]);
-    }
-    this->getClientFDs().clear();
-};
+Server::Server() {};
 
 /**
  * @brief Parameterized constructor for the Server class.
@@ -63,15 +56,24 @@ Server::~Server() {
             delete this->m_listConnection[i];
         }
     }
+ 
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
         delete this->registeredClients[i];
     }
     this->m_listConnection.clear();
     this->registeredClients.clear();
+ 
     for (size_t i = 0; i < this->channels.size(); i++) {
         delete this->channels[i];
     }
     this->channels.clear();
+ 
+    for (size_t i = 0; i < this->getClientFDs().size(); i++) {
+        int socket = this->getClientFDs()[i];
+        this->sendData(socket, "Server closed\r\n");
+        close(this->getClientFDs()[i]);
+    }
+    this->getClientFDs().clear();
 }
 
 /**

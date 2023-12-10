@@ -30,6 +30,7 @@ bool	is_adminServer(Client* client)
 bool	get_command_parameter(Server& server, Client* &client)
 {
 	std::string str = client->m_getInput();
+	std::cout << str << std::endl;
 	int	i(0);
 
 	while (str[i] && str[i] != ' ')
