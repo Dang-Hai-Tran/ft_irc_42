@@ -26,8 +26,6 @@ void ft_command_outside(Server &server, Client *&client) {
         ft_command_whois(server, client);
     else if (cmd == "NICK")
         ft_command_nick(server, client);
-    else if (cmd == "PRIVMSG") // delete
-        ft_command_privmsg(server, client);
     else if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING" || cmd == "QUIT")
         return;
     else if (client->m_getStatusC() == false) {

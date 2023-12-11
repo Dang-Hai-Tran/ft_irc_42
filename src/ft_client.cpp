@@ -24,6 +24,7 @@ Client::Client(void) {
     this->m_cmd = "";
     this->m_parameter = "";
 
+    this->m_defineText = false;
     this->m_irssi = false;
     this->m_connected = false;
     this->m_statusS = false;
@@ -182,6 +183,17 @@ void Client::m_setConnected(bool status) {
 
 bool Client::m_isConnected(void) const {
     return (this->m_connected);
+}
+
+/* Define Message */
+void Client::m_defineMessage(bool status)
+{
+    this->m_defineText = status;
+}
+
+bool Client::m_isMessage(void) const
+{
+    return (this->m_defineText);
 }
 
 /************************************************/

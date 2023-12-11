@@ -33,8 +33,8 @@ bool ft_connection_with_nc(Server &server, Client *&client, std::string &cmd) {
         client->m_setInput(cmd);
         run = get_command_parameter(server, client);
     } else if (client->m_getStatusC()) {
-        client->m_setInput(cmd);
-        ft_message(client);
+        client->m_defineMessage(true);
+        ft_message(client, cmd);
     } else {
         ft_send(client, "(!) Command start with '/'");
         ft_send(client, "(i) Use /HELP for instructions");
@@ -100,6 +100,7 @@ void get_input(Server &server, Client *&client) {
         std::string cmd = str.substr(0, m);
         // std::cout << cmd << std::endl;
 
+        client->m_defineMessage(false);
         if (!ft_check_type_client(server, client, cmd))
             break;
         str = str.substr(m + 1, str.size());
