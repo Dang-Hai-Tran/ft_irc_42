@@ -43,6 +43,8 @@ bool ft_connection_with_nc(Server &server, Client *&client, std::string &cmd) {
     }
 
     if (run) {
+        if (client->m_getStatusC())
+            return (1);
         std::string text = "";
         text += "[" + client->m_getNickName();
         for (size_t i = 0; i < client->getChannelsUserIn().size(); i++) {
