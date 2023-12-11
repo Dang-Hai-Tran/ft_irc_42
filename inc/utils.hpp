@@ -89,6 +89,7 @@ void ft_command_whois(Server &server, Client *client);
 void ft_command_privmsg(Server &server, Client *client);
 void ft_conversation(Client *client, Channel *channel);
 void ft_message(Client *client, std::string cmd);
+void ft_send_a_personne(Server& server, Client* client);
 
 // command CLEAR
 void ft_command_clear(Client *client);

@@ -54,9 +54,16 @@ int	ft_find_namechannel(Server& server, std::string nameChannel)
 
 void	ft_command_privmsg(Server& server, Client* client)
 {
+	client->m_defineMessage(true);
 	std::string	parameter = client->m_getParameter();
-	if (parameter == "" || ft_nbrSpace(parameter) < 1 || parameter[0] != '#')
+	if (parameter == "" || ft_nbrSpace(parameter) < 1)
 		return (error_syntax(client));
+
+	if (parameter[0] != '#')
+	{
+		ft_send_a_personne(server, client);
+		return ;
+	}
 
 	int	i(0);
 	while (parameter[i] && parameter[i] != ' ')

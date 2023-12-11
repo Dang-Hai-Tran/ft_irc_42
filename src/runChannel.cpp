@@ -46,7 +46,6 @@ void commandChannel(Server &server, Client &client) {
         return;
     }
     if (cmd == "PRIVMSG") {
-        client.m_defineMessage(true);
         ft_command_privmsg(server, &client);
     }
     else {
