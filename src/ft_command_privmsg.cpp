@@ -22,7 +22,6 @@ void	ft_conversation(Client* client, Channel* channel)
 	std::string	sender = client->m_getNickName();
 	std::string	nameChannel = channel->getNameChannel();
 
-	std::cout << "--------------> " << client->m_isMessage() << std::endl;
 	if (!client->m_isMessage())
 	{
 		ft_send(client, RPL_PRIVMSG2(sender, nameChannel, message));
@@ -82,8 +81,15 @@ void	ft_message(Client* client, std::string cmd)
 	std::string	message = ":" + cmd;
 	client->m_setParameter(message);
 
+	size_t	nbr_channel = client->getChannelsUserIn().size();
+	if (nbr_channel == 0)
+	{
+		ft_send(client, cmd + "\r\n");
+		return ;
+	}
+
 	size_t	i(0);
-	while (i < client->getChannelsUserIn().size())
+	while (i < nbr_channel)
 	{
 		Channel*	channel = client->getChannelsUserIn()[i];
 		ft_conversation(client, channel);

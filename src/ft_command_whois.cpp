@@ -15,49 +15,49 @@
 void	print_type_client(Client* client, Client* user)
 {
 	if (user->m_usingIrssi())
-		ft_send(client, "* USING: irssi\r\n");
+		ft_message(client, "* USING: irssi");
 	else
-		ft_send(client, "* USING: nc\r\n");
+		ft_message(client, "* USING: nc");
 }
 
 void	print_adminServer(Client* client, Client* user)
 {
 	if (user->m_getAdminServer())
-		ft_send(client, "* ADMIN SERVER: true\r\n");
+		ft_message(client, "* ADMIN SERVER: true");
 	else
-		ft_send(client, "* ADMIN SERVER: false\r\n");
+		ft_message(client, "* ADMIN SERVER: false");
 }
 
 void	print_adminChannel(Client* client, Client* user)
 {
 	if (user->m_getAdminChannel())
-		ft_send(client, "* ADMIN CHANNEL: true\r\n");
+		ft_message(client, "* ADMIN CHANNEL: true");
 	else
-		ft_send(client, "* ADMIN CHANNEL: false\r\n");
+		ft_message(client, "* ADMIN CHANNEL: false");
 }
 
 void	print_statusS(Client* client, Client* user)
 {
 	if (user->m_getStatusS())
-		ft_send(client, "* STATUS ON SERVER: on\r\n");
+		ft_message(client, "* STATUS ON SERVER: on");
 	else
-		ft_send(client, "* STATUS ON SERVER: off\r\n");
+		ft_message(client, "* STATUS ON SERVER: off");
 }
 
 void	print_statusC(Client* client, Client* user)
 {
 	if (user->m_getStatusC())
-		ft_send(client, "* STATUS ON CHANNEL: on\r\n");
+		ft_message(client, "* STATUS ON CHANNEL: on");
 	else
-		ft_send(client, "* STATUS ON CHANNEL: off\r\n");
+		ft_message(client, "* STATUS ON CHANNEL: off");
 }
 
 void	print_mode(Client* client, Client* user)
 {
 	if (user->m_getMode())
-		ft_send(client, "* MODE: invisible\r\n");
+		ft_message(client, "* MODE: invisible");
 	else
-		ft_send(client, "* MODE: normal\r\n");
+		ft_message(client, "* MODE: normal");
 }
 
 void	ft_display_informations(Server& server, Client* client, int id)
@@ -69,10 +69,10 @@ void	ft_display_informations(Server& server, Client* client, int id)
 	std::string	nickName = user->m_getNickName();
 
 	// print
-	ft_send(client, "* USERNAME: " + userName + "\r\n"); // delete
-	ft_send(client, "* ID: " + numberID + "\r\n");
-	ft_send(client, "* NICKNAME: " + nickName + "\r\n");
-	ft_send(client, "* REALNAME: " + realName + "\r\n");
+	ft_message(client, "* USERNAME: " + userName); // delete
+	ft_message(client, "* ID: " + numberID);
+	ft_message(client, "* NICKNAME: " + nickName);
+	ft_message(client, "* REALNAME: " + realName);
 
 	print_type_client(client, user);
 	print_mode(client, user);
