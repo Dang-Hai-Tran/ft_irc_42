@@ -62,7 +62,7 @@ public:
 
     // modes
     void m_setMode(bool mode);
-    bool m_getMode(void) const;
+    bool m_isInvisible(void) const;
 
     // connected
     void m_setConnected(bool status);

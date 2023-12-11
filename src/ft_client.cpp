@@ -51,7 +51,7 @@ Client &Client::operator=(const Client &objet) {
         this->m_nickName = objet.m_getNickName();
         this->m_userName = objet.m_getUserName();
         this->m_realName = objet.m_getRealName();
-        this->m_invisible = objet.m_getMode();
+        this->m_invisible = objet.m_isInvisible();
         this->m_adminServer = objet.m_getAdminServer();
         this->m_adminChannel = objet.m_getAdminChannel();
     }
@@ -172,7 +172,7 @@ void Client::m_setMode(bool mode) {
     this->m_invisible = mode;
 }
 
-bool Client::m_getMode(void) const {
+bool Client::m_isInvisible(void) const {
     return (this->m_invisible);
 }
 

@@ -38,9 +38,9 @@ bool ft_check_mode(Client *client, std::string &mode) {
     if (mode.size() != 1 || (mode[0] != '0' && mode[0] != '8'))
         return (reset_data_username(client));
 
-    client->m_setMode(1);
-    if (mode == "0")
-        client->m_setMode(0);
+    client->m_setMode(false);
+    if (mode == "8")
+        client->m_setMode(true);
     return (1);
 }
 

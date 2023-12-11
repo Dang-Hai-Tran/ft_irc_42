@@ -26,7 +26,9 @@ void ft_command_outside(Server &server, Client *&client) {
         ft_command_whois(server, client);
     else if (cmd == "NICK")
         ft_command_nick(server, client);
-    else if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING" || cmd == "QUIT")
+    else if (cmd == "MODE")
+        client->m_setMode(true);
+    else if (cmd == "PING")
         return;
     else if (client->m_getStatusC() == false) {
         ft_send(client, "(!) This command is invalid");
@@ -51,7 +53,7 @@ void ft_guide(Client *client) {
     } else if (client->m_getNickName() == "") {
         ft_send(client, "(!) Usage: /NICK <nickname> to set new nick\r\n");
     } else if (client->m_getUserName() == "") {
-        ft_send(client, "(!) Usage: /USER <username> 8 * :<realname> to set new username\r\n");
+        ft_send(client, "(!) Usage: /USER <username> 0 * :<realname> to set new username\r\n");
     }
 }
 

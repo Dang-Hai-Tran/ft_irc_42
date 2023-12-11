@@ -34,7 +34,7 @@ void sign_in(Server &server, Client *&client, int id) {
     std::string nickName = client->m_getNickName();
     std::string realName = client->m_getRealName();
     bool typeClient = client->m_usingIrssi();
-    bool mode = client->m_getMode();
+    bool mode = client->m_isInvisible();
     int socket = client->m_getSocket();
 
     // update

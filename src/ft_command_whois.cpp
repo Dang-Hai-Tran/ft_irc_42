@@ -54,7 +54,7 @@ void	print_statusC(Client* client, Client* user)
 
 void	print_mode(Client* client, Client* user)
 {
-	if (user->m_getMode())
+	if (user->m_isInvisible())
 		ft_message(client, "* MODE: invisible");
 	else
 		ft_message(client, "* MODE: normal");
@@ -94,7 +94,7 @@ void	ft_command_whois(Server& server, Client* client)
 		parameter = client->m_getNickName();
 
 	int	id = ft_find_nickname(server, parameter);
-	if (id == 0)
+	if (id == 0 || (server.getRegisteredClients()[id - 1]->m_isInvisible() && server.getRegisteredClients()[id - 1]->m_getID() != client->m_getID()))
 	{
 		ft_send(client, ERR_NOSUCHNICK(client->m_getNickName(), parameter));
 		return ;
