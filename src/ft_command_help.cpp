@@ -54,6 +54,11 @@ void ft_infor_whois(Client *client) {
     ft_send(client, "(!) Usage: /WHOIS <nickname> to retrieve detailed information about a specific user connected to server\r\n");
 }
 
+void ft_infor_privmsg(Client *client) {
+    ft_send(client, "* Command: /PRIVMSG nickName/#nameChannel :message\r\n");
+    ft_send(client, "Use: send a private message for a person or a channel\r\n");
+}
+
 /**************************************************************/
 
 void ft_command_help(Client *client) {
@@ -85,6 +90,8 @@ void ft_command_help(Client *client) {
     if (client->m_getUserName() == "")
         return;
 
+    ft_infor_privmsg(client);
+    ft_send(client, "   ---------------------------------------   \r\n");
     ft_infor_who(client);
     ft_send(client, "   ---------------------------------------   \r\n");
     ft_infor_whois(client);

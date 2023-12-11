@@ -61,7 +61,7 @@ void	ft_command_privmsg(Server& server, Client* client)
 
 	if (parameter[0] != '#')
 	{
-		ft_send_a_personne(server, client);
+		ft_send_a_person(server, client);
 		return ;
 	}
 

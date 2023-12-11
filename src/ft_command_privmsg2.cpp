@@ -12,7 +12,7 @@
 
 #include "../inc/irc.hpp"
 
-void	ft_send_a_personne2(Server& server, Client* client, int id)
+void	ft_send_a_person2(Server& server, Client* client, int id)
 {
 	Client*	target = server.getRegisteredClients()[id];
 	std::string	sender = client->m_getNickName();
@@ -37,7 +37,7 @@ void	ft_send_a_personne2(Server& server, Client* client, int id)
 	}
 }
 
-void	ft_send_a_personne(Server& server, Client* client)
+void	ft_send_a_person(Server& server, Client* client)
 {
 	std::string	parameter = client->m_getParameter();
 
@@ -59,5 +59,5 @@ void	ft_send_a_personne(Server& server, Client* client)
 		return ;
 	}
 	if (id != client->m_getID())
-		ft_send_a_personne2(server, client, id - 1);
+		ft_send_a_person2(server, client, id - 1);
 }
