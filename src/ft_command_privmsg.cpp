@@ -34,7 +34,11 @@ void	ft_conversation(Client* client, Channel* channel)
 		Client*	target = channel->getUsers()[i];
 		std::string	recipient = target->m_getNickName();
 		if (recipient != sender)
+		{
 			ft_send(target, RPL_PRIVMSG2(sender, nameChannel, message));
+			if (!target->m_usingIrssi())
+				send_status(target);
+		}
 		i++;
 	}
 }

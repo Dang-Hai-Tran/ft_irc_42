@@ -99,4 +99,6 @@ void copy_data(Server *server, Client *client);
 // command QUIT
 bool	ft_command_quit(Client* client);
 
+void    send_status(Client* client);
+
 #endif

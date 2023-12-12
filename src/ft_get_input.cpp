@@ -40,21 +40,10 @@ bool ft_connection_with_nc(Server &server, Client *&client, std::string &cmd) {
         run = client->m_getStatusS();
     }
 
-    if (run) {
-        if (client->m_getStatusC())
-            return (1);
-        std::string text = "";
-        text += "[" + client->m_getNickName();
-        for (size_t i = 0; i < client->getChannelsUserIn().size(); i++) {
-            Channel *channel = client->getChannelsUserIn()[i];
-            text += " " + channel->getNameChannel();
-        }
-        text += "] ";
-        if (client->m_getNickName() == "")
-            text = "[irc] ";
-        send(client->m_getSocket(), text.c_str(), text.size(), 0);
+    send_status(client);
+
+    if (run)
         return (1);
-    }
     server.delClientSocket(client->m_getSocket());
     return (0);
 }

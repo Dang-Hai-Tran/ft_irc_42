@@ -24,6 +24,8 @@ void	ft_send_a_person2(Server& server, Client* client, int id)
 	{
 		ft_send(target, annonce + "\r\n");
 		ft_send(target, sender + ": " + message + "\r\n");
+		if (!target->m_usingIrssi())
+			send_status(target);
 		return ;
 	}
 
@@ -33,6 +35,8 @@ void	ft_send_a_person2(Server& server, Client* client, int id)
 		std::string	nameChannel = target->getChannelsUserIn()[i]->getNameChannel();
 		ft_send(target, RPL_PRIVMSG2(sender, nameChannel, annonce));
 		ft_send(target, RPL_PRIVMSG2(sender, nameChannel, message));
+		if (!target->m_usingIrssi())
+			send_status(target);
 		i++;
 	}
 }

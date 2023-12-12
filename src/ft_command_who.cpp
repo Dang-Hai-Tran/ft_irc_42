@@ -87,6 +87,11 @@ void	ft_command_who(Server& server, Client* client)
 	{
 		if (ft_nbrSpace(parameter) != 0 || parameter[0] != '#')
 			return (error_syntax(client));
+		if (!client->m_usingIrssi())
+		{
+			ft_send(client, ERR_UNKNOWNCOMMAND(client->m_getNickName(), client->m_getCmd()));
+			return ;
+		}
 		ft_find_channel(server, client, parameter);
 	}
 }
