@@ -24,6 +24,7 @@ Client::Client(void) {
     this->m_cmd = "";
     this->m_parameter = "";
 
+    this->m_defineText = false;
     this->m_irssi = false;
     this->m_connected = false;
     this->m_statusS = false;
@@ -50,7 +51,7 @@ Client &Client::operator=(const Client &objet) {
         this->m_nickName = objet.m_getNickName();
         this->m_userName = objet.m_getUserName();
         this->m_realName = objet.m_getRealName();
-        this->m_invisible = objet.m_getMode();
+        this->m_invisible = objet.m_isInvisible();
         this->m_adminServer = objet.m_getAdminServer();
         this->m_adminChannel = objet.m_getAdminChannel();
     }
@@ -171,7 +172,7 @@ void Client::m_setMode(bool mode) {
     this->m_invisible = mode;
 }
 
-bool Client::m_getMode(void) const {
+bool Client::m_isInvisible(void) const {
     return (this->m_invisible);
 }
 
@@ -182,6 +183,17 @@ void Client::m_setConnected(bool status) {
 
 bool Client::m_isConnected(void) const {
     return (this->m_connected);
+}
+
+/* Define Message */
+void Client::m_defineMessage(bool status)
+{
+    this->m_defineText = status;
+}
+
+bool Client::m_isMessage(void) const
+{
+    return (this->m_defineText);
 }
 
 /************************************************/

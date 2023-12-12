@@ -12,25 +12,42 @@
 
 #include "../inc/irc.hpp"
 
+int	nbr_invisible(std::vector<Client *> &list_user)
+{
+	size_t	i(0);
+	int	nbr_invisible(0);
+
+	while (i < list_user.size())
+	{
+		Client* user = list_user[i];
+		if (user->m_isInvisible())
+			nbr_invisible++;
+		i++;
+	}
+	return (nbr_invisible);
+}
+
 void	print_list_user(Client*	client, std::vector<Client *> &list_user)
 {
 	int	i(0);
 	int	nb_clients = list_user.size();
 
-	ft_send(client, "[   Number clients on Server: " + int_to_string(nb_clients) + "   ]");
+	ft_message(client, "[   Number clients on Server: " + int_to_string(nb_clients  - nbr_invisible(list_user)) + "   ]");
 	while (i < nb_clients)
 	{
 		Client* user = list_user[i];
-
-		std::string id = "[ " + int_to_string(user->m_getID()) + " | ";
-		std::string	status = "OFF ]: ";
-		if (user->m_getStatusS())
-			status = "ON ]: ";
-		std::string	nickName = user->m_getNickName() + " ";
-		std::string	realName = "(" + user->m_getRealName() + ")";
-		
-		std::string	text = id + status + nickName + realName;
-		ft_send(client, text);
+		if (user->m_isInvisible() == false)
+		{
+			std::string id = "[ " + int_to_string(user->m_getID()) + " | ";
+			std::string	status = "OFF ]: ";
+			if (user->m_getStatusS())
+				status = "ON ]: ";
+			std::string	nickName = user->m_getNickName() + " ";
+			std::string	realName = "(" + user->m_getRealName() + ")";
+			
+			std::string	text = id + status + nickName + realName;
+			ft_message(client, text);
+		}
 		i++;
 	}
 }
@@ -39,12 +56,21 @@ void	ft_find_channel(Server& server, Client* client, std::string nameChannel)
 {
 	size_t	i(0);
 	std::vector<Channel *> &list_channel = server.getChannels();
+	std::string	nickName = client->m_getNickName();
+	std::string	userName = client->m_getUserName();
+	std::string	realName = client->m_getRealName();
+	std::string	serverName = server.getServerName();
+	std::string	flags = "G";
+	if (client->m_getStatusS())
+		flags = "H";
 
 	while (i < list_channel.size())
 	{
 		if (list_channel[i]->getNameChannel() == nameChannel)
 		{
-			print_list_user(client, list_channel[i]->getUsers());
+			// print_list_user(client, list_channel[i]->getUsers());
+			ft_send(client, RPL_WHOREPLY(nickName, nameChannel, userName, serverName, flags, realName));
+			ft_send(client, RPL_ENDOFWHO(nickName, nameChannel));
 			return ;
 		}
 		i++;
@@ -61,6 +87,11 @@ void	ft_command_who(Server& server, Client* client)
 	{
 		if (ft_nbrSpace(parameter) != 0 || parameter[0] != '#')
 			return (error_syntax(client));
+		if (!client->m_usingIrssi())
+		{
+			ft_send(client, ERR_UNKNOWNCOMMAND(client->m_getNickName(), client->m_getCmd()));
+			return ;
+		}
 		ft_find_channel(server, client, parameter);
 	}
 }

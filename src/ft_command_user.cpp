@@ -25,8 +25,7 @@ bool ft_check_username(Server &server, Client *&client, std::string userName) {
     if (id != 0 && id != client->m_getID()) {
         Client *target = server.getRegisteredClients()[id - 1];
         if (target->m_getStatusS()) {
-            std::string text = ":localhost 433 * " + userName + " :(!) Username is already in use";
-            ft_send(client, text);
+            ft_send(client, ERR_ALREADYREGISTERED(client->m_getNickName()));
             return (reset_data_username(client));
         }
     }
@@ -39,9 +38,9 @@ bool ft_check_mode(Client *client, std::string &mode) {
     if (mode.size() != 1 || (mode[0] != '0' && mode[0] != '8'))
         return (reset_data_username(client));
 
-    client->m_setMode(1);
-    if (mode == "0")
-        client->m_setMode(0);
+    client->m_setMode(false);
+    if (mode == "8")
+        client->m_setMode(true);
     return (1);
 }
 

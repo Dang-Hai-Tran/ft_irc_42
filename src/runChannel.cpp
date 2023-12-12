@@ -45,8 +45,9 @@ void commandChannel(Server &server, Client &client) {
         commandTransfer(&server, &client, input);
         return;
     }
-    if (cmd == "PRIVMSG") // xuluu
+    if (cmd == "PRIVMSG") {
         ft_command_privmsg(server, &client);
+    }
     else {
         Client *tmp = &client;
         ft_command_outside(server, tmp);

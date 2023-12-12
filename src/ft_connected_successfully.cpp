@@ -34,7 +34,7 @@ void sign_in(Server &server, Client *&client, int id) {
     std::string nickName = client->m_getNickName();
     std::string realName = client->m_getRealName();
     bool typeClient = client->m_usingIrssi();
-    bool mode = client->m_getMode();
+    bool mode = client->m_isInvisible();
     int socket = client->m_getSocket();
 
     // update
@@ -51,25 +51,26 @@ void sign_in(Server &server, Client *&client, int id) {
     Client*	tmp = client;
     client = oldClient;
     delete	tmp;
-    std::cout << "2 --> " << client << std::endl;
+    if (DEBUG)
+        std::cout << "2 --> " << client << std::endl;
 }
 
 void	ft_welcome(Client* client)
 {
     std::string nickName = client->m_getNickName();
-    
-    ft_send(client, "\n----------------------------------------\n");
-    if (client->m_usingIrssi()) // signal connected for IRSSI
-    {
-        std::string text = ":localhost 001 " + nickName + " :<--            Welcome to the IRC Network             -->";
-        ft_send(client, text);
-    } else
-        ft_send(client, "<--            Welcome to the IRC Network             -->");
+    std::string socket = int_to_string(client->m_getSocket());
+    ft_send(client, RPL_WELCOME(socket, nickName));
 }
 
 void connected_successfully(Server &server, Client *&client) {
     std::string userName = client->m_getUserName();
-    ft_send(client, "Helloooooo [" + userName + "] !!!");
+    std::string nickName = client->m_getNickName();
+    
+    std::string text = "Hellooooo [" + userName + "]";
+    if (client->m_getStatusC())
+        ft_send(client, RPL_PRIVMSG2(nickName, "", text));
+    else
+        ft_send(client, text + "\r\n");
     
     // update status
     if (client->m_getStatusS())
@@ -81,16 +82,13 @@ void connected_successfully(Server &server, Client *&client) {
     int id = ft_find_username(server, userName);
     if (id == 0)
         sign_up(server, client);
-    else {
+    else
         sign_in(server, client, id - 1);
-        if (DEBUG) {
-            std::cout << "Address of newClient after assignment : " << client << std::endl;
-        }
-    }
+
     // number connection
     std::string nbr_connection = int_to_string((int)server.m_getListConnection().size());
     std::string nbrRegisteredUsers = int_to_string((int)server.getRegisteredClients().size());
     std::string nbrChannels = int_to_string((int)server.getChannels().size());
-    std::string message = "Actually, the server has " + nbr_connection + " users connected, " + nbrRegisteredUsers + " users registered, and " + nbrChannels + " channels created";
+    std::string message = "Actually, the server has " + nbr_connection + " users connected, " + nbrRegisteredUsers + " users registered, and " + nbrChannels + " channels created\r\n";
     ft_send(client, message);
 }

@@ -34,7 +34,7 @@ std::ostream &operator<<(std::ostream &os, const std::vector<T> &vec) {
 }
 
 // utiles
-void ft_send(Client *client, std::string output);
+void ft_send(Client *client, std::string text);
 void error_syntax(Client *client);
 int ft_nbrSpace(const std::string &str);
 bool ft_isStringEmpty(const std::string &str);
@@ -88,11 +88,17 @@ void ft_command_whois(Server &server, Client *client);
 // command PRIVMSG
 void ft_command_privmsg(Server &server, Client *client);
 void ft_conversation(Client *client, Channel *channel);
-void ft_message(Client *client);
+void ft_message(Client *client, std::string cmd);
+void ft_send_a_person(Server& server, Client* client);
 
 // command CLEAR
 void ft_command_clear(Client *client);
 
 void copy_data(Server *server, Client *client);
+
+// command QUIT
+bool	ft_command_quit(Client* client);
+
+void    send_status(Client* client);
 
 #endif

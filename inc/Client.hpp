@@ -62,7 +62,7 @@ public:
 
     // modes
     void m_setMode(bool mode);
-    bool m_getMode(void) const;
+    bool m_isInvisible(void) const;
 
     // connected
     void m_setConnected(bool status);
@@ -71,6 +71,10 @@ public:
     // irssi
     void m_setModeClient(bool mode);
     bool m_usingIrssi(void) const;
+
+    // define message
+    void m_defineMessage(bool status);
+    bool m_isMessage(void) const;
 
     std::vector<Channel *> &getChannelsUserIn(void);
     void addChannel(Channel *channel);
@@ -88,6 +92,7 @@ private:
     std::string m_cmd;
     std::string m_parameter;
 
+    bool m_defineText;
     bool m_irssi;
     bool m_connected;
     bool m_statusS;

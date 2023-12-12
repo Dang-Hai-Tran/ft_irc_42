@@ -13,12 +13,8 @@
 #include "../inc/irc.hpp"
 
 bool ft_connection_failed(Client *client) {
-    std::string text = "";
-    if (client->m_usingIrssi())
-        text = ":localhost 421 * :(!) Cannot connect to server (Connection timed out)";
-    else
-        text = "(!) Cannot connect to server (Connection timed out)";
-    ft_send(client, text);
+    std::string socket = int_to_string(client->m_getSocket());
+    ft_send(client, ERR_UNKNOWNCOMMAND(socket, client->m_getCmd()));
     return (0);
 }
 
@@ -31,8 +27,6 @@ bool ft_requestPassword(Server &server, Client *client) {
     ft_command_pass(server, client);
     if (client->m_isConnected())
         return (1);
-    if (client->m_usingIrssi())
-        ft_send(client, ":localhost 464 * :Password incorrect");
     return (0);
 }
 

@@ -3,7 +3,7 @@
 /**
  * @brief Default constructor for the Server class.
  */
-Server::Server(){};
+Server::Server() {};
 
 /**
  * @brief Parameterized constructor for the Server class.
@@ -56,15 +56,22 @@ Server::~Server() {
             delete this->m_listConnection[i];
         }
     }
+ 
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
         delete this->registeredClients[i];
     }
     this->m_listConnection.clear();
     this->registeredClients.clear();
+ 
     for (size_t i = 0; i < this->channels.size(); i++) {
         delete this->channels[i];
     }
     this->channels.clear();
+ 
+    for (size_t i = 0; i < this->getClientFDs().size(); i++) {
+        close(this->getClientFDs()[i]);
+    }
+    this->getClientFDs().clear();
 }
 
 /**
@@ -131,7 +138,8 @@ void Server::waitEvents(void) {
  */
 void ft_add_connection(Server &server, int socket) {
     Client *client = new Client();
-    std::cout << "1 --> " << client << std::endl;
+    if (DEBUG)
+        std::cout << "1 --> " << client << std::endl;
     client->m_setSocket(socket);
     server.m_getListConnection().push_back(client);
 }
@@ -169,7 +177,8 @@ void ft_input(Server &server, int socket, std::string &input) {
         if (sk == socket) {
             clients[i]->m_setInput(input);
             get_input(server, clients[i]);
-            std::cout << "3 --> " << clients[i] << std::endl;
+            if (DEBUG)
+                std::cout << "3 --> " << clients[i] << std::endl;
             break;
         }
         i++;

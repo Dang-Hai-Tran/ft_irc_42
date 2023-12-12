@@ -33,28 +33,17 @@ bool ft_connection_with_nc(Server &server, Client *&client, std::string &cmd) {
         client->m_setInput(cmd);
         run = get_command_parameter(server, client);
     } else if (client->m_getStatusC()) {
-        client->m_setInput(cmd);
-        ft_message(client);
+        client->m_defineMessage(true);
+        ft_message(client, cmd);
     } else {
-        ft_send(client, "(!) Command start with '/'");
-        ft_send(client, "(i) Use /HELP for instructions");
-        ft_send(client, "\n-------------------------------------------------\n");
+        ft_send(client, ERR_UNKNOWNCOMMAND(client->m_getNickName(), client->m_getCmd()));
         run = client->m_getStatusS();
     }
 
-    if (run) {
-        std::string text = "";
-        text += "[" + client->m_getNickName();
-        for (size_t i = 0; i < client->getChannelsUserIn().size(); i++) {
-            Channel *channel = client->getChannelsUserIn()[i];
-            text += " " + channel->getNameChannel();
-        }
-        text += "] ";
-        if (client->m_getNickName() == "")
-            text = "[irc] ";
-        send(client->m_getSocket(), text.c_str(), text.size(), 0);
+    send_status(client);
+
+    if (run)
         return (1);
-    }
     server.delClientSocket(client->m_getSocket());
     return (0);
 }
@@ -100,6 +89,7 @@ void get_input(Server &server, Client *&client) {
         std::string cmd = str.substr(0, m);
         // std::cout << cmd << std::endl;
 
+        client->m_defineMessage(false);
         if (!ft_check_type_client(server, client, cmd))
             break;
         str = str.substr(m + 1, str.size());

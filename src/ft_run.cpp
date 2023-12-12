@@ -14,7 +14,6 @@
 
 void ft_command_outside(Server &server, Client *&client) {
     std::string cmd = client->m_getCmd();
-    // std::cout << cmd << std::endl;
 
     if (cmd == "HELP")
         ft_command_help(client);
@@ -26,14 +25,12 @@ void ft_command_outside(Server &server, Client *&client) {
         ft_command_whois(server, client);
     else if (cmd == "NICK")
         ft_command_nick(server, client);
-    else if (cmd == "PRIVMSG") // delete
+    else if (cmd == "PRIVMSG")
         ft_command_privmsg(server, client);
-    else if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING" || cmd == "QUIT")
-        return;
-    else if (client->m_getStatusC() == false) {
-        ft_send(client, "(!) This command is invalid");
-        ft_send(client, "(i) Use /HELP for instructions");
-    }
+    else if (cmd == "MODE" && client->m_usingIrssi())
+        client->m_setMode(true);
+    else if (!client->m_getStatusC())
+        ft_send(client, ERR_UNKNOWNCOMMAND(client->m_getNickName(), client->m_getCmd()));
 }
 
 void reset_data(Client *client) {
@@ -41,19 +38,19 @@ void reset_data(Client *client) {
     client->m_setConnected(false);
     client->m_setStatusS(false);
     client->m_setStatusC(false);
+    client->m_setModeClient(false);
     client->m_setInput("");
     client->m_setCmd("");
     client->m_setParameter("");
-    client->m_setModeClient(false);
 }
 
 void ft_guide(Client *client) {
     if (client->m_isConnected() == false) {
-        ft_send(client, "(!) Usage: /PASS <password> to login server");
+        ft_send(client, "(!) Usage: /PASS <password> to login server\r\n");
     } else if (client->m_getNickName() == "") {
-        ft_send(client, "(!) Usage: /NICK <nickname> to set new nick");
+        ft_send(client, "(!) Usage: /NICK <nickname> to set new nick\r\n");
     } else if (client->m_getUserName() == "") {
-        ft_send(client, "(!) Usage: /USER <username> 8 * :<realname> to set new username");
+        ft_send(client, "(!) Usage: /USER <username> 0 * :<realname> to set new username\r\n");
     }
 }
 
@@ -63,7 +60,10 @@ int ft_general_command(Server *server, Client *client) {
     std::string username = client->m_getUserName();
 
     if (cmd == "QUIT")
-        return (0);
+    {
+        if (ft_command_quit(client))
+            return (0);
+    }
     if (cmd == "HELP")
         ft_command_help(client);
     else if (cmd == "CLEAR")
@@ -102,12 +102,5 @@ bool ft_run(Server &server, Client *&client) {
         return (0);
     else if (code == 1 && !ft_request_informations(server, client))
         return (0);
-
-    // std::cout << "2 --> " << client << std::endl;
-    if (client->m_getStatusS()) {
-        if ((cmd == "MODE" && !client->m_getStatusC()) || cmd == "PING")
-            return (1);
-        ft_send(client, "\n----------------------------------------\n");
-    }
     return (1);
 }

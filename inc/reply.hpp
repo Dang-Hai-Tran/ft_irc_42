@@ -65,7 +65,7 @@
 #define RPL_ENDOFNAMES(client, channel) (":localhost 366 " + client + " " + channel + " :End of /NAMES list.\r\n")
 
 // NICK
-#define ERR_NONICKNAMEGIVEN(client) (":localhost 431 " + client + " :There is no nickname.\r\n")
+#define ERR_NONICKNAMEGIVEN(client) (":localhost 431 " + client + " :No nickname given\r\n")
 #define ERR_ERRONEUSNICKNAME(client, nickname) (":localhost 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
 #define ERR_NICKNAMEINUSE(client, nickname) (":localhost 433 " + client + " " + nickname + " :Nickname is already in use.\r\n")
 #define RPL_NICK(oclient, uclient, client) (":" + oclient + "!" + uclient + "@localhost NICK " + client + "\r\n")
@@ -87,7 +87,7 @@
 #define RPL_PONG(user_id, token) (user_id + " PONG " + token + "\r\n")
 
 // QUIT
-#define RPL_QUIT(user_id, reason) (user_id + " QUIT :Quit: " + reason + "\r\n")
+#define RPL_QUIT(user_id, reason) (user_id + " QUIT :Quit" + reason + "\r\n")
 #define RPL_ERROR(user_id, reason) (user_id + " ERROR :" + reason + "\r\n")
 
 // PRIVMSG
@@ -95,6 +95,7 @@
 #define ERR_NORECIPIENT(client) ("411 " + client + " :No recipient given PRIVMSG\r\n")
 #define ERR_NOTEXTTOSEND(client) ("412 " + client + " :No text to send\r\n")
 #define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + " " + message + "\r\n")
+#define RPL_PRIVMSG2(nick, channel, message) (":" + nick + " PRIVMSG " + channel + " " + message + "\r\n")
 
 // TOPIC
 #define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " " + channel + " " + topic + "\r\n")
@@ -102,4 +103,12 @@
 
 // USER
 #define ERR_ALREADYREGISTERED(client) (":localhost 462 " + client + " :You may not register.\r\n")
+
+// WHO
+#define RPL_WHOREPLY(nickName, channel, userName, serverName, flags, realName) (":localhost 352 " + nickName + " " + channel + " " + userName + " " + serverName + " " + nickName + " " + flags + " :1 " + realName + "\r\n")
+#define RPL_ENDOFWHO(nickName, channel) (":localhost 315 " + nickName + " " + channel + " :End of WHO list\r\n")
+
+// WHOIS
+#define RPL_ENDOFWHOIS(nickName) (":localhost 318 " + nickName + " " + nickName + " :End of /WHOIS list\r\n")
+
 #endif
