@@ -59,6 +59,9 @@ std::string getIpAddressFromSockaddr(const struct sockaddr_in6 *sockaddr) {
 std::vector<std::string> splitString(std::string str, char c) {
     std::vector<std::string> strs;
     for (size_t i = 0; i < str.size(); i++) {
+        if (str[i] == c && str[i+1] == c && i < str.size() - 1) {
+            strs.push_back("");
+        }
         if (str[i] != c) {
             size_t begin = i;
             size_t end = begin + 1;

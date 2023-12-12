@@ -33,6 +33,6 @@
 #ifndef DEBUG
 # define DEBUG 0
 #endif
-#define OPENAI_API_KEY ""
+#define OPENAI_API_KEY "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"
 
 #endif

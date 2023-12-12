@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utiles.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:19:22 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/28 17:19:25 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/12/12 18:12:33 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,4 +104,5 @@ void    send_status(Client* client)
     if (client->m_getNickName() == "")
         text = "[irc] ";
     send(client->m_getSocket(), text.c_str(), text.size(), 0);
+	std::cout << std::left << std::setw(40) << "[Server] Message sent to client " << client->m_getSocket() << " >> " << text + "\r\n";
 }

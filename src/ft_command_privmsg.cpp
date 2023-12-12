@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:02:14 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/04 18:34:16 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/12 18:39:34 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,11 @@ void	ft_conversation(Client* client, Channel* channel)
 		Client*	target = channel->getUsers()[i];
 		std::string	recipient = target->m_getNickName();
 		if (recipient != sender)
-		{
 			ft_send(target, RPL_PRIVMSG2(sender, nameChannel, message));
-			if (!target->m_usingIrssi())
-				send_status(target);
-		}
 		i++;
 	}
+	if (!client->m_usingIrssi())
+		send_status(client);
 }
 
 int	ft_find_namechannel(Server& server, std::string nameChannel)
@@ -111,6 +109,7 @@ void	ft_message(Client* client, std::string cmd)
 	{
 		Channel*	channel = client->getChannelsUserIn()[i];
 		ft_conversation(client, channel);
+		break ;
 		i++;
 	}
 }

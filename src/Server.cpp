@@ -3,7 +3,7 @@
 /**
  * @brief Default constructor for the Server class.
  */
-Server::Server() {};
+Server::Server(){};
 
 /**
  * @brief Parameterized constructor for the Server class.
@@ -56,18 +56,18 @@ Server::~Server() {
             delete this->m_listConnection[i];
         }
     }
- 
+
     for (size_t i = 0; i < this->registeredClients.size(); i++) {
         delete this->registeredClients[i];
     }
     this->m_listConnection.clear();
     this->registeredClients.clear();
- 
+
     for (size_t i = 0; i < this->channels.size(); i++) {
         delete this->channels[i];
     }
     this->channels.clear();
- 
+
     for (size_t i = 0; i < this->getClientFDs().size(); i++) {
         close(this->getClientFDs()[i]);
     }
@@ -271,6 +271,14 @@ void Server::sendData(int clientSocket, std::string message) {
         throw std::runtime_error("ERROR :Sending data to client");
     }
     std::cout << std::left << std::setw(40) << "[Server] Message sent to client " << clientSocket << " >> " << message;
+    std::vector<Client *> listConnection = this->m_getListConnection();
+    Client *client = NULL;
+    for (size_t i = 0; i < listConnection.size(); i++) {
+        if (listConnection[i]->m_getSocket() == clientSocket)
+            client = listConnection[i];
+    }
+    if (!client->m_usingIrssi())
+        send_status(client);
 }
 
 /**

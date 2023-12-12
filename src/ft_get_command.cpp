@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:03:06 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/30 13:20:51 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/12 17:51:29 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	ft_send(Client* client, std::string text)
 	int	clientSocket = client->m_getSocket();
 	std::cout << std::left << std::setw(40) << "[Server] Message sent to client " << clientSocket << " >> " << text;
 	send(clientSocket, text.c_str(), text.size(), 0);
+	if (!client->m_usingIrssi())
+		send_status(client);
 }
 
 bool	is_adminServer(Client* client)

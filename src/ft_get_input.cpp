@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 15:39:21 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 22:00:00 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/12 17:58:24 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ bool ft_connection_with_nc(Server &server, Client *&client, std::string &cmd) {
         ft_send(client, ERR_UNKNOWNCOMMAND(client->m_getNickName(), client->m_getCmd()));
         run = client->m_getStatusS();
     }
-
-    send_status(client);
 
     if (run)
         return (1);

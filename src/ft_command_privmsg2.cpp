@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_command_privmsg2.cpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 16:08:00 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/11 16:08:30 by xuluu            ###   ########.fr       */
+/*   Updated: 2023/12/12 18:38:16 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ void	ft_send_a_person2(Server& server, Client* client, int id)
 	{
 		ft_send(target, annonce + "\r\n");
 		ft_send(target, sender + ": " + message + "\r\n");
-		if (!target->m_usingIrssi())
-			send_status(target);
 		return ;
 	}
 
@@ -35,10 +33,11 @@ void	ft_send_a_person2(Server& server, Client* client, int id)
 		std::string	nameChannel = target->getChannelsUserIn()[i]->getNameChannel();
 		ft_send(target, RPL_PRIVMSG2(sender, nameChannel, annonce));
 		ft_send(target, RPL_PRIVMSG2(sender, nameChannel, message));
-		if (!target->m_usingIrssi())
-			send_status(target);
+		break ;
 		i++;
 	}
+	if (!client->m_usingIrssi())
+		send_status(client);
 }
 
 void	ft_send_a_person(Server& server, Client* client)
