@@ -41,15 +41,15 @@ void	ft_conversation(Client* client, Channel* channel)
 
 int	ft_find_namechannel(Server& server, std::string nameChannel)
 {
-	int	i(0);
+	size_t	i(0);
 
-	while (i < (int)server.getChannels().size())
+	while (i < server.getChannels().size())
 	{
 		if (server.getChannels()[i]->getNameChannel() == nameChannel)
 			return (i + 1);
 		i++;
 	}
-	return (i);
+	return (0);
 }
 
 void	ft_command_privmsg(Server& server, Client* client)
@@ -70,6 +70,7 @@ void	ft_command_privmsg(Server& server, Client* client)
 		i++;
 
 	std::string	nameChannel = parameter.substr(1, i);
+
 	int	id = ft_find_namechannel(server, nameChannel);
 	if (id == 0)
 	{
