@@ -20,5 +20,5 @@ RUN make
 # Run your program when the container launches
 CMD ["valgrind","--show-leak-kinds=all","--leak-check=full","--track-fds=yes","--track-origins=yes","./ircserv","5555","1234"]
 
-# docker build -t irc .
+# docker image prune -a && docker build -t irc .
 # docker run -it --rm -p 5555:5555 irc
