@@ -87,7 +87,7 @@
 #define RPL_PONG(user_id, token) (user_id + " PONG " + token + "\r\n")
 
 // QUIT
-#define RPL_QUIT(user_id, reason) (user_id + " QUIT :Quit: " + reason + "\r\n")
+#define RPL_QUIT(user_id, reason) (user_id + " QUIT :Quit" + reason + "\r\n")
 #define RPL_ERROR(user_id, reason) (user_id + " ERROR :" + reason + "\r\n")
 
 // PRIVMSG
@@ -103,4 +103,12 @@
 
 // USER
 #define ERR_ALREADYREGISTERED(client) (":localhost 462 " + client + " :You may not register.\r\n")
+
+// WHO
+#define RPL_WHOREPLY(nickName, channel, userName, serverName, flags, realName) (":localhost 352 " + nickName + " " + channel + " " + userName + " " + serverName + " " + nickName + " " + flags + " :1 " + realName + "\r\n")
+#define RPL_ENDOFWHO(nickName, channel) (":localhost 315 " + nickName + " " + channel + " :End of WHO list\r\n")
+
+// WHOIS
+#define RPL_ENDOFWHOIS(nickName) (":localhost 318 " + nickName + " " + nickName + " :End of /WHOIS list\r\n")
+
 #endif

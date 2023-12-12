@@ -96,4 +96,7 @@ void ft_command_clear(Client *client);
 
 void copy_data(Server *server, Client *client);
 
+// command QUIT
+bool	ft_command_quit(Client* client);
+
 #endif

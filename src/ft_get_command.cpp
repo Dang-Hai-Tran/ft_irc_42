@@ -15,6 +15,7 @@
 void	ft_send(Client* client, std::string text)
 {
 	int	clientSocket = client->m_getSocket();
+	std::cout << std::left << std::setw(40) << "[Server] Message sent to client " << clientSocket << " >> " << text;
 	send(clientSocket, text.c_str(), text.size(), 0);
 }
 

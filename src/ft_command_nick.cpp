@@ -55,10 +55,7 @@ void	ft_nickname_accepted(Client* client, std::string nickName)
 	std::string	newNick = client->m_getNickName();
 	ft_send(client, RPL_NICK(oldNick, newNick, newNick));
 	if (!client->m_usingIrssi())
-	{
-		ft_send(client, "\n-----------------------------------------\r\n");
 		ft_guide(client);
-	}
 }
 
 void	ft_command_nick(Server& server, Client* client)

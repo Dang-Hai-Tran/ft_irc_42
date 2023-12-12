@@ -67,33 +67,25 @@ void ft_command_help(Client *client) {
 
     // general command
     ft_infor_help(client);
-    ft_send(client, "   ---------------------------------------   \r\n");
     ft_infor_clear(client);
-    ft_send(client, "   ---------------------------------------   \r\n");
 
     // password
     if (client->m_isConnected() == false) {
         ft_infor_password(client);
-        ft_send(client, "   ---------------------------------------   \r\n");
         return;
     }
 
     // nickname
     ft_infor_nickname(client);
-    ft_send(client, "   ---------------------------------------   \r\n");
     if (client->m_getNickName() == "")
         return;
 
     // username
     ft_infor_username(client);
-    ft_send(client, "   ---------------------------------------   \r\n");
     if (client->m_getUserName() == "")
         return;
 
     ft_infor_privmsg(client);
-    ft_send(client, "   ---------------------------------------   \r\n");
     ft_infor_who(client);
-    ft_send(client, "   ---------------------------------------   \r\n");
     ft_infor_whois(client);
-    ft_send(client, "   ---------------------------------------   \r\n");
 }

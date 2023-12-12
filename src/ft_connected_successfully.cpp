@@ -51,15 +51,14 @@ void sign_in(Server &server, Client *&client, int id) {
     Client*	tmp = client;
     client = oldClient;
     delete	tmp;
-    std::cout << "2 --> " << client << std::endl;
+    if (DEBUG)
+        std::cout << "2 --> " << client << std::endl;
 }
 
 void	ft_welcome(Client* client)
 {
     std::string nickName = client->m_getNickName();
     std::string socket = int_to_string(client->m_getSocket());
-    
-    ft_send(client, "\n----------------------------------------\r\n");
     ft_send(client, RPL_WELCOME(socket, nickName));
 }
 

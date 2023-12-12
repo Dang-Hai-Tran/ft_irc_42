@@ -56,12 +56,21 @@ void	ft_find_channel(Server& server, Client* client, std::string nameChannel)
 {
 	size_t	i(0);
 	std::vector<Channel *> &list_channel = server.getChannels();
+	std::string	nickName = client->m_getNickName();
+	std::string	userName = client->m_getUserName();
+	std::string	realName = client->m_getRealName();
+	std::string	serverName = server.getServerName();
+	std::string	flags = "G";
+	if (client->m_getStatusS())
+		flags = "H";
 
 	while (i < list_channel.size())
 	{
 		if (list_channel[i]->getNameChannel() == nameChannel)
 		{
-			print_list_user(client, list_channel[i]->getUsers());
+			// print_list_user(client, list_channel[i]->getUsers());
+			ft_send(client, RPL_WHOREPLY(nickName, nameChannel, userName, serverName, flags, realName));
+			ft_send(client, RPL_ENDOFWHO(nickName, nameChannel));
 			return ;
 		}
 		i++;

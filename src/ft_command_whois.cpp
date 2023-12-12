@@ -88,16 +88,19 @@ void	ft_command_whois(Server& server, Client* client)
 	std::string	parameter = client->m_getParameter();
 
 	if (ft_nbrSpace(parameter) != 0)
-		return (error_syntax(client));
+	{
+		error_syntax(client);
+		ft_send(client, RPL_ENDOFWHOIS(client->m_getNickName()));
+		return ;
+	}
 
 	if (parameter == "")
 		parameter = client->m_getNickName();
 
 	int	id = ft_find_nickname(server, parameter);
 	if (id == 0 || (server.getRegisteredClients()[id - 1]->m_isInvisible() && server.getRegisteredClients()[id - 1]->m_getID() != client->m_getID()))
-	{
 		ft_send(client, ERR_NOSUCHNICK(client->m_getNickName(), parameter));
-		return ;
-	}
-	ft_display_informations(server, client, id - 1);
+	else
+		ft_display_informations(server, client, id - 1);
+	ft_send(client, RPL_ENDOFWHOIS(client->m_getNickName()));
 }

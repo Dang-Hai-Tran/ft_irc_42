@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_command_pass.cpp                                :+:      :+:    :+:   */
+/*   ft_command_quit.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: xuluu <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/28 17:17:38 by xuluu             #+#    #+#             */
-/*   Updated: 2023/11/28 17:17:40 by xuluu            ###   ########.fr       */
+/*   Created: 2023/12/12 12:40:35 by xuluu             #+#    #+#             */
+/*   Updated: 2023/12/12 12:40:53 by xuluu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/irc.hpp"
 
-void	ft_command_pass(Server& server, Client* client)
+bool	ft_command_quit(Client* client)
 {
 	std::string	parameter = client->m_getParameter();
-	std::string	socketClient = int_to_string(client->m_getSocket());
+	std::string	nickName = client->m_getNickName();
+	std::string	userName = client->m_getUserName();
 
-	if (parameter == "" || ft_nbrSpace(parameter) != 0)
-		return (error_syntax(client));
-
-	if (parameter != server.getPassword())
-	{
-		ft_send(client, ERR_PASSWDMISMATCH(socketClient));
-		return ;
-	}
-
-	ft_send(client, "Password correct.\r\n");
-	client->m_setConnected(true);
-
-	if (client->m_usingIrssi())
-		return ;
-	ft_guide(client);
+	if (parameter.size() > 0 && parameter[0] != ':')
+		return (0);
+	ft_send(client, RPL_QUIT(user_id(nickName, userName), parameter));
+	return (1);
 }
