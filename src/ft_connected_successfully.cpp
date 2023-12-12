@@ -6,7 +6,7 @@
 /*   By: datran <datran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:13:15 by xuluu             #+#    #+#             */
-/*   Updated: 2023/12/05 21:20:47 by datran           ###   ########.fr       */
+/*   Updated: 2023/12/12 16:23:34 by datran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,30 +48,29 @@ void sign_in(Server &server, Client *&client, int id) {
     oldClient->m_setConnected(true);
     oldClient->m_setStatusS(true);
 
-    Client*	tmp = client;
+    Client *tmp = client;
     client = oldClient;
-    delete	tmp;
+    delete tmp;
     if (DEBUG)
         std::cout << "2 --> " << client << std::endl;
 }
 
-void	ft_welcome(Client* client)
-{
+void ft_welcome(Client *client) {
     std::string nickName = client->m_getNickName();
-    std::string socket = int_to_string(client->m_getSocket());
-    ft_send(client, RPL_WELCOME(socket, nickName));
+    std::string userName = client->m_getUserName();
+    ft_send(client, RPL_WELCOME(user_id(nickName, userName), nickName));
 }
 
 void connected_successfully(Server &server, Client *&client) {
     std::string userName = client->m_getUserName();
     std::string nickName = client->m_getNickName();
-    
+
     std::string text = "Hellooooo [" + userName + "]";
     if (client->m_getStatusC())
         ft_send(client, RPL_PRIVMSG2(nickName, "", text));
     else
         ft_send(client, text + "\r\n");
-    
+
     // update status
     if (client->m_getStatusS())
         return;
