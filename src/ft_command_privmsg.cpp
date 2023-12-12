@@ -65,16 +65,22 @@ void	ft_command_privmsg(Server& server, Client* client)
 		return ;
 	}
 
+	if (!client->m_usingIrssi())
+	{
+		ft_send(client, ERR_UNKNOWNCOMMAND(client->m_getNickName(), client->m_getCmd()));
+		return ;
+	}
+
 	int	i(0);
 	while (parameter[i] && parameter[i] != ' ')
 		i++;
 
-	std::string	nameChannel = parameter.substr(1, i);
+	std::string	nameChannel = parameter.substr(0, i);
 
 	int	id = ft_find_namechannel(server, nameChannel);
 	if (id == 0)
 	{
-		ft_send(client, "(!) This channel cannot be found");
+		ft_send(client, ERR_NOSUCHCHANNEL(client->m_getNickName(), nameChannel));
 		return ;
 	}
 

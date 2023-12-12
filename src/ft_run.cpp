@@ -29,10 +29,8 @@ void ft_command_outside(Server &server, Client *&client) {
         ft_command_privmsg(server, client);
     else if (cmd == "MODE" && client->m_usingIrssi())
         client->m_setMode(true);
-    else if (!client->m_getStatusC()) {
-        ft_send(client, "(!) This command is invalid\r\n");
-        ft_send(client, "(i) Use /HELP for instructions\r\n");
-    }
+    else if (!client->m_getStatusC())
+        ft_send(client, ERR_UNKNOWNCOMMAND(client->m_getNickName(), client->m_getCmd()));
 }
 
 void reset_data(Client *client) {
