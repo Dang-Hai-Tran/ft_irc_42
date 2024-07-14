@@ -3,3 +3,4 @@ obj
 ircserv
 unittest/test
 .env
+.DS_Store
